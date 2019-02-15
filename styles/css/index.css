@@ -6316,7 +6316,7 @@ hr {
 .docs-header,
 .docs-home {
   color: #b9c8e0;
-  background-color: #bee7fd;
+  background-color: #2d85f0;
 }
 /* Page headers */
 .docs-header {
@@ -6462,9 +6462,9 @@ hr {
 .sidebar .nav > .active:hover > a,
 .sidebar .nav > .active:focus > a {
   font-weight: bold;
-  color: #bee7fd;
+  color: #2d85f0;
   background-color: transparent;
-  border-right: 1px solid #bee7fd;
+  border-right: 1px solid #2d85f0;
 }
 .sidebar .nav .nav {
   display: none;
@@ -6511,7 +6511,7 @@ hr {
 }
 .docs-nav {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
-  background-color: #bee7fd;
+  background-color: #2d85f0;
   border-color: rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07);
 }
@@ -6544,14 +6544,14 @@ hr {
   background-color: rgba(0, 0, 0, 0.2);
 }
 .docs-nav .navbar-toggle {
-  border-color: #bee7fd;
+  border-color: #2d85f0;
 }
 .docs-nav .navbar-toggle:hover {
   background-color: #111f36;
   border-color: #111f36;
 }
 .btn-outline {
-  color: #bee7fd;
+  color: #2d85f0;
   background-color: #fff;
   border-color: #e5e5e5;
 }
@@ -6559,8 +6559,8 @@ hr {
 .btn-outline:focus,
 .btn-outline:active {
   color: #fff;
-  background-color: #bee7fd;
-  border-color: #bee7fd;
+  background-color: #2d85f0;
+  border-color: #2d85f0;
 }
 /* Inverted outline button (white on dark) */
 .btn-outline-inverse {
@@ -6571,7 +6571,7 @@ hr {
 .btn-outline-inverse:hover,
 .btn-outline-inverse:focus,
 .btn-outline-inverse:active {
-  color: #bee7fd;
+  color: #2d85f0;
   text-shadow: none;
   background-color: #fff;
   border-color: #fff;
