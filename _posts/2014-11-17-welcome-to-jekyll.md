@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
-date:   2014-11-17 13:31:01 +0800
-categories: jekyll
-tag: jekyll
+title:  "url和正则表达式的学习"
+date:   2019-02-14 00:21:00
+categories: 前端笔记
+tag: 前端笔记
 ---
 
 * content
