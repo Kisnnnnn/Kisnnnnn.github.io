@@ -1,0 +1,119 @@
+---
+layout: post
+title:  "url和正则表达式的学习"
+date:   2019-02-13 00:21:00
+categories: 前端笔记
+tag: 前端
+---
+
+* content
+{:toc}
+
+## 浏览器的URL的构成
+- portocal，协议头，例如：http、ftp等
+- host，主机域名或IP地址
+- port，端口号
+- path，目录路径
+- query，即查询参数
+- fragment，即#后的hash值，一般用来定位到某个位置
+
+> 'http://note.youdao.com/?user=admin&query=123#page=top' = portocal(https://) + host(www.jianshu.com) + port(80) + path(/p/d31f494ad6f5) + query(?user=admin&query=123) + fragment(#page=top)
+
+##  window.location
+- window.location.hostname，返回web主机的域名 (segmentfault.com)
+- window.location.pathname，返回当前页面的路径和文件名(a/119....6)
+- window.location.port，返回web主机的端口
+- window.location.portocal，返回所使用的web协议（http://）
+- window.location.assign('https://www.baidu.com")，assign(url)，导航到一个新的页面
+- window.location.reload(true) 刷新页面
+- window.location.search，获取url后额外的数据
+
+## 如何获取url的额外参数与分析正则表达式
+```
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"),
+        r = window.location.search.substr(1).match(reg);
+        
+    if (r != null) return unescape(r[2]);
+        return null;
+}
+```
+
+### 正则表达式
+#### 限定符
+
+字符 | 描述
+---|---
+* | 匹配前面的子表达式零次或者多次。例如，zo*能匹配「z」以及「zoo」。等价于{0,}（只要包含「z」、「o」的字符全直接匹配出来）
++ | 匹配前面的子表达式一次或多次，例如，zo+能匹配「zo」以及「zoo」。等价于{0,1}（只要包含「zo」的字符会直接匹配出来）
+? | 匹配前面的子表达式零次或者多次，例如，「do(es)?」能匹配到「do」，「does」能匹配到「does」，「doxy」中的「do」。（讲包含「do」或者「does」的字符中的「do」、「does」匹配展现出来）
+{n} | n为一个非负整数。匹配确定的n次。例如，「o{2}」不能匹配「Bob」中的「o」，但是能匹配「food」的两个o（o{2}匹配出至少包含2个含有o的符合对象）
+{n,} | n为一个非负整数。至少匹配n次。例如，「o{2,}」不能匹配「Bob」中的「o」，但是能匹配「foooooood」的所以的o（o{2,}匹配出包含大于等于2个含有o的符合对象），「o{1,}」 等价于 「o+」。「o{0,}」 则等价于 「o*」。
+{n,m} | m 和 n 均为非负整数，其中n <= m。最少匹配 n 次且最多匹配 m 次。例如，「o{1,3}」将匹配 「fooooood」 中的前三个 o。「o{0,1}」 等价于 「o?」。请注意在逗号和两个数之间不能有空格。
+
+#### 特殊符号
+特别字符 | 描述
+---|---
+$ | 匹配输入字符全的结尾位置。如果设置了RegExp对象的Multiline属性，则$也匹配「\n」「\r」。要匹配$字符本身，请使用\$ ==（以下特殊字符均可以使用\形式匹配）==
+( ) | 标记一个字表达式的开始和结束。子表达式可以获取提供以后使用。
+* | 匹配前面的子表达式零次或者多次。
++ | 匹配前面的子表达式一次或者多次。
+. | 匹配除换行符\n之外的任何单字符。
+[ | 标记一个中括号表达式的开始。
+? | 匹配前面的子表达式零次或者一次，或者指明一个非贪婪限定符。
+\ | 将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义字符。
+^ | 匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。
+{ | 标记限定符表达式的开始。
+\| | 指明两项之间的一个选择.
+
+#### 定位符
+字符 | 描述
+---|---
+^ | 匹配输入字符开始的位置
+$ | 匹配输入字符结束的位置
+\b | 匹配一个单词边间，即字与空间间的位置
+\B | 非单词边界匹配
+
+
+注意：不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如 ==^*== 之类的表达式。
+
+若要匹配一行文本开始处的文本，请在正则表达式的开始使用 ^ 字符。不要将 ^ 的这种用法与中括号表达式内的用法混淆。
+
+若要匹配一行文本的结束处的文本，请在正则表达式的结束处使用 $ 字符。
+
+#### 正则匹配匹配的一些demo
+参考：[RegExp-廖雪峰](https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499503920bb7b42ff6627420da2ceae4babf6c4f2000)
+
+```
+    // 匹配大小写、字母和数字
+    function isReg(reg, con, isGlobal) {
+        const res = reg.test(con);
+        const execRes = reg.exec(con);
+        console.log(res);
+        console.log(execRes);
+
+        if (isGlobal === 1) {
+            console.log(res.lastIndex);
+            isReg(reg, con, 0);
+        }
+    }
+
+    // 可以匹配一个大小写字母、一个数字或者下划线
+    isReg(/[a-zA-Z0-9\_]/, '_');
+    // 可以匹配一个大小写字母、下划线开头，等
+    isReg(/^([a-zA-Z\$\_])[a-zA-Z0-9\_\$]{0,19}/, 'ab2c3');
+    // 三个数字+「-」+ 五个字母或者数字
+    isReg(/^(\d{3})-(\w{5})$/, '123-sdaws');
+    // 三个数字+「-」或者 空格+ 五个字母或者数字
+    isReg(/^(\d{3})(-|\s)(\w{5})$/, '123 sdaws');
+    // 贪婪匹配 ["120300000", "120300000", " ", index: 0, input: "120300000", groups: undefined]
+    isReg(/^(\d+)(0*)$/, 120300000);
+    // 非贪婪匹配 （也就是尽可能少匹配,精确匹配)["120300000", "1203", "00000", index: 0, input: "120300000", groups: undefined]
+    isReg(/^(\d+?)(0*)$/, 120300000);
+    // 全局匹配
+    isReg(/[a-zA-Z]+Team/g, 'sTeam, bTeam, cTeam', 1);
+    // 可以验证并提取出带名字的Email地址：
+    isReg(/^\<(\w+\s?\w+)\>\s?(\w+@\w+\.\w+)$/, '<Tom Paris> tom@voyager.org');
+    // 验证Email地址
+    isReg(/^([a-zA-Z0-9\.\_])+@([0-9]|[A-Za-z])+.(com|org)$/, 'szaf93671@126.com');
+```
