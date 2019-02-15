@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>浏览器如何发起一个完整的HTTP请求 - 翻山越岭遇到一条狗的Blog</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="canonical" href="/2019/02/14/http/">
+	<link rel="alternate" type="application/rss+xml" title="翻山越岭遇到一条狗的Blog" href="/feed.xml">
+	
+	<meta name="keywords" content="浏览器如何发起一个完整的HTTP请求, 翻山越岭遇到一条狗的Blog, 袁凯忻;个人博客;前端技术;">
+	<meta name="description" content="袁凯忻;个人博客;前端技术;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a> -->
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">categories</a>
+        </li>
+        <li>
+          <a href="/tag">tag</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <!-- <a><span id="busuanzi_container_site_pv" style="display:non">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a> -->
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/Kisnnnnn/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="https://kisnnnnn.github.io/kisnStudy/">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>浏览器如何发起一个完整的HTTP请求</h1>
+		    <p>Post on Feb 14, 2019 by <a href="/about">Kisn</a></p>
+		-->
+		    <h1>「今でもあなたはわたしの光」</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#前端笔记-ref">前端笔记</a>	/
+    	<a href="/tag/#前端-ref">前端</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+    <h1>目录</h1>
+    <ul class="nav sidenav">
+    </ul>
+    <!-- <div style="height: 200px;width: 200px;">
+      <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"> 
+      </script>
+    </div> -->
+  </div>
+  
+   
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">浏览器如何发起一个完整的HTTP请求</h1>
+              <!--
+                <p class="post-meta">Feb 14, 2019</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Feb 14, 2019</span> By <a target="_blank" href="http://localhost:4000">Kisn</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#浏览器如何发起一个完整的http请求" id="markdown-toc-浏览器如何发起一个完整的http请求">浏览器如何发起一个完整的HTTP请求？</a>    <ul>
+      <li><a href="#五层因特网协议栈" id="markdown-toc-五层因特网协议栈">五层因特网协议栈</a></li>
+      <li><a href="#http" id="markdown-toc-http">HTTP</a></li>
+      <li><a href="#dns" id="markdown-toc-dns">DNS</a></li>
+      <li><a href="#cdn" id="markdown-toc-cdn">CDN</a></li>
+      <li><a href="#什么是tcpip协议" id="markdown-toc-什么是tcpip协议">什么是TCP/IP协议？</a></li>
+      <li><a href="#什么是三次握手四次握手" id="markdown-toc-什么是三次握手四次握手">什么是三次握手、四次握手？</a></li>
+      <li><a href="#get和post的区别" id="markdown-toc-get和post的区别">GET和POST的区别</a></li>
+      <li><a href="#后台处理流程" id="markdown-toc-后台处理流程">后台处理流程</a></li>
+      <li><a href="#http的报文接口" id="markdown-toc-http的报文接口">http的报文接口</a>        <ul>
+          <li><a href="#通用头部" id="markdown-toc-通用头部">通用头部</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="浏览器如何发起一个完整的http请求">浏览器如何发起一个完整的HTTP请求？</h2>
+<p>答:==应用层==的发送http请求，==DNS==将域名解析成IP，然后到==传输层==通过==三次握手==建立==TCP/IP请求==，再到==网络层==的ip寻址，再到==数据链路层==的封装成帧，最后到==物理层==的利用物理介质传输。</p>
+
+<h3 id="五层因特网协议栈">五层因特网协议栈</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.应用层(dns,http) DNS解析成IP并发送http请求
+
+2.传输层(tcp,udp) 建立tcp连接（三次握手）
+
+3.网络层(IP,ARP) IP寻址
+
+4.数据链路层(PPP) 封装成帧
+
+5.物理层(利用物理介质传输比特流) 物理传输（然后传输的时候通过双绞线，电磁波等各种介质）
+</code></pre></div></div>
+
+<h3 id="http">HTTP</h3>
+<blockquote>
+  <p>超文本传输协议，Web浏览器和Web服务器之间的通信，一般基于TCP/IP协议</p>
+</blockquote>
+
+<h3 id="dns">DNS</h3>
+<blockquote>
+  <p>Domain Name System，即域名系统。它作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS使用TCP和UDP端口53[1]。当前，对于每一级域名长度的限制是63个字符，域名总长度则不能超过253个字符。</p>
+</blockquote>
+
+<p>可以理解为一个工具将域名和IP关联了起来，通过让快速访问到IP,域名查询到IP。
+比较牛逼的网站可能会用CDN来进行均衡用户访问负载量。</p>
+
+<h3 id="cdn">CDN</h3>
+<blockquote>
+  <p>Content Delivery Network，即内容分发网络。网络之上的内容分发网络，依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。CDN的关键技术主要有内容存储和分发技术。
+通俗的讲就是在人多的地方放置更多的服务器，当访问量激增，CDN可以通过全局负载技术将流量平均分配到不同的服务器中，保证流量均很，减少网络拥堵。一般域名查询时会用到CDN，保证用户访问域名是能获得最快的访问速度</p>
+</blockquote>
+
+<h3 id="什么是tcpip协议">什么是TCP/IP协议？</h3>
+<blockquote>
+  <p>TCP（传输控制协议）和IP（网际协议）。</p>
+</blockquote>
+
+<p>通俗的讲，我们所接触的绝大多数HTTP请求都是TCP/IP请求。
+tcp将http长报文划分为短报文，通过三次握手与服务端建立连接，进行可靠传输以及断开连接的四次握手。</p>
+
+<h3 id="什么是三次握手四次握手">什么是三次握手、四次握手？</h3>
+
+<ul>
+  <li>三次握手
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>第一次握手：建立连接时，客户端发送syn包（syn=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。
+第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；
+第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手。
+</code></pre></div>    </div>
+    <p>通俗的讲</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.客户端告诉服务端，请求建交
+2.服务端告诉客户端，我已经收到请求信息，请确认是否为正确的服务端？
+3.客户端确认，正式建交
+</code></pre></div>    </div>
+  </li>
+  <li>四次握手
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>第一次握手：TCP客户端发送一个FIN，用来关闭客户到服务器的数据传送。
+第二次握手：服务器收到这个FIN，它发回一个ACK，确认序号为收到的序号加1。和SYN一样，一个FIN将占用一个序号。
+第三次握手：服务器关闭客户端的连接，发送一个FIN给客户端。
+第四次握手：客户端发回ACK报文确认，并将确认序号设置为收到序号加1。
+</code></pre></div>    </div>
+    <p>通俗的讲</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.客户端告诉服务器，我要开始和你断交了
+2.服务端收到这个断交信息
+3.服务器断开连接，并且告诉客户端，服务端断交。
+4.客户端获取服务器断交信息，数据通道关闭。
+</code></pre></div>    </div>
+    <p><strong>浏览器对于同一域名的tcp/ip并发是有数量限制的，一般是2~10个不等，就是POST/GET请求在同一域名下请求并发量是有限制的！</strong></p>
+  </li>
+</ul>
+
+<h3 id="get和post的区别">GET和POST的区别</h3>
+
+<p>POST会发送2个TCP的包，首先发起预请求，会向服务端发送headers，如果的到100 continue,则会发送data包，返回数据
+GET只会发送一个TCP的包，直接向服务端发送header和data，返回数据。</p>
+<h3 id="后台处理流程">后台处理流程</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.一般有的后端是有统一的验证的，如安全拦截，跨域验证
+2.如果这一步不符合规则，就直接返回了相应的http报文（如拒绝请求等）
+3.然后当验证通过后，才会进入实际的后台代码，此时是程序接收到请求，然后执行（譬如查询数据库，大量计算等等）
+4.等程序执行完毕后，就会返回一个http响应包（一般这一步也会经过多层封装）
+5.然后就是将这个包从后端发送到前端，完成交互
+</code></pre></div></div>
+<h3 id="http的报文接口">http的报文接口</h3>
+<blockquote>
+  <p>报文接口包含：通用头部，请求/响应头部，请求/响应体</p>
+</blockquote>
+
+<h4 id="通用头部">通用头部</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Request Url：请求的web服务器地址
+Request Method：请求方式（POST/GET/OPTIONS/PUT/DELETED等）
+Status Code：状态码（10X/404/200)
+Remote Address： 请求远程的web服务器地址（IP）
+</code></pre></div></div>
+<blockquote>
+  <p>值得注意的是，在存在跨域问题的时候，可能是method为options，状态码为404/405等</p>
+</blockquote>
+
+<p>在这里主要归纳下状态码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1XX——指示信息，表示请求已接收，继续处理
+2XX——成功，表示请求已被成功接收、理解、接受
+3XX——重定向，要完成请求必须进行更进一步的操作
+4XX——客户端错误，请求有语法错误或请求无法实现
+5XX——服务器端错误，服务器未能实现合法的请求
+</code></pre></div></div>
+<p>也就是4XX可能是客户端的问题，不单单是服务器端的问题，个人觉得应该优先排除客户端的容器问题（tomcat、iis等）</p>
+
+
+            </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2019 <a href="https://kisnnnnn.github.io/kisnStudy/"><code>Kisn</code></a>.</p>
+		<!-- <p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, themed from <a href="http://lesscss.cn/">Less</a>, refactored by <a href="http://www.hifreud.com/">Freud Kang</a></p> -->
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script src="/styles/js/application.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

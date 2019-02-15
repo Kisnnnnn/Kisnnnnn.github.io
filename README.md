@@ -2,7 +2,18 @@
 最近看到很多大牛开始跳槽，我自己想了想，就现有技术而言，万一公司把我开了，好像自己也没地方可以去了，因为自己太菜了，我之前在网上看到一段话，也送给现在正在踌躇是否继续专研技术还是转管理的人
 > 「在公司红利期的成就和业绩并不能代替你现有的成绩，想想自己跳出红利平台和舒适区是否还能继续你的辉煌？」
 
+如何在线预览
+------------------------------------
+```
+sudo gem install jekyll
+sudo gem install bundler
+sudo gem install jekyll-paginate
+sudo gem install jekyll-gist
 
+
+cd prpject
+jekyll serve 
+```
 如何写文章
 ------------------------------------
 

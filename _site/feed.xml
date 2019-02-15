@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>「今でもあなたはわたしの光」</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 15 Feb 2019 17:40:57 +0800</pubDate>
+    <lastBuildDate>Fri, 15 Feb 2019 17:40:57 +0800</lastBuildDate>
+    <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>浏览器如何发起一个完整的HTTP请求</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#浏览器如何发起一个完整的http请求&quot; id=&quot;markdown-toc-浏览器如何发起一个完整的http请求&quot;&gt;浏览器如何发起一个完整的HTTP请求？&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#五层因特网协议栈&quot; id=&quot;markdown-toc-五层因特网协议栈&quot;&gt;五层因特网协议栈&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#http&quot; id=&quot;markdown-toc-http&quot;&gt;HTTP&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#dns&quot; id=&quot;markdown-toc-dns&quot;&gt;DNS&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#cdn&quot; id=&quot;markdown-toc-cdn&quot;&gt;CDN&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是tcpip协议&quot; id=&quot;markdown-toc-什么是tcpip协议&quot;&gt;什么是TCP/IP协议？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是三次握手四次握手&quot; id=&quot;markdown-toc-什么是三次握手四次握手&quot;&gt;什么是三次握手、四次握手？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#get和post的区别&quot; id=&quot;markdown-toc-get和post的区别&quot;&gt;GET和POST的区别&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#后台处理流程&quot; id=&quot;markdown-toc-后台处理流程&quot;&gt;后台处理流程&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#http的报文接口&quot; id=&quot;markdown-toc-http的报文接口&quot;&gt;http的报文接口&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#通用头部&quot; id=&quot;markdown-toc-通用头部&quot;&gt;通用头部&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;浏览器如何发起一个完整的http请求&quot;&gt;浏览器如何发起一个完整的HTTP请求？&lt;/h2&gt;
+&lt;p&gt;答:==应用层==的发送http请求，==DNS==将域名解析成IP，然后到==传输层==通过==三次握手==建立==TCP/IP请求==，再到==网络层==的ip寻址，再到==数据链路层==的封装成帧，最后到==物理层==的利用物理介质传输。&lt;/p&gt;
+
+&lt;h3 id=&quot;五层因特网协议栈&quot;&gt;五层因特网协议栈&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.应用层(dns,http) DNS解析成IP并发送http请求
+
+2.传输层(tcp,udp) 建立tcp连接（三次握手）
+
+3.网络层(IP,ARP) IP寻址
+
+4.数据链路层(PPP) 封装成帧
+
+5.物理层(利用物理介质传输比特流) 物理传输（然后传输的时候通过双绞线，电磁波等各种介质）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;http&quot;&gt;HTTP&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;超文本传输协议，Web浏览器和Web服务器之间的通信，一般基于TCP/IP协议&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;dns&quot;&gt;DNS&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Domain Name System，即域名系统。它作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS使用TCP和UDP端口53[1]。当前，对于每一级域名长度的限制是63个字符，域名总长度则不能超过253个字符。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;可以理解为一个工具将域名和IP关联了起来，通过让快速访问到IP,域名查询到IP。
+比较牛逼的网站可能会用CDN来进行均衡用户访问负载量。&lt;/p&gt;
+
+&lt;h3 id=&quot;cdn&quot;&gt;CDN&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Content Delivery Network，即内容分发网络。网络之上的内容分发网络，依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。CDN的关键技术主要有内容存储和分发技术。
+通俗的讲就是在人多的地方放置更多的服务器，当访问量激增，CDN可以通过全局负载技术将流量平均分配到不同的服务器中，保证流量均很，减少网络拥堵。一般域名查询时会用到CDN，保证用户访问域名是能获得最快的访问速度&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;什么是tcpip协议&quot;&gt;什么是TCP/IP协议？&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;TCP（传输控制协议）和IP（网际协议）。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;通俗的讲，我们所接触的绝大多数HTTP请求都是TCP/IP请求。
+tcp将http长报文划分为短报文，通过三次握手与服务端建立连接，进行可靠传输以及断开连接的四次握手。&lt;/p&gt;
+
+&lt;h3 id=&quot;什么是三次握手四次握手&quot;&gt;什么是三次握手、四次握手？&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;三次握手
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第一次握手：建立连接时，客户端发送syn包（syn=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。
+第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；
+第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;通俗的讲&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.客户端告诉服务端，请求建交
+2.服务端告诉客户端，我已经收到请求信息，请确认是否为正确的服务端？
+3.客户端确认，正式建交
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;四次握手
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第一次握手：TCP客户端发送一个FIN，用来关闭客户到服务器的数据传送。
+第二次握手：服务器收到这个FIN，它发回一个ACK，确认序号为收到的序号加1。和SYN一样，一个FIN将占用一个序号。
+第三次握手：服务器关闭客户端的连接，发送一个FIN给客户端。
+第四次握手：客户端发回ACK报文确认，并将确认序号设置为收到序号加1。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;通俗的讲&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.客户端告诉服务器，我要开始和你断交了
+2.服务端收到这个断交信息
+3.服务器断开连接，并且告诉客户端，服务端断交。
+4.客户端获取服务器断交信息，数据通道关闭。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;strong&gt;浏览器对于同一域名的tcp/ip并发是有数量限制的，一般是2~10个不等，就是POST/GET请求在同一域名下请求并发量是有限制的！&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;get和post的区别&quot;&gt;GET和POST的区别&lt;/h3&gt;
+
+&lt;p&gt;POST会发送2个TCP的包，首先发起预请求，会向服务端发送headers，如果的到100 continue,则会发送data包，返回数据
+GET只会发送一个TCP的包，直接向服务端发送header和data，返回数据。&lt;/p&gt;
+&lt;h3 id=&quot;后台处理流程&quot;&gt;后台处理流程&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.一般有的后端是有统一的验证的，如安全拦截，跨域验证
+2.如果这一步不符合规则，就直接返回了相应的http报文（如拒绝请求等）
+3.然后当验证通过后，才会进入实际的后台代码，此时是程序接收到请求，然后执行（譬如查询数据库，大量计算等等）
+4.等程序执行完毕后，就会返回一个http响应包（一般这一步也会经过多层封装）
+5.然后就是将这个包从后端发送到前端，完成交互
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;http的报文接口&quot;&gt;http的报文接口&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;报文接口包含：通用头部，请求/响应头部，请求/响应体&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;通用头部&quot;&gt;通用头部&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Request Url：请求的web服务器地址
+Request Method：请求方式（POST/GET/OPTIONS/PUT/DELETED等）
+Status Code：状态码（10X/404/200)
+Remote Address： 请求远程的web服务器地址（IP）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;值得注意的是，在存在跨域问题的时候，可能是method为options，状态码为404/405等&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在这里主要归纳下状态码：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1XX——指示信息，表示请求已接收，继续处理
+2XX——成功，表示请求已被成功接收、理解、接受
+3XX——重定向，要完成请求必须进行更进一步的操作
+4XX——客户端错误，请求有语法错误或请求无法实现
+5XX——服务器端错误，服务器未能实现合法的请求
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;也就是4XX可能是客户端的问题，不单单是服务器端的问题，个人觉得应该优先排除客户端的容器问题（tomcat、iis等）&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 14 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/14/http/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/14/http/</guid>
+        
+        <category>前端</category>
+        
+        
+        <category>前端笔记</category>
+        
+      </item>
+    
+      <item>
+        <title>url和正则表达式的学习</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#浏览器的url的构成&quot; id=&quot;markdown-toc-浏览器的url的构成&quot;&gt;浏览器的URL的构成&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#windowlocation&quot; id=&quot;markdown-toc-windowlocation&quot;&gt;window.location&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#如何获取url的额外参数与分析正则表达式&quot; id=&quot;markdown-toc-如何获取url的额外参数与分析正则表达式&quot;&gt;如何获取url的额外参数与分析正则表达式&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#正则表达式&quot; id=&quot;markdown-toc-正则表达式&quot;&gt;正则表达式&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#限定符&quot; id=&quot;markdown-toc-限定符&quot;&gt;限定符&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#特殊符号&quot; id=&quot;markdown-toc-特殊符号&quot;&gt;特殊符号&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#定位符&quot; id=&quot;markdown-toc-定位符&quot;&gt;定位符&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#正则匹配匹配的一些demo&quot; id=&quot;markdown-toc-正则匹配匹配的一些demo&quot;&gt;正则匹配匹配的一些demo&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;浏览器的url的构成&quot;&gt;浏览器的URL的构成&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;portocal，协议头，例如：http、ftp等&lt;/li&gt;
+  &lt;li&gt;host，主机域名或IP地址&lt;/li&gt;
+  &lt;li&gt;port，端口号&lt;/li&gt;
+  &lt;li&gt;path，目录路径&lt;/li&gt;
+  &lt;li&gt;query，即查询参数&lt;/li&gt;
+  &lt;li&gt;fragment，即#后的hash值，一般用来定位到某个位置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;‘http://note.youdao.com/?user=admin&amp;amp;query=123#page=top’ = portocal(https://) + host(www.jianshu.com) + port(80) + path(/p/d31f494ad6f5) + query(?user=admin&amp;amp;query=123) + fragment(#page=top)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;windowlocation&quot;&gt;window.location&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;window.location.hostname，返回web主机的域名 (segmentfault.com)&lt;/li&gt;
+  &lt;li&gt;window.location.pathname，返回当前页面的路径和文件名(a/119….6)&lt;/li&gt;
+  &lt;li&gt;window.location.port，返回web主机的端口&lt;/li&gt;
+  &lt;li&gt;window.location.portocal，返回所使用的web协议（http://）&lt;/li&gt;
+  &lt;li&gt;window.location.assign(‘https://www.baidu.com”)，assign(url)，导航到一个新的页面&lt;/li&gt;
+  &lt;li&gt;window.location.reload(true) 刷新页面&lt;/li&gt;
+  &lt;li&gt;window.location.search，获取url后额外的数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;如何获取url的额外参数与分析正则表达式&quot;&gt;如何获取url的额外参数与分析正则表达式&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function getQueryString(name) {
+    var reg = new RegExp(&quot;(^|&amp;amp;)&quot; + name + &quot;=([^&amp;amp;]*)(&amp;amp;|$)&quot;, &quot;i&quot;),
+        r = window.location.search.substr(1).match(reg);
+        
+    if (r != null) return unescape(r[2]);
+        return null;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;正则表达式&quot;&gt;正则表达式&lt;/h3&gt;
+&lt;h4 id=&quot;限定符&quot;&gt;限定符&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;字符&lt;/th&gt;
+      &lt;th&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;*&lt;/td&gt;
+      &lt;td&gt;匹配前面的子表达式零次或者多次。例如，zo*能匹配「z」以及「zoo」。等价于{0,}（只要包含「z」、「o」的字符全直接匹配出来）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;+&lt;/td&gt;
+      &lt;td&gt;匹配前面的子表达式一次或多次，例如，zo+能匹配「zo」以及「zoo」。等价于{0,1}（只要包含「zo」的字符会直接匹配出来）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;匹配前面的子表达式零次或者多次，例如，「do(es)?」能匹配到「do」，「does」能匹配到「does」，「doxy」中的「do」。（讲包含「do」或者「does」的字符中的「do」、「does」匹配展现出来）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;{n}&lt;/td&gt;
+      &lt;td&gt;n为一个非负整数。匹配确定的n次。例如，「o{2}」不能匹配「Bob」中的「o」，但是能匹配「food」的两个o（o{2}匹配出至少包含2个含有o的符合对象）&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;{n,}&lt;/td&gt;
+      &lt;td&gt;n为一个非负整数。至少匹配n次。例如，「o{2,}」不能匹配「Bob」中的「o」，但是能匹配「foooooood」的所以的o（o{2,}匹配出包含大于等于2个含有o的符合对象），「o{1,}」 等价于 「o+」。「o{0,}」 则等价于 「o*」。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;{n,m}&lt;/td&gt;
+      &lt;td&gt;m 和 n 均为非负整数，其中n &amp;lt;= m。最少匹配 n 次且最多匹配 m 次。例如，「o{1,3}」将匹配 「fooooood」 中的前三个 o。「o{0,1}」 等价于 「o?」。请注意在逗号和两个数之间不能有空格。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;特殊符号&quot;&gt;特殊符号&lt;/h4&gt;
+&lt;p&gt;特别字符 | 描述
+—|—
+$ | 匹配输入字符全的结尾位置。如果设置了RegExp对象的Multiline属性，则$也匹配「\n」「\r」。要匹配$字符本身，请使用$ （以下特殊字符均可以使用\形式匹配）
+( ) | 标记一个字表达式的开始和结束。子表达式可以获取提供以后使用。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;table&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;匹配前面的子表达式零次或者多次。&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;table&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;匹配前面的子表达式一次或者多次。&lt;/td&gt;
+          &lt;td&gt; &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;.&lt;/td&gt;
+          &lt;td&gt;匹配除换行符\n之外的任何单字符。&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;[&lt;/td&gt;
+          &lt;td&gt;标记一个中括号表达式的开始。&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;?&lt;/td&gt;
+          &lt;td&gt;匹配前面的子表达式零次或者一次，或者指明一个非贪婪限定符。&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;\&lt;/td&gt;
+          &lt;td&gt;将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义字符。&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;^&lt;/td&gt;
+          &lt;td&gt;匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;{&lt;/td&gt;
+          &lt;td&gt;标记限定符表达式的开始。&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;|&lt;/td&gt;
+          &lt;td&gt;指明两项之间的一个选择.&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;定位符&quot;&gt;定位符&lt;/h4&gt;
+&lt;p&gt;字符 | 描述
+—|—
+^ | 匹配输入字符开始的位置
+$ | 匹配输入字符结束的位置
+\b | 匹配一个单词边间，即字与空间间的位置
+\B | 非单词边界匹配&lt;/p&gt;
+
+&lt;p&gt;注意：不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如 ^* 之类的表达式。&lt;/p&gt;
+
+&lt;p&gt;若要匹配一行文本开始处的文本，请在正则表达式的开始使用 ^ 字符。不要将 ^ 的这种用法与中括号表达式内的用法混淆。&lt;/p&gt;
+
+&lt;p&gt;若要匹配一行文本的结束处的文本，请在正则表达式的结束处使用 $ 字符。&lt;/p&gt;
+
+&lt;h4 id=&quot;正则匹配匹配的一些demo&quot;&gt;正则匹配匹配的一些demo&lt;/h4&gt;
+&lt;p&gt;参考：&lt;a href=&quot;https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499503920bb7b42ff6627420da2ceae4babf6c4f2000&quot;&gt;RegExp-廖雪峰&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // 匹配大小写、字母和数字
+    function isReg(reg, con, isGlobal) {
+        const res = reg.test(con);
+        const execRes = reg.exec(con);
+        console.log(res);
+        console.log(execRes);
+
+        if (isGlobal == 1) {
+            console.log(res.lastIndex);
+            isReg(reg, con, 0);
+        }
+    }
+
+    // 可以匹配一个大小写字母、一个数字或者下划线
+    isReg(/[a-zA-Z0-9\_]/, '_');
+    // 可以匹配一个大小写字母、下划线开头，等
+    isReg(/^([a-zA-Z\$\_])[a-zA-Z0-9\_\$]{0,19}/, 'ab2c3');
+    // 三个数字+「-」+ 五个字母或者数字
+    isReg(/^(\d{3})-(\w{5})$/, '123-sdaws');
+    // 三个数字+「-」或者 空格+ 五个字母或者数字
+    isReg(/^(\d{3})(-|\s)(\w{5})$/, '123 sdaws');
+    // 贪婪匹配 [&quot;120300000&quot;, &quot;120300000&quot;, &quot; &quot;, index: 0, input: &quot;120300000&quot;, groups: undefined]
+    isReg(/^(\d+)(0*)$/, 120300000);
+    // 非贪婪匹配 （也就是尽可能少匹配,精确匹配)[&quot;120300000&quot;, &quot;1203&quot;, &quot;00000&quot;, index: 0, input: &quot;120300000&quot;, groups: undefined]
+    isReg(/^(\d+?)(0*)$/, 120300000);
+    // 全局匹配
+    isReg(/[a-zA-Z]+Team/g, 'sTeam, bTeam, cTeam', 1);
+    // 可以验证并提取出带名字的Email地址：
+    isReg(/^\&amp;lt;(\w+\s?\w+)\&amp;gt;\s?(\w+@\w+\.\w+)$/, '&amp;lt;Tom Paris&amp;gt; tom@voyager.org');
+    // 验证Email地址
+    isReg(/^([a-zA-Z0-9\.\_])+@([0-9]|[A-Za-z])+.(com|org)$/, 'szaf93671@126.com');
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Wed, 13 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/13/url/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/13/url/</guid>
+        
+        <category>前端</category>
+        
+        
+        <category>前端笔记</category>
+        
+      </item>
+    
+  </channel>
+</rss>
