@@ -3885,7 +3885,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-color: #111f36;
 }
 .navbar-inverse .navbar-brand {
-  color: #b9c8e0;
+  color: #fff;
 }
 .navbar-inverse .navbar-brand:hover,
 .navbar-inverse .navbar-brand:focus {
@@ -3893,10 +3893,10 @@ textarea.input-group-sm > .input-group-btn > .btn {
   background-color: transparent;
 }
 .navbar-inverse .navbar-text {
-  color: #b9c8e0;
+  color: #fff;
 }
 .navbar-inverse .navbar-nav > li > a {
-  color: #b9c8e0;
+  color: #fff;
 }
 .navbar-inverse .navbar-nav > li > a:hover,
 .navbar-inverse .navbar-nav > li > a:focus {
@@ -3940,8 +3940,8 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-bottom-color: #ffffff;
 }
 .navbar-inverse .navbar-nav > .dropdown > a .caret {
-  border-top-color: #b9c8e0;
-  border-bottom-color: #b9c8e0;
+  border-top-color: #fff;
+  border-bottom-color: #fff;
 }
 .navbar-inverse .navbar-nav > .open > a .caret,
 .navbar-inverse .navbar-nav > .open > a:hover .caret,
@@ -3954,7 +3954,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
     border-color: #111f36;
   }
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-    color: #b9c8e0;
+    color: #fff;
   }
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -3975,7 +3975,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-inverse .navbar-link {
-  color: #b9c8e0;
+  color: #fff;
 }
 .navbar-inverse .navbar-link:hover {
   color: #ffffff;
@@ -6204,7 +6204,7 @@ hr {
   padding-top: 0 !important;
 }
 .ad-tag {
-  color: #b9c8e0 !important;
+  color: #fff !important;
   text-align: left !important;
 }
 .ad-text a,
@@ -6315,7 +6315,7 @@ hr {
 }
 .docs-header,
 .docs-home {
-  color: #b9c8e0;
+  color: #fff;
   background-color: #2d85f0;
 }
 /* Page headers */
@@ -6530,7 +6530,7 @@ hr {
 }
 .docs-nav .navbar-nav > li > a,
 .docs-nav .navbar-nav > li > span {
-  color: #b9c8e0;
+  color: #fff;
 }
 .docs-nav .navbar-nav > li > a:hover,
 .docs-nav .navbar-nav > li > span:hover {
@@ -6566,7 +6566,7 @@ hr {
 .btn-outline-inverse {
   color: #fff;
   background-color: transparent;
-  border-color: #b9c8e0;
+  border-color: #fff;
 }
 .btn-outline-inverse:hover,
 .btn-outline-inverse:focus,
