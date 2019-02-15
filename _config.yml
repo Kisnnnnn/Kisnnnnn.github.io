@@ -1,6 +1,6 @@
 # Site settings
 name: 翻山越岭遇到一条狗的笔记
-email: 312339704
+email: 312339704@QQ.COM
 author: Kisn
 url: http://www.kisnn.cn
 resume_site: https://kisnnnnn.github.io/kisnStudy/
@@ -16,7 +16,7 @@ paginate: 10
 
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
 
-github_username: luoyan35714
+github_username: kisnnnnn
 
 # Build settings
 markdown: kramdown
