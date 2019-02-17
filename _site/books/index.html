@@ -59,10 +59,10 @@
           <a href="/">Home</a>
         </li>
         <li>
-          <a href="/categories/">categories</a>
+          <a href="/categories/">Categories</a>
         </li>
         <li>
-          <a href="/tag">tag</a>
+          <a href="/tag">Tag</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -105,7 +105,8 @@
 
     
 
-    <div class="container docs-container">
+    <!-- <script src=""></script> -->
+<div class="container docs-container">
   <div class="row">
     <div class="col-md-3">
       <div class="sidebar hidden-print" role="complementary">
@@ -174,7 +175,21 @@
 <script src="/styles/js/holder.min.js"></script>
 <script src="/styles/js/lessismore.js"></script>
 <script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
 
   </body>
 </html>

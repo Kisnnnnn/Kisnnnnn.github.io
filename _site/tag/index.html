@@ -59,10 +59,10 @@
           <a href="/">Home</a>
         </li>
         <li>
-          <a href="/categories/">categories</a>
+          <a href="/categories/">Categories</a>
         </li>
         <li>
-          <a href="/tag">tag</a>
+          <a href="/tag">Tag</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -114,7 +114,7 @@
       		<ul class="nav sidenav">
 			  	
 				  	 
-				  	<li><a href="#前端-ref">前端 <span style="color: #999999;" >(2)</span></a></li>
+				  	<li><a href="#笔记-ref">笔记 <span style="color: #999999;" >(4)</span></a></li>
 				  	
 				
           	</ul>
@@ -127,7 +127,7 @@
           <div class="home">
 
           	 
-			  <h2 id="前端-ref">前端</h2>
+			  <h2 id="笔记-ref">笔记</h2>
 			  <ul>
 			      
 			    
@@ -135,7 +135,29 @@
     
     	
     	<ol class="breadcrumb">
-    		<li><a href="/2019/02/14/http/">浏览器如何发起一个完整的HTTP请求</a></li>
+    		<li><a href="/2019/02/16/cookie%E5%92%8Cgzip-%E9%95%BF%E4%B8%8E%E7%9F%AD%E8%BF%9E%E6%8E%A5/">Cookie和gizp压缩、长连接与短连接</a></li>
+    		<li style="float:right;"><span>2019-02-16</span></li>
+    	</ol>
+    	
+    
+  
+
+  
+    
+    	
+    	<ol class="breadcrumb">
+    		<li><a href="/2019/02/15/http(2)/">浏览器如何发起一个完整的HTTP请求(2)</a></li>
+    		<li style="float:right;"><span>2019-02-15</span></li>
+    	</ol>
+    	
+    
+  
+
+  
+    
+    	
+    	<ol class="breadcrumb">
+    		<li><a href="/2019/02/14/http/">浏览器如何发起一个完整的HTTP请求(1)</a></li>
     		<li style="float:right;"><span>2019-02-14</span></li>
     	</ol>
     	
@@ -177,7 +199,21 @@
 <script src="/styles/js/holder.min.js"></script>
 <script src="/styles/js/lessismore.js"></script>
 <script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
 
   </body>
 </html>

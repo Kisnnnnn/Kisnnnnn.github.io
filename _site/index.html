@@ -59,10 +59,10 @@
           <a href="/">Home</a>
         </li>
         <li>
-          <a href="/categories/">categories</a>
+          <a href="/categories/">Categories</a>
         </li>
         <li>
-          <a href="/tag">tag</a>
+          <a href="/tag">Tag</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -121,6 +121,28 @@
                   
                   
                   
+                        
+                      
+                    
+                  
+                
+                  
+                  
+                  
+                  
+                  
+                  
+                        
+                      
+                    
+                  
+                
+                  
+                  
+                  
+                  
+                  
+                  
                         </ul>
                       </li>
                   
@@ -151,7 +173,39 @@
                   
 
                   <ol class="breadcrumb">
-                   <li><span>February 14, 2019</span> &raquo; <a href="/2019/02/14/http/">浏览器如何发起一个完整的HTTP请求</a></li>
+                   <li><span>February 16, 2019</span> &raquo; <a href="/2019/02/16/cookie%E5%92%8Cgzip-%E9%95%BF%E4%B8%8E%E7%9F%AD%E8%BF%9E%E6%8E%A5/">Cookie和gizp压缩、长连接与短连接</a></li>
+                  </ol>
+                  
+                        
+                      
+                    
+                  
+                
+                  
+                  
+                  
+                  
+
+                  
+
+                  <ol class="breadcrumb">
+                   <li><span>February 15, 2019</span> &raquo; <a href="/2019/02/15/http(2)/">浏览器如何发起一个完整的HTTP请求(2)</a></li>
+                  </ol>
+                  
+                        
+                      
+                    
+                  
+                
+                  
+                  
+                  
+                  
+
+                  
+
+                  <ol class="breadcrumb">
+                   <li><span>February 14, 2019</span> &raquo; <a href="/2019/02/14/http/">浏览器如何发起一个完整的HTTP请求(1)</a></li>
                   </ol>
                   
                         
@@ -193,7 +247,21 @@
 <script src="/styles/js/holder.min.js"></script>
 <script src="/styles/js/lessismore.js"></script>
 <script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
 
   </body>
 </html>

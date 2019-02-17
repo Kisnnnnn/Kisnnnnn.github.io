@@ -10,4 +10,18 @@
 <script src="{{ '/styles/js/holder.min.js' | prepend: site.baseurl }}"></script>
 <script src="{{ '/styles/js/lessismore.js' | prepend: site.baseurl }}"></script>
 <script src="{{ '/styles/js/application.js' | prepend: site.baseurl }}"></script>
+<script src="{{ '/styles/js/jquery.zoom.min.js' | prepend: site.baseurl }}"></script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>

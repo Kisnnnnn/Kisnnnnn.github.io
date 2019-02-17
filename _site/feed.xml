@@ -5,12 +5,366 @@
     <description>「今でもあなたはわたしの光」</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 15 Feb 2019 17:40:57 +0800</pubDate>
-    <lastBuildDate>Fri, 15 Feb 2019 17:40:57 +0800</lastBuildDate>
+    <pubDate>Sun, 17 Feb 2019 18:18:01 +0800</pubDate>
+    <lastBuildDate>Sun, 17 Feb 2019 18:18:01 +0800</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
-        <title>浏览器如何发起一个完整的HTTP请求</title>
+        <title>Cookie和gizp压缩、长连接与短连接</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#cookie&quot; id=&quot;markdown-toc-cookie&quot;&gt;Cookie&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是cookie&quot; id=&quot;markdown-toc-什么是cookie&quot;&gt;什么是Cookie？&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#多域名拆分&quot; id=&quot;markdown-toc-多域名拆分&quot;&gt;多域名拆分&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#cookie的交互&quot; id=&quot;markdown-toc-cookie的交互&quot;&gt;cookie的交互&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#gzip压缩&quot; id=&quot;markdown-toc-gzip压缩&quot;&gt;gzip压缩&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#长连接与短连接&quot; id=&quot;markdown-toc-长连接与短连接&quot;&gt;长连接与短连接&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#tcpip中的定义&quot; id=&quot;markdown-toc-tcpip中的定义&quot;&gt;tcp/ip中的定义&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#http的定义&quot; id=&quot;markdown-toc-http的定义&quot;&gt;http的定义：&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#诶你怎么还不睡-那么我来写copy个彩蛋吧&quot; id=&quot;markdown-toc-诶你怎么还不睡-那么我来写copy个彩蛋吧&quot;&gt;诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#现在发现有很多东西需要学习不单单为了我个人的薪资或者理想可能更多的是想更加了解一点世界&quot; id=&quot;markdown-toc-现在发现有很多东西需要学习不单单为了我个人的薪资或者理想可能更多的是想更加了解一点世界&quot;&gt;现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;今天有些忙，晚上二刷完「流浪地球」才回家，继续整理下昨天接下来的「Cookie」&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;cookie&quot;&gt;Cookie&lt;/h2&gt;
+
+&lt;h3 id=&quot;什么是cookie&quot;&gt;什么是Cookie？&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Cookie, 网站为了辨别用户身份、进行session跟踪而存储在用户本地终端的数据（加密），规范为RFC6265&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;通俗的来说，就是「浏览器缓存」，在网站上来用帮助客户端和服务器校验身份，或者交换数据（通信），结合服务器的seesion使用。&lt;/p&gt;
+
+&lt;p&gt;举个栗子：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在login页面进行登录的时候，用户点击「登录」
+此时，服务端会生成一个seesion，seesion中有对于用户的信息（账号、密码等）
+然后会生成一个sessionid（相当于是服务端的这个seesion对应的key）
+然后服务器端在登录页面中写入cookie，值就是jessionid=xxx
+最后浏览器中本地就有这个cookie，以后再访问同域名下的页面的时候，自动就带上这个sessionid了，就不需要自动登录了。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g08oox73ggj30nq0mewht.jpg&quot; alt=&quot;image&quot; /&gt;
+一般来说cookie是不允许存放敏感信息的（禁止明文存储账号、密码）&lt;/p&gt;
+
+&lt;p&gt;因为在同域名的资源氢气下，浏览器会默认带上本地的cookie，所以在某些不想带cookie信息的情况下，还需要另外处理&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;客户端在域名A下有cookie
+但是A下有一个页面，页面中有很多依赖的静态资源（资源都在域名A服务器下面）
+此时就在请求这些静态页面的时候，浏览器就会默认带上cookie
+这样就会降低访问速度，浪费效能
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;比较稳当的解决办法，就是「多域名拆分」。具体作坊就是&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;讲静态资源，分别放在不同的域名下（带cookie的：www.a.com,不需要带cookie：wwww.c.com）&lt;/li&gt;
+  &lt;li&gt;而a.com在加载页面的时候，加载静态页面就不会带cookie&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;多域名拆分&quot;&gt;多域名拆分&lt;/h4&gt;
+
+&lt;p&gt;在移动端，如果请求的域名过多，会降低请求速度，因为域名解析流程也是需要时间
+此时，就需要再加一份优化方案「dns-prefetch」，让浏览器在空闲时提前解析dns域名。&lt;/p&gt;
+
+&lt;h3 id=&quot;cookie的交互&quot;&gt;cookie的交互&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g08p2fv8khj30pg0grwf7.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;gzip压缩&quot;&gt;gzip压缩&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;http协议上的gzip编码是中用来改进WEB应用程序性能的技术。可以让用户更快的速度请求。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;gzip是一中压缩格式，需要浏览器支持才有效，压缩效率比较优秀
+gzip一般在「apache」、「tomcat」等web服务器开启&lt;/p&gt;
+
+&lt;h2 id=&quot;长连接与短连接&quot;&gt;长连接与短连接&lt;/h2&gt;
+&lt;h3 id=&quot;tcpip中的定义&quot;&gt;tcp/ip中的定义&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;长连接：一个tcp/ip连接上可以连续发送多个数据包，在tcp保持连接期间，如果没有数据包发送，需要双方发检验测试包以维持连接，一般需要自己做在线维持。&lt;/li&gt;
+  &lt;li&gt;短连接：通信双方有数据交互时，就建立一个tcp连接，数据交互完成，销毁。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;http的定义&quot;&gt;http的定义：&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;http1.0中，默认使用的是短连接，浏览器每进行一次http操作，就会建立一次连接，交互结束销毁连接。&lt;/li&gt;
+  &lt;li&gt;http1.1中，默认使用长连接，使用长连接会有「Connection:keep-alive」，在长连接情况下，当一个页面打开完成后，客户端和服务端之前用于传输http的tcvp就不会关闭，如果客户端再次访问这个服务器页面，则会继续使用这条建立过的连接&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;PS：keep-alive不会永远保持，也有时间，一般配置在服务器中，另外长连接也需要客户端和服务器都支持该配置才有效。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;结语&quot;&gt;结语&lt;/h3&gt;
+&lt;p&gt;本来还想整理（抄）一下http2.0和https的定义和区别，但是时间不早了，该睡了。
+该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;p&gt;该睡了。&lt;/p&gt;
+
+&lt;h3 id=&quot;诶你怎么还不睡-那么我来写copy个彩蛋吧&quot;&gt;诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;事情是这样的，我banner上写的是一句日文「今でもあなたはわたしの光」，来自米津玄師的「Lemon」。然后我哥提醒我「わたし」一般是女的才用，毕竟我哥日文水平还是可以不错的，于是我和我哥就去查了下资料。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g08pipshysj30i613egnd.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以下是来wiki的解释&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g08pvo9n9pj31e70u0wo1.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;私（わたし／watashi）
+日本人用得最多的一人称。「わたくし」的谦逊说法。男女老少都用，礼貌用语。特别公开场合男的用这个就很礼貌，用「わたくし」就更礼貌了。女性更比男性常用。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;私（わたくし／watakushi）
+「私」的自谦、郑重语，对年龄比自己大，地位比自己高的时候使用。公开郑重场合用这个最礼貌。特别是皇族公开演说必须用这个，因为皇族在面向国民的时候需要用自谦的语气说话。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;自分（じぶん／zibun）&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;体育协会那些男生多用。相扑力士和棒球选手常用。刑事日剧『西部警察』里面渡哲也演的主人公大門圭介使用这个很有名で、一时期成为了流行語。
+在文章里面也常用语一人称，这种时候女的也有用的。但是在正式的文书和商务文书禁用。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;僕（ぼく／boku）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;男性在私下场合对同辈或长辈常用，在较正式的场合也有用的，给人亲近、随和的感觉是一种自谦语。就像字面上说的“请把我作为仆人召唤”的感觉，这种时候女性可以用「妾（ショウ）」。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;俺（おれ／ore）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;一般只能男的私下场合用，只能对同辈或者晚辈使用。因为是俗语，所以公开场合不用。用在路飞身上再好不过。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;还有好多语法，我就不一一google translate了…附上链接:https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%81%AE%E4%B8%80%E4%BA%BA%E7%A7%B0%E4%BB%A3%E5%90%8D%E8%A9%9E#%E7%A7%81%EF%BC%88%E3%82%8F%E3%81%9F%E3%81%97%EF%BC%89 （查看请示用「科学上网」）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;现在发现有很多东西需要学习不单单为了我个人的薪资或者理想可能更多的是想更加了解一点世界&quot;&gt;现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。&lt;/h4&gt;
+</description>
+        <pubDate>Sat, 16 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/16/cookie%E5%92%8Cgzip-%E9%95%BF%E4%B8%8E%E7%9F%AD%E8%BF%9E%E6%8E%A5/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/16/cookie%E5%92%8Cgzip-%E9%95%BF%E4%B8%8E%E7%9F%AD%E8%BF%9E%E6%8E%A5/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>浏览器如何发起一个完整的HTTP请求(2)</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#常用的请求头部&quot; id=&quot;markdown-toc-常用的请求头部&quot;&gt;常用的请求头部&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#accept-和-content-type-的区别&quot; id=&quot;markdown-toc-accept-和-content-type-的区别&quot;&gt;Accept 和 Content-Type 的区别&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#常用的响应头&quot; id=&quot;markdown-toc-常用的响应头&quot;&gt;常用的响应头&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#其实我在整理之前一直在想为什么请求头部也有content-type那为什么不是它和响应头部的content-type匹配&quot; id=&quot;markdown-toc-其实我在整理之前一直在想为什么请求头部也有content-type那为什么不是它和响应头部的content-type匹配&quot;&gt;其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#举栗子&quot; id=&quot;markdown-toc-举栗子&quot;&gt;举栗子&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是实体头&quot; id=&quot;markdown-toc-什么是实体头&quot;&gt;什么是实体头？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是实体信息&quot; id=&quot;markdown-toc-什么是实体信息&quot;&gt;什么是实体信息？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#最后讲一下crlf&quot; id=&quot;markdown-toc-最后讲一下crlf&quot;&gt;最后讲一下，CRLF&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#http请求报文结构栗子&quot; id=&quot;markdown-toc-http请求报文结构栗子&quot;&gt;http请求报文结构栗子：&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#再说点什么&quot; id=&quot;markdown-toc-再说点什么&quot;&gt;再说点什么？&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;昨天看到请求头部分，整理一些通用请求头，下面整理下常用的响应/请求头&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;常用的请求头部&quot;&gt;常用的请求头部&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g07d0evn94j30h807u3yq.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Accept：接受类型，标示浏览器支持的MIME类型（对标服务器返回的Centent-Type）
+Accept-Encoding： 浏览器支持的压缩类型，比如gzip等，超过类型不能接受
+Content-Type：客户端发送出去实体内容的类型
+Cache-Control：指定请求和响应遵循的缓存机制，如no-cache、no-store
+If-Modified-Since：对应服务器的Last-Modified,用来匹配看文件是否变动，精确到1s
+Expires：缓存控制，在这个时间内不会请求，直接使用缓存（http1.0，而且是服务器端时间）
+Max-age： 代表资源在本地缓存多少秒，有效时间不会请求，而是使用缓存（http1.1）
+If-None-Match：对于服务端的ETag，用于匹配文件内容是否改变（非常精确）（http1.1）
+Cookie：有cookie并且同域访问时会自动带上（www.baidu.com/a.baidu.com非同域名！）
+Host：请求的服务器URL
+Origin：最初请求是从哪里发起的（精确到端口），Origin比Referer更遵循隐私
+Referer：该页面的来源URL（适用于所有类型的请求，会精确到详细页面，csrf通常会拦截该字段）
+User-Agent：用户客户端的一些必要信息
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;备注&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;no-cache:可以在本地缓存，可以代理服务器缓存，但是和这个缓存需要服务器验证以后才可以使用&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;no-store:禁用缓存，本地和代理服务器均不准使用,必须从服务器获取&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;accept-和-content-type-的区别&quot;&gt;Accept 和 Content-Type 的区别&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Accpet属于请求头，Content-Type属于实体头
+Accpet：告诉服务端，客户端接收什么类型的信息
+Content-Type：发送端（客户端|服务器端）发送的实体数据的数据类型
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;常用的响应头&quot;&gt;常用的响应头&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g07d2tzlz5j30gq08zglu.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Hedaers：服务器端允许的Headers
+Access-Control-Allow-Methods：服务器端允许的请求方法
+Acees-Control-Allow-Origin：服务器端允许的请求Origin头部
+Content-Type：服务器返回的实体内容类型
+Data：数据从服务器发起的时间
+Cache-Control：告诉浏览器或其他用户，什么环境可以安全的缓存文档
+Last-Modified：请求资源的最后修改时间
+Expires：文档的过期时间，删除缓存
+Max-age：客户端的本地资源的缓存时间(单位-秒)，开启了Cache-Contral后有效
+ETag：请求标量的实体标签的当前值
+Set-Cookie：设置和页面关联的cookie，服务器通过整个头部把cookie传给客户端
+Keep-Alive：客户端有keep-alive，服务端也会响应（timeout=38）
+Server：服务器的一些相关信息
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;请求头部和响应头部是彼此匹配分析的。&lt;/p&gt;
+
+&lt;p&gt;最常见的：
+请求头部的Accept要和响应头部的Content-Type进行匹配，否则会报错。&lt;/p&gt;
+&lt;h4 id=&quot;其实我在整理之前一直在想为什么请求头部也有content-type那为什么不是它和响应头部的content-type匹配&quot;&gt;其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？&lt;/h4&gt;
+&lt;p&gt;后来，我整理的时候发现，「Content-Type」是实体头部，指的是：「发送端（可以使客户端，也可以是服务端），用来表明发送信息的文档类型的」，也就是说他是发送性质的，「Accept」是接受性质，so请求头部的「Accept」和响应头部的「Cotent-Type」匹配的。&lt;/p&gt;
+
+&lt;h4 id=&quot;举栗子&quot;&gt;举栗子&lt;/h4&gt;
+&lt;p&gt;造成跨域问题，往往是因为请求头部「Origin」要匹配响应头部的「Access-Control-Allow-Origin」，一旦匹配失败，则会报跨域错误。&lt;/p&gt;
+
+&lt;p&gt;在使用缓存时，请求头部的If-Modified-Since、If-None-Match分别和响应头部的Last-Modified、ETag对应&lt;/p&gt;
+
+&lt;h3 id=&quot;什么是实体头&quot;&gt;什么是实体头？&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tKfTcgy1g07d19zojoj30h00abmxi.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;可以理解为「实体信息」的头部&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;什么是实体信息&quot;&gt;什么是实体信息？&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;消息实体分为响应实体、请求实体&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在http请求中，会将一些需要的参数放入，你比如POST请求。&lt;/p&gt;
+
+&lt;p&gt;实体信息中可以放入参数（data=ab&amp;amp;query=123），也可以直接通过表单对象（Form Data对象，上传时可以带参数、文件、二进制流）&lt;/p&gt;
+
+&lt;p&gt;而http响应时候，服务端就会返回实体信息（没错，就是reponse）&lt;/p&gt;
+
+&lt;p&gt;一般的接口请求，实体信息就是JSON格式的数据，然而接口返回的可以使JSON格式的数据也可以使html，然后通过JS渲染&lt;/p&gt;
+
+&lt;h3 id=&quot;最后讲一下crlf&quot;&gt;最后讲一下，CRLF&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Carriage-Return Line-Feed), 回车换行符&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;（我也不明白这东西有什么用）&lt;/p&gt;
+
+&lt;p&gt;请求头和实体消息之间有一个CRLF分隔，响应头部和响应实体之间用一个CRLF分隔&lt;/p&gt;
+
+&lt;p&gt;一般来说（分隔符类别）:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CRLF-&amp;gt;Windows-style
+LF-&amp;gt;Unix Style
+CR-&amp;gt;Mac Style
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;结束下面附上一个http请求栗子&lt;/p&gt;
+
+&lt;h3 id=&quot;http请求报文结构栗子&quot;&gt;http请求报文结构栗子：&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g07e2c2i61j30gk0m80uo.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;再说点什么&quot;&gt;再说点什么？&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;今天的内容其实我已经整理的差不多，两天把大牛的http请求，简单的整理（抄）了一遍，收获很多，之前一直不懂跨域的原理，以及request/response的头部匹配，基本也理解了。从HTTP报文结构表面来看至少看出来跨域的问题来自哪里，具体如何解决还需要仔细研究&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;2019年02月15日20:40:48
+袁凯忻&lt;/p&gt;
+</description>
+        <pubDate>Fri, 15 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/15/http(2)/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/15/http(2)/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>浏览器如何发起一个完整的HTTP请求(1)</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#浏览器如何发起一个完整的http请求&quot; id=&quot;markdown-toc-浏览器如何发起一个完整的http请求&quot;&gt;浏览器如何发起一个完整的HTTP请求？&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#五层因特网协议栈&quot; id=&quot;markdown-toc-五层因特网协议栈&quot;&gt;五层因特网协议栈&lt;/a&gt;&lt;/li&gt;
@@ -141,10 +495,10 @@ Remote Address： 请求远程的web服务器地址（IP）
         <link>http://localhost:4000/2019/02/14/http/</link>
         <guid isPermaLink="true">http://localhost:4000/2019/02/14/http/</guid>
         
+        <category>笔记</category>
+        
+        
         <category>前端</category>
-        
-        
-        <category>前端笔记</category>
         
       </item>
     
@@ -347,10 +701,10 @@ $ | 匹配输入字符结束的位置
         <link>http://localhost:4000/2019/02/13/url/</link>
         <guid isPermaLink="true">http://localhost:4000/2019/02/13/url/</guid>
         
+        <category>笔记</category>
+        
+        
         <category>前端</category>
-        
-        
-        <category>前端笔记</category>
         
       </item>
     
