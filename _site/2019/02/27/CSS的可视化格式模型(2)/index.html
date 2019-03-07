@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>2019-02-27-CSS的可视化格式模型(2) - 翻山越岭遇到一条狗的Blog</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="canonical" href="/2019/02/27/CSS%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B(2)/">
+	<link rel="alternate" type="application/rss+xml" title="翻山越岭遇到一条狗的Blog" href="/feed.xml">
+	
+	<meta name="keywords" content="2019-02-27-CSS的可视化格式模型(2), 翻山越岭遇到一条狗的Blog, 袁凯忻;个人博客;前端技术;">
+	<meta name="description" content="袁凯忻;个人博客;前端技术;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a> -->
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">Categories</a>
+        </li>
+        <li>
+          <a href="/tag">Tag</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <!-- <a><span id="busuanzi_container_site_pv" style="display:non">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a> -->
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/Kisnnnnn/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="https://kisnnnnn.github.io/kisnStudy/">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>2019-02-27-CSS的可视化格式模型(2)</h1>
+		    <p>Post on Feb 27, 2019 by <a href="/about">Kisn</a></p>
+		-->
+		    <h1>「今でもあなたはわたしの光」</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#前端-ref">前端</a>	/
+    	<a href="/tag/#笔记-ref">笔记</a>
+    
+  </div>
+</div>
+
+    
+
+    <!-- <script src=""></script> -->
+<div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+    <h1>目录</h1>
+    <ul class="nav sidenav">
+    </ul>
+    <!-- <div style="height: 200px;width: 200px;">
+      <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"> 
+      </script>
+    </div> -->
+  </div>
+  
+   
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">2019-02-27-CSS的可视化格式模型(2)</h1>
+              <!--
+                <p class="post-meta">Feb 27, 2019</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Feb 27, 2019</span> By <a target="_blank" href="http://localhost:4000">Kisn</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#fc" id="markdown-toc-fc">FC</a></li>
+  <li><a href="#ifcinline-formatting-context" id="markdown-toc-ifcinline-formatting-context">IFC（inline Formatting Context）</a>    <ul>
+      <li><a href="#ifc规则" id="markdown-toc-ifc规则">IFC规则</a></li>
+      <li><a href="#行匡" id="markdown-toc-行匡">行匡</a></li>
+      <li><a href="#行框的规则" id="markdown-toc-行框的规则">行框的规则</a></li>
+      <li><a href="#总结" id="markdown-toc-总结">总结</a>        <ul>
+          <li><a href="#相比较bfc规则ifc可能更加抽奖因为没有那么清晰的规则和触发条件" id="markdown-toc-相比较bfc规则ifc可能更加抽奖因为没有那么清晰的规则和触发条件">相比较BFC规则，IFC可能更加抽奖（因为没有那么清晰的规则和触发条件）</a></li>
+          <li><a href="#但是总体来说它就是行内元素自身如何显示以及在框内如何摆放的渲染规则" id="markdown-toc-但是总体来说它就是行内元素自身如何显示以及在框内如何摆放的渲染规则">但是总体来说，它就是行内元素自身如何显示以及在框内如何摆放的渲染规则。</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>上一篇忘了说明什么是格式上下文（FC）</p>
+</blockquote>
+
+<h2 id="fc">FC</h2>
+
+<blockquote>
+  <p>Formattinf Context,格式上下文。它定义了框内部的元素渲染规则，比较抽象。</p>
+</blockquote>
+
+<p>FC像是一个容器，里面内部包含元素。容器可以隔开里面的额元素和外面的元素，保护内部元素被外部元素影响。</p>
+
+<blockquote>
+  <p>注意，并不是说所有的框都产生FC，而是符合特定条件才会产生，只有产生了对于的FC后才会应用对应渲染规则</p>
+</blockquote>
+
+<h2 id="ifcinline-formatting-context">IFC（inline Formatting Context）</h2>
+
+<blockquote>
+  <p>行内框产生的格式上下文</p>
+</blockquote>
+
+<h3 id="ifc规则">IFC规则</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>在行内格式化上下文中框一个接一个水平排列，七点是包含块的顶部。
+
+水平方向上的margin，border和padding在框之间得以保留
+
+框在垂直方向上可以以不同的方式对齐：它们的顶部或底部对齐，或根据其中文字的基线对齐
+
+浮动元素可能会处于包含块的边缘和行款边缘之间
+
+尽管在相同的行内格式胡上下问中的行框通常拥有相同的宽度，他们可能会因为浮动元素缩短了可用宽度，而在宽度上发生变化
+
+同一行内格式化上下文中的行框通常高度不一样（如，一行包含了一个高的图形，而其他行只包含了文本）
+
+当一行中行内宽度和总和小鱼包含他们的行框的宽，他们在水平方向上对齐，取决于「text-align」的属性
+
+空的行内框应该被忽略
+
+及不包含,保留空白符，margrin/padding/border非0的行内元素，以及其他常规流中的内容（比如，图片，inline-blcoks和inline-tables）并且不是以换行结束的行框，
+必须被当做零高度行框对待
+</code></pre></div></div>
+
+<h3 id="行匡">行匡</h3>
+<p>包含那些框的长方形区域，会形成一行，叫行框</p>
+
+<p>行框的宽度由它的包含块和其中的浮动元素决定，高度的确定由行高度计算规则决定</p>
+
+<h3 id="行框的规则">行框的规则</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>如果几个行内框在水平方向无法放入一个行框内，它们可以分配在两个或者多个行框垂直堆叠的行框内
+行框在堆叠时没有垂直方向上的分割且永不重叠
+行框的高度总是足够容纳所包含的所有框，不过他可能高于它包含的最高的框
+行框的左边接触到其包含快的左边，后边接触到其包含块的右边
+</code></pre></div></div>
+
+<h3 id="总结">总结</h3>
+<ul>
+  <li>行内元素总会应用IFC渲染规则</li>
+  <li>行内元素会应用IFC规则渲染，例如「text-align」可以用来居中</li>
+  <li>块框内部，对语文本这类的匿名元素，会产生匿名行框包围，而行框内部就应用IFC渲染规则</li>
+  <li>行内框内部，对于那些行内元素，应该应用IFC渲染规则</li>
+  <li>另外， 「inline-block」，挥着元素外层生成IFC（所以这个元素是可以通过「text-align」来水平居中的），当然它内部则是按照BFC规则渲染</li>
+</ul>
+
+<h4 id="相比较bfc规则ifc可能更加抽奖因为没有那么清晰的规则和触发条件">相比较BFC规则，IFC可能更加抽奖（因为没有那么清晰的规则和触发条件）</h4>
+<h4 id="但是总体来说它就是行内元素自身如何显示以及在框内如何摆放的渲染规则">但是总体来说，它就是行内元素自身如何显示以及在框内如何摆放的渲染规则。</h4>
+
+
+            </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2019 <a href="https://kisnnnnn.github.io/kisnStudy/"><code>Kisn</code></a>.</p>
+		<!-- <p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, themed from <a href="http://lesscss.cn/">Less</a>, refactored by <a href="http://www.hifreud.com/">Freud Kang</a></p> -->
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
+
+  </body>
+</html>

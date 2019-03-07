@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理 - 翻山越岭遇到一条狗的Blog</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="canonical" href="/2019/02/21/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-3-HTML%E5%88%9D%E5%A7%8B%E5%8C%96%E9%81%87%E5%88%B0%E5%A4%96%E9%93%BE%E7%9A%84%E5%A4%84%E7%90%86/">
+	<link rel="alternate" type="application/rss+xml" title="翻山越岭遇到一条狗的Blog" href="/feed.xml">
+	
+	<meta name="keywords" content="2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理, 翻山越岭遇到一条狗的Blog, 袁凯忻;个人博客;前端技术;">
+	<meta name="description" content="袁凯忻;个人博客;前端技术;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a> -->
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">Categories</a>
+        </li>
+        <li>
+          <a href="/tag">Tag</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <!-- <a><span id="busuanzi_container_site_pv" style="display:non">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a> -->
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/Kisnnnnn/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="https://kisnnnnn.github.io/kisnStudy/">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理</h1>
+		    <p>Post on Feb 21, 2019 by <a href="/about">Kisn</a></p>
+		-->
+		    <h1>「今でもあなたはわたしの光」</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#前端-ref">前端</a>	/
+    	<a href="/tag/#笔记-ref">笔记</a>
+    
+  </div>
+</div>
+
+    
+
+    <!-- <script src=""></script> -->
+<div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+    <h1>目录</h1>
+    <ul class="nav sidenav">
+    </ul>
+    <!-- <div style="height: 200px;width: 200px;">
+      <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"> 
+      </script>
+    </div> -->
+  </div>
+  
+   
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理</h1>
+              <!--
+                <p class="post-meta">Feb 21, 2019</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Feb 21, 2019</span> By <a target="_blank" href="http://localhost:4000">Kisn</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#chrome中的调试" id="markdown-toc-chrome中的调试">Chrome中的调试</a></li>
+  <li><a href="#资源外链的下载" id="markdown-toc-资源外链的下载">资源外链的下载</a>    <ul>
+      <li><a href="#遇到外链时的处理" id="markdown-toc-遇到外链时的处理">遇到外链时的处理</a></li>
+      <li><a href="#遇到css样式资源" id="markdown-toc-遇到css样式资源">遇到CSS样式资源</a></li>
+      <li><a href="#遇到js脚本资源" id="markdown-toc-遇到js脚本资源">遇到JS脚本资源</a>        <ul>
+          <li><a href="#domcontentloaded事件和onload事件的区别" id="markdown-toc-domcontentloaded事件和onload事件的区别">DOMContentLoaded事件和onload事件的区别</a></li>
+          <li><a href="#遇到img图片类资源" id="markdown-toc-遇到img图片类资源">遇到img图片类资源</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="chrome中的调试">Chrome中的调试</h2>
+<p>Chrome的开发者工具中，Perfromance中可以看到详细的渲染工程
+<img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g0ebgvx4h6j30p00c0ab4.jpg" alt="image" /></p>
+
+<h2 id="资源外链的下载">资源外链的下载</h2>
+<blockquote>
+  <p>在解析html时，会遇到一些资源链接，此时需要进行单独处理</p>
+</blockquote>
+
+<p>一般情况，静态资源分为几个大类（未全列举）：</p>
+<ul>
+  <li>CSS样式资源</li>
+  <li>JS脚本资源</li>
+  <li>img图片资源</li>
+</ul>
+
+<h4 id="遇到外链时的处理">遇到外链时的处理</h4>
+
+<p>当遇到上述外链的时候，会独立开启一个下载线程去下载资源（HTTP1.1）</p>
+
+<h4 id="遇到css样式资源">遇到CSS样式资源</h4>
+
+<p>CSS资源的处理有几个特点</p>
+
+<ul>
+  <li>CSS下载时异步，不会阻塞浏览器构建DOM树</li>
+  <li>但是会阻塞渲染，也就是在构建render时候，会等到css下载解析完毕才会进行。（这与浏览器优化有关，防止css规则不断改变，避免了重复的构建）</li>
+  <li>「media query」声明的CSS是不会阻塞渲染的</li>
+</ul>
+
+<h3 id="遇到js脚本资源">遇到JS脚本资源</h3>
+<p>JS脚本资源的处理有几个特点：</p>
+<ul>
+  <li>阻塞浏览器的解析，也就是说发现一个外链脚本时，需等待脚本下载完成并执行后才会解析HTML</li>
+  <li>浏览器的优化，一般现代浏览器有优化，在脚本阻塞时，也会继续下载其他资源（当然也有并发上限），但是虽然脚本可以并行下载，但是解析过程仍然是阻塞的，也即是说必须这个脚本和执行完成后才能继续解析，并行下载只是一个优化操作</li>
+  <li>defer与async，普通德积小本是会阻塞浏览器解析的，但是可以加上defer或者async属性，这样脚本就会变成异步了，可以等待解析结束后执行脚本。</li>
+</ul>
+
+<blockquote>
+  <p>值得注意的是，defer是延迟执行，async是异步执行</p>
+</blockquote>
+
+<p>简单的来说：</p>
+<ul>
+  <li>「async」是异步执行，异步下载完毕后就会执行，不确保执行顺序，一定在onload钱，但是不确定在「DOMContentLoaded」事件的前或者后</li>
+  <li>「defer」是延迟执行，在浏览器看起来的效果像是将脚本放在body后面一样。</li>
+</ul>
+
+<h4 id="domcontentloaded事件和onload事件的区别">DOMContentLoaded事件和onload事件的区别</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DOMContentLoaded: 当初始的HTML文档被完全加载和解析后，被触发，无需等待样式表、图像和子框架的加载完成。
+onload:仅用于检测一个完全加载的页面（图像、CSS资源等）
+</code></pre></div></div>
+
+<h4 id="遇到img图片类资源">遇到img图片类资源</h4>
+
+<p>遇到图片资源时候，直接是异步下载，不会阻塞解析，下载完成后直接使用图片替换原有SRC</p>
+
+<blockquote>
+  <p>html基本整理好了，明天和同事有个聚会，就暂时偷个懒，下周开始整理CSS</p>
+</blockquote>
+
+            </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2019 <a href="https://kisnnnnn.github.io/kisnStudy/"><code>Kisn</code></a>.</p>
+		<!-- <p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, themed from <a href="http://lesscss.cn/">Less</a>, refactored by <a href="http://www.hifreud.com/">Freud Kang</a></p> -->
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
+
+  </body>
+</html>

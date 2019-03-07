@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>2019-02-17-http2.0、https（1） - 翻山越岭遇到一条狗的Blog</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="canonical" href="/2019/02/17/http2.0-https-1/">
+	<link rel="alternate" type="application/rss+xml" title="翻山越岭遇到一条狗的Blog" href="/feed.xml">
+	
+	<meta name="keywords" content="2019-02-17-http2.0、https（1）, 翻山越岭遇到一条狗的Blog, 袁凯忻;个人博客;前端技术;">
+	<meta name="description" content="袁凯忻;个人博客;前端技术;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a> -->
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">Categories</a>
+        </li>
+        <li>
+          <a href="/tag">Tag</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <!-- <a><span id="busuanzi_container_site_pv" style="display:non">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a> -->
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/Kisnnnnn/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="https://kisnnnnn.github.io/kisnStudy/">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>2019-02-17-http2.0、https（1）</h1>
+		    <p>Post on Feb 17, 2019 by <a href="/about">Kisn</a></p>
+		-->
+		    <h1>「今でもあなたはわたしの光」</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#前端-ref">前端</a>	/
+    	<a href="/tag/#笔记-ref">笔记</a>
+    
+  </div>
+</div>
+
+    
+
+    <!-- <script src=""></script> -->
+<div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+    <h1>目录</h1>
+    <ul class="nav sidenav">
+    </ul>
+    <!-- <div style="height: 200px;width: 200px;">
+      <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"> 
+      </script>
+    </div> -->
+  </div>
+  
+   
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">2019-02-17-http2.0、https（1）</h1>
+              <!--
+                <p class="post-meta">Feb 17, 2019</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Feb 17, 2019</span> By <a target="_blank" href="http://localhost:4000">Kisn</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#http20" id="markdown-toc-http20">http2.0</a>    <ul>
+      <li><a href="#http20和http11的不同之处" id="markdown-toc-http20和http11的不同之处">http2.0和http1.1的不同之处</a></li>
+    </ul>
+  </li>
+  <li><a href="#https" id="markdown-toc-https">https</a>    <ul>
+      <li><a href="#ssl" id="markdown-toc-ssl">SSL</a></li>
+      <li><a href="#tls" id="markdown-toc-tls">TLS</a></li>
+      <li><a href="#ssltls-的-握手流程" id="markdown-toc-ssltls-的-握手流程">SSL/TLS 的 握手流程：</a></li>
+      <li><a href="#slltls握手规则示意图" id="markdown-toc-slltls握手规则示意图">SLL/TLS握手规则示意图</a></li>
+      <li><a href="#http的缓存" id="markdown-toc-http的缓存">http的缓存</a>        <ul>
+          <li><a href="#强缓存与弱缓存" id="markdown-toc-强缓存与弱缓存">强缓存与弱缓存</a></li>
+        </ul>
+      </li>
+      <li><a href="#缓存头部" id="markdown-toc-缓存头部">缓存头部</a>        <ul>
+          <li><a href="#如何区分强缓存和协商缓存" id="markdown-toc-如何区分强缓存和协商缓存">如何区分强缓存和协商缓存</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="http20">http2.0</h2>
+<blockquote>
+  <p>HTTP/2，即超文本传输协议2.0，是下一代HTTP协议。是互联网工程任务组的httpbis小组开发进行。在开放互联网上HTTP 2.0将只用于https:\/\/网址，而 http:\/\/ 网址将继续使用HTTP/1，目的是在开放互联网上增加使用加密技术，以提供强有力的保护去遏制主动攻击。DANE RFC6698允许域名管理员不通过第三方CA自行发行证书</p>
+</blockquote>
+
+<p>就是http的下一代规范</p>
+
+<h3 id="http20和http11的不同之处">http2.0和http1.1的不同之处</h3>
+<ul>
+  <li>http1.1中，每次请求资源都需要开启一个tcp/ip请求，因为tcp/ip有并发数炼制，所以当资源一多，就会影响页面加载速度。</li>
+  <li>http2.0，一个tcp/ip请求可请求多个资源，提高效率</li>
+  <li>http2.0采用二进制而非文本格式，将所有的信息分割为更小的消息和帧，提高请求速度，降低延迟。</li>
+  <li>http2.0使用报头压缩</li>
+  <li>http2.0可以让服务端对客户端的一个请求，响应多次，主动推送到客户端缓存中</li>
+  <li>请求优先级，当所有资源都并发请求的时候，可以对特定的资源进行优先传输。</li>
+</ul>
+
+<h2 id="https">https</h2>
+
+<blockquote>
+  <p>HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer 或 Hypertext Transfer Protocol Secure，超文本传输安全协议），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。</p>
+</blockquote>
+
+<p>如果需要将网站升级为https，需要后端去申请证书（SSL）等，同时http请求的时候所传输的信息更大，建议htpp2.0+https。</p>
+
+<h3 id="ssl">SSL</h3>
+<blockquote>
+  <p>Secure Sockets Layer，安全套接层，一种安全协议，为TCP/IP于各种应用层协议之间，为数据通讯提供安全支持。</p>
+</blockquote>
+
+<h3 id="tls">TLS</h3>
+<blockquote>
+  <p>Transport Layer Security，及其前身安全套接层（Secure Sockets Layer，缩写作SSL）是一种安全协议，目的是为互联网通信提供安全及数据完整性保障。该协议由两层组成：TLS记录协议（TLS Record）和TLS握手协议（TLS Handshak）</p>
+</blockquote>
+
+<h3 id="ssltls-的-握手流程">SSL/TLS 的 握手流程：</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.浏览器请求建立SSL连接，并向服务端发送一个随机数-Client random和客户端支持的加密方法，比如RSA加密，此时是明文传输。
+2.服务端从中选出一组加密算法与HAash算法，回复一个随机数-Server random，并将自己的身份信息以证书的形式发回给客户端（证书中包含了网站地址，非对称加密的公钥，以及证书颁发机构等信息）
+3.浏览器收到服务器端的证书后
+    1）验证证书的合法性（颁发机构是否合法，证书中包含的网址是否和正在访问的一样），如果证书信任，则浏览器会显示一个小锁，否则会有提示
+    2）用户接收证书后（不管信不信任），浏览器会生成一个新的随机数-Premaster Secret，然后证书中的公钥以及制定的加密方法加密「Premaster secret」，发送给服务器端
+    3）利用Client random、Server random以及Premaster secret通过一定的算法生成HTTP链接数据传输的对称加密key-「seesion key」。
+    4）使用约定好的Hash算法计算握手消息，并使用生成的「session key」对消息进行加密，最后将之前生成的所有信息发送给服务端。
+4.服务端收到浏览器的回复
+    1）利用已知的加解密方式与自己的私钥进行解密，获取「Premaster secret」
+    2）和浏览器相同规则生成「seesion key」
+    3）使用「session key」解密浏览器发送的握手消息，并验证Hash是否和浏览器发送的一致
+    4）使用「seesion key」加密一段握手消息，发送给浏览器
+5.浏览器解密并计算握手消息的Hash，如果与服务器端发来的Hash一样，此时握手流程结束。
+</code></pre></div></div>
+<h3 id="slltls握手规则示意图">SLL/TLS握手规则示意图</h3>
+
+<blockquote>
+  <p>写了五六遍，勉强能写出像样的示意图，请见谅</p>
+</blockquote>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g09pvdj80sj30u0140jv8.jpg" alt="iamges" /></p>
+
+<h3 id="http的缓存">http的缓存</h3>
+<blockquote>
+  <p>前后端的http交互中，使用缓存能很大程度上的提升效率，而且对有性能有要求的前端项目都是必用缓存的</p>
+</blockquote>
+
+<h4 id="强缓存与弱缓存">强缓存与弱缓存</h4>
+
+<p>缓存可以分为两种类型：</p>
+
+<ul>
+  <li>强缓存（200 from cache）</li>
+  <li>协商缓存 （304）</li>
+</ul>
+
+<p>区别：</p>
+<ul>
+  <li>强缓存时，浏览器如果判断本地缓存未过期就会直接使用，无需发起http请求</li>
+  <li>协商缓存时，浏览器会向服务端发起http请求，然后服务端告诉浏览器「文件为改变」，让浏览器使用本地缓存</li>
+</ul>
+
+<p>对于协商缓存，使用ctrl + F5 强制刷新可以是协商缓存失效</p>
+
+<p>但是对于强缓存，在未过期是，必须更新资源路径才能发起新的请求</p>
+
+<h3 id="缓存头部">缓存头部</h3>
+<h4 id="如何区分强缓存和协商缓存">如何区分强缓存和协商缓存</h4>
+<p>常用强缓存：</p>
+<ul>
+  <li>Cache-Control/Max-age   (http1.1)</li>
+  <li>Pragma/Expires          (http1.0)</li>
+</ul>
+
+<p>常用协商缓存:</p>
+<ul>
+  <li>If-None-Match/E-tag     (http1.1)</li>
+  <li>If-Modified-Since/last-Modified  (http1.0)</li>
+</ul>
+
+<p>使用「meta」标签可以控制缓存方案-Pragma</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;META HTTP-EQUIV="Pragma" CONTENT="no-cache"&gt;
+</code></pre></div></div>
+
+<blockquote>
+  <p>Pragma方案，支持情况不佳，缓存代理服务器不支持</p>
+</blockquote>
+
+            </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2019 <a href="https://kisnnnnn.github.io/kisnStudy/"><code>Kisn</code></a>.</p>
+		<!-- <p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, themed from <a href="http://lesscss.cn/">Less</a>, refactored by <a href="http://www.hifreud.com/">Freud Kang</a></p> -->
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
+
+  </body>
+</html>

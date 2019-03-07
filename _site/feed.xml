@@ -5,706 +5,1254 @@
     <description>「今でもあなたはわたしの光」</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 17 Feb 2019 18:18:01 +0800</pubDate>
-    <lastBuildDate>Sun, 17 Feb 2019 18:18:01 +0800</lastBuildDate>
+    <pubDate>Thu, 07 Mar 2019 21:27:55 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Mar 2019 21:27:55 +0800</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
-        <title>Cookie和gizp压缩、长连接与短连接</title>
+        <title>2019-03-06-闭包(Closurce)</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#cookie&quot; id=&quot;markdown-toc-cookie&quot;&gt;Cookie&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是cookie&quot; id=&quot;markdown-toc-什么是cookie&quot;&gt;什么是Cookie？&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#多域名拆分&quot; id=&quot;markdown-toc-多域名拆分&quot;&gt;多域名拆分&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#cookie的交互&quot; id=&quot;markdown-toc-cookie的交互&quot;&gt;cookie的交互&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#什么是闭包&quot; id=&quot;markdown-toc-什么是闭包&quot;&gt;什么是闭包？&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#变量的作用域&quot; id=&quot;markdown-toc-变量的作用域&quot;&gt;变量的作用域&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#gzip压缩&quot; id=&quot;markdown-toc-gzip压缩&quot;&gt;gzip压缩&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#长连接与短连接&quot; id=&quot;markdown-toc-长连接与短连接&quot;&gt;长连接与短连接&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#tcpip中的定义&quot; id=&quot;markdown-toc-tcpip中的定义&quot;&gt;tcp/ip中的定义&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#http的定义&quot; id=&quot;markdown-toc-http的定义&quot;&gt;http的定义：&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#诶你怎么还不睡-那么我来写copy个彩蛋吧&quot; id=&quot;markdown-toc-诶你怎么还不睡-那么我来写copy个彩蛋吧&quot;&gt;诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#现在发现有很多东西需要学习不单单为了我个人的薪资或者理想可能更多的是想更加了解一点世界&quot; id=&quot;markdown-toc-现在发现有很多东西需要学习不单单为了我个人的薪资或者理想可能更多的是想更加了解一点世界&quot;&gt;现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#如何从外部读取局部变脸&quot; id=&quot;markdown-toc-如何从外部读取局部变脸&quot;&gt;如何从外部读取局部变脸？&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#在函数内部在定义一个函数&quot; id=&quot;markdown-toc-在函数内部在定义一个函数&quot;&gt;在函数内部，在定义一个函数&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;今天有些忙，晚上二刷完「流浪地球」才回家，继续整理下昨天接下来的「Cookie」&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;cookie&quot;&gt;Cookie&lt;/h2&gt;
-
-&lt;h3 id=&quot;什么是cookie&quot;&gt;什么是Cookie？&lt;/h3&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;Cookie, 网站为了辨别用户身份、进行session跟踪而存储在用户本地终端的数据（加密），规范为RFC6265&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;通俗的来说，就是「浏览器缓存」，在网站上来用帮助客户端和服务器校验身份，或者交换数据（通信），结合服务器的seesion使用。&lt;/p&gt;
-
-&lt;p&gt;举个栗子：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在login页面进行登录的时候，用户点击「登录」
-此时，服务端会生成一个seesion，seesion中有对于用户的信息（账号、密码等）
-然后会生成一个sessionid（相当于是服务端的这个seesion对应的key）
-然后服务器端在登录页面中写入cookie，值就是jessionid=xxx
-最后浏览器中本地就有这个cookie，以后再访问同域名下的页面的时候，自动就带上这个sessionid了，就不需要自动登录了。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g08oox73ggj30nq0mewht.jpg&quot; alt=&quot;image&quot; /&gt;
-一般来说cookie是不允许存放敏感信息的（禁止明文存储账号、密码）&lt;/p&gt;
-
-&lt;p&gt;因为在同域名的资源氢气下，浏览器会默认带上本地的cookie，所以在某些不想带cookie信息的情况下，还需要另外处理&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;客户端在域名A下有cookie
-但是A下有一个页面，页面中有很多依赖的静态资源（资源都在域名A服务器下面）
-此时就在请求这些静态页面的时候，浏览器就会默认带上cookie
-这样就会降低访问速度，浪费效能
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;比较稳当的解决办法，就是「多域名拆分」。具体作坊就是&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;讲静态资源，分别放在不同的域名下（带cookie的：www.a.com,不需要带cookie：wwww.c.com）&lt;/li&gt;
-  &lt;li&gt;而a.com在加载页面的时候，加载静态页面就不会带cookie&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;多域名拆分&quot;&gt;多域名拆分&lt;/h4&gt;
-
-&lt;p&gt;在移动端，如果请求的域名过多，会降低请求速度，因为域名解析流程也是需要时间
-此时，就需要再加一份优化方案「dns-prefetch」，让浏览器在空闲时提前解析dns域名。&lt;/p&gt;
-
-&lt;h3 id=&quot;cookie的交互&quot;&gt;cookie的交互&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g08p2fv8khj30pg0grwf7.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;gzip压缩&quot;&gt;gzip压缩&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;http协议上的gzip编码是中用来改进WEB应用程序性能的技术。可以让用户更快的速度请求。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;gzip是一中压缩格式，需要浏览器支持才有效，压缩效率比较优秀
-gzip一般在「apache」、「tomcat」等web服务器开启&lt;/p&gt;
-
-&lt;h2 id=&quot;长连接与短连接&quot;&gt;长连接与短连接&lt;/h2&gt;
-&lt;h3 id=&quot;tcpip中的定义&quot;&gt;tcp/ip中的定义&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;长连接：一个tcp/ip连接上可以连续发送多个数据包，在tcp保持连接期间，如果没有数据包发送，需要双方发检验测试包以维持连接，一般需要自己做在线维持。&lt;/li&gt;
-  &lt;li&gt;短连接：通信双方有数据交互时，就建立一个tcp连接，数据交互完成，销毁。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;http的定义&quot;&gt;http的定义：&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;http1.0中，默认使用的是短连接，浏览器每进行一次http操作，就会建立一次连接，交互结束销毁连接。&lt;/li&gt;
-  &lt;li&gt;http1.1中，默认使用长连接，使用长连接会有「Connection:keep-alive」，在长连接情况下，当一个页面打开完成后，客户端和服务端之前用于传输http的tcvp就不会关闭，如果客户端再次访问这个服务器页面，则会继续使用这条建立过的连接&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;PS：keep-alive不会永远保持，也有时间，一般配置在服务器中，另外长连接也需要客户端和服务器都支持该配置才有效。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;结语&quot;&gt;结语&lt;/h3&gt;
-&lt;p&gt;本来还想整理（抄）一下http2.0和https的定义和区别，但是时间不早了，该睡了。
-该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;p&gt;该睡了。&lt;/p&gt;
-
-&lt;h3 id=&quot;诶你怎么还不睡-那么我来写copy个彩蛋吧&quot;&gt;诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;事情是这样的，我banner上写的是一句日文「今でもあなたはわたしの光」，来自米津玄師的「Lemon」。然后我哥提醒我「わたし」一般是女的才用，毕竟我哥日文水平还是可以不错的，于是我和我哥就去查了下资料。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g08pipshysj30i613egnd.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;以下是来wiki的解释&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g08pvo9n9pj31e70u0wo1.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;私（わたし／watashi）
-日本人用得最多的一人称。「わたくし」的谦逊说法。男女老少都用，礼貌用语。特别公开场合男的用这个就很礼貌，用「わたくし」就更礼貌了。女性更比男性常用。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;私（わたくし／watakushi）
-「私」的自谦、郑重语，对年龄比自己大，地位比自己高的时候使用。公开郑重场合用这个最礼貌。特别是皇族公开演说必须用这个，因为皇族在面向国民的时候需要用自谦的语气说话。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;自分（じぶん／zibun）&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;体育协会那些男生多用。相扑力士和棒球选手常用。刑事日剧『西部警察』里面渡哲也演的主人公大門圭介使用这个很有名で、一时期成为了流行語。
-在文章里面也常用语一人称，这种时候女的也有用的。但是在正式的文书和商务文书禁用。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;僕（ぼく／boku）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;男性在私下场合对同辈或长辈常用，在较正式的场合也有用的，给人亲近、随和的感觉是一种自谦语。就像字面上说的“请把我作为仆人召唤”的感觉，这种时候女性可以用「妾（ショウ）」。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;俺（おれ／ore）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;一般只能男的私下场合用，只能对同辈或者晚辈使用。因为是俗语，所以公开场合不用。用在路飞身上再好不过。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;还有好多语法，我就不一一google translate了…附上链接:https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%81%AE%E4%B8%80%E4%BA%BA%E7%A7%B0%E4%BB%A3%E5%90%8D%E8%A9%9E#%E7%A7%81%EF%BC%88%E3%82%8F%E3%81%9F%E3%81%97%EF%BC%89 （查看请示用「科学上网」）&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;现在发现有很多东西需要学习不单单为了我个人的薪资或者理想可能更多的是想更加了解一点世界&quot;&gt;现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。&lt;/h4&gt;
-</description>
-        <pubDate>Sat, 16 Feb 2019 21:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/16/cookie%E5%92%8Cgzip-%E9%95%BF%E4%B8%8E%E7%9F%AD%E8%BF%9E%E6%8E%A5/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/16/cookie%E5%92%8Cgzip-%E9%95%BF%E4%B8%8E%E7%9F%AD%E8%BF%9E%E6%8E%A5/</guid>
-        
-        <category>笔记</category>
-        
-        
-        <category>前端</category>
-        
-      </item>
-    
-      <item>
-        <title>浏览器如何发起一个完整的HTTP请求(2)</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#常用的请求头部&quot; id=&quot;markdown-toc-常用的请求头部&quot;&gt;常用的请求头部&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#accept-和-content-type-的区别&quot; id=&quot;markdown-toc-accept-和-content-type-的区别&quot;&gt;Accept 和 Content-Type 的区别&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#常用的响应头&quot; id=&quot;markdown-toc-常用的响应头&quot;&gt;常用的响应头&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#其实我在整理之前一直在想为什么请求头部也有content-type那为什么不是它和响应头部的content-type匹配&quot; id=&quot;markdown-toc-其实我在整理之前一直在想为什么请求头部也有content-type那为什么不是它和响应头部的content-type匹配&quot;&gt;其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#举栗子&quot; id=&quot;markdown-toc-举栗子&quot;&gt;举栗子&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是实体头&quot; id=&quot;markdown-toc-什么是实体头&quot;&gt;什么是实体头？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是实体信息&quot; id=&quot;markdown-toc-什么是实体信息&quot;&gt;什么是实体信息？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#最后讲一下crlf&quot; id=&quot;markdown-toc-最后讲一下crlf&quot;&gt;最后讲一下，CRLF&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#http请求报文结构栗子&quot; id=&quot;markdown-toc-http请求报文结构栗子&quot;&gt;http请求报文结构栗子：&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#再说点什么&quot; id=&quot;markdown-toc-再说点什么&quot;&gt;再说点什么？&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#闭包的用途&quot; id=&quot;markdown-toc-闭包的用途&quot;&gt;闭包的用途&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#使用闭包的注意点&quot; id=&quot;markdown-toc-使用闭包的注意点&quot;&gt;使用闭包的注意点&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了&quot; id=&quot;markdown-toc-好了写完了&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-1&quot; id=&quot;markdown-toc-好了写完了-1&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-2&quot; id=&quot;markdown-toc-好了写完了-2&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-3&quot; id=&quot;markdown-toc-好了写完了-3&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-4&quot; id=&quot;markdown-toc-好了写完了-4&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-5&quot; id=&quot;markdown-toc-好了写完了-5&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-6&quot; id=&quot;markdown-toc-好了写完了-6&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-7&quot; id=&quot;markdown-toc-好了写完了-7&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-8&quot; id=&quot;markdown-toc-好了写完了-8&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-9&quot; id=&quot;markdown-toc-好了写完了-9&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-10&quot; id=&quot;markdown-toc-好了写完了-10&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-11&quot; id=&quot;markdown-toc-好了写完了-11&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-12&quot; id=&quot;markdown-toc-好了写完了-12&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-13&quot; id=&quot;markdown-toc-好了写完了-13&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-14&quot; id=&quot;markdown-toc-好了写完了-14&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-15&quot; id=&quot;markdown-toc-好了写完了-15&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-16&quot; id=&quot;markdown-toc-好了写完了-16&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-17&quot; id=&quot;markdown-toc-好了写完了-17&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-18&quot; id=&quot;markdown-toc-好了写完了-18&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-19&quot; id=&quot;markdown-toc-好了写完了-19&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-20&quot; id=&quot;markdown-toc-好了写完了-20&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-21&quot; id=&quot;markdown-toc-好了写完了-21&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-22&quot; id=&quot;markdown-toc-好了写完了-22&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-23&quot; id=&quot;markdown-toc-好了写完了-23&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-24&quot; id=&quot;markdown-toc-好了写完了-24&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-25&quot; id=&quot;markdown-toc-好了写完了-25&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-26&quot; id=&quot;markdown-toc-好了写完了-26&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-27&quot; id=&quot;markdown-toc-好了写完了-27&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-28&quot; id=&quot;markdown-toc-好了写完了-28&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-29&quot; id=&quot;markdown-toc-好了写完了-29&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-30&quot; id=&quot;markdown-toc-好了写完了-30&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-31&quot; id=&quot;markdown-toc-好了写完了-31&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-32&quot; id=&quot;markdown-toc-好了写完了-32&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-33&quot; id=&quot;markdown-toc-好了写完了-33&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-34&quot; id=&quot;markdown-toc-好了写完了-34&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-35&quot; id=&quot;markdown-toc-好了写完了-35&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-36&quot; id=&quot;markdown-toc-好了写完了-36&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-37&quot; id=&quot;markdown-toc-好了写完了-37&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-38&quot; id=&quot;markdown-toc-好了写完了-38&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-39&quot; id=&quot;markdown-toc-好了写完了-39&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-40&quot; id=&quot;markdown-toc-好了写完了-40&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#好了写完了-41&quot; id=&quot;markdown-toc-好了写完了-41&quot;&gt;好了写完了&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;昨天看到请求头部分，整理一些通用请求头，下面整理下常用的响应/请求头&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;什么是闭包&quot;&gt;什么是闭包？&lt;/h2&gt;
+&lt;p&gt;闭包就是能够读取其他函数内部变脸的函数。在JavaScript中，只有函数内部的子函数才能读取局部变量，所以闭包可以理解成「定义在一个函数内部的函数」。本质，闭包是将函数内部和函数外部连接起来的桥梁。&lt;/p&gt;
 
-&lt;h2 id=&quot;常用的请求头部&quot;&gt;常用的请求头部&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g07d0evn94j30h807u3yq.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Accept：接受类型，标示浏览器支持的MIME类型（对标服务器返回的Centent-Type）
-Accept-Encoding： 浏览器支持的压缩类型，比如gzip等，超过类型不能接受
-Content-Type：客户端发送出去实体内容的类型
-Cache-Control：指定请求和响应遵循的缓存机制，如no-cache、no-store
-If-Modified-Since：对应服务器的Last-Modified,用来匹配看文件是否变动，精确到1s
-Expires：缓存控制，在这个时间内不会请求，直接使用缓存（http1.0，而且是服务器端时间）
-Max-age： 代表资源在本地缓存多少秒，有效时间不会请求，而是使用缓存（http1.1）
-If-None-Match：对于服务端的ETag，用于匹配文件内容是否改变（非常精确）（http1.1）
-Cookie：有cookie并且同域访问时会自动带上（www.baidu.com/a.baidu.com非同域名！）
-Host：请求的服务器URL
-Origin：最初请求是从哪里发起的（精确到端口），Origin比Referer更遵循隐私
-Referer：该页面的来源URL（适用于所有类型的请求，会精确到详细页面，csrf通常会拦截该字段）
-User-Agent：用户客户端的一些必要信息
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;备注&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;变量的作用域&quot;&gt;变量的作用域&lt;/h3&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;no-cache:可以在本地缓存，可以代理服务器缓存，但是和这个缓存需要服务器验证以后才可以使用&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;no-store:禁用缓存，本地和代理服务器均不准使用,必须从服务器获取&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;accept-和-content-type-的区别&quot;&gt;Accept 和 Content-Type 的区别&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Accpet属于请求头，Content-Type属于实体头
-Accpet：告诉服务端，客户端接收什么类型的信息
-Content-Type：发送端（客户端|服务器端）发送的实体数据的数据类型
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;常用的响应头&quot;&gt;常用的响应头&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g07d2tzlz5j30gq08zglu.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Hedaers：服务器端允许的Headers
-Access-Control-Allow-Methods：服务器端允许的请求方法
-Acees-Control-Allow-Origin：服务器端允许的请求Origin头部
-Content-Type：服务器返回的实体内容类型
-Data：数据从服务器发起的时间
-Cache-Control：告诉浏览器或其他用户，什么环境可以安全的缓存文档
-Last-Modified：请求资源的最后修改时间
-Expires：文档的过期时间，删除缓存
-Max-age：客户端的本地资源的缓存时间(单位-秒)，开启了Cache-Contral后有效
-ETag：请求标量的实体标签的当前值
-Set-Cookie：设置和页面关联的cookie，服务器通过整个头部把cookie传给客户端
-Keep-Alive：客户端有keep-alive，服务端也会响应（timeout=38）
-Server：服务器的一些相关信息
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;请求头部和响应头部是彼此匹配分析的。&lt;/p&gt;
-
-&lt;p&gt;最常见的：
-请求头部的Accept要和响应头部的Content-Type进行匹配，否则会报错。&lt;/p&gt;
-&lt;h4 id=&quot;其实我在整理之前一直在想为什么请求头部也有content-type那为什么不是它和响应头部的content-type匹配&quot;&gt;其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？&lt;/h4&gt;
-&lt;p&gt;后来，我整理的时候发现，「Content-Type」是实体头部，指的是：「发送端（可以使客户端，也可以是服务端），用来表明发送信息的文档类型的」，也就是说他是发送性质的，「Accept」是接受性质，so请求头部的「Accept」和响应头部的「Cotent-Type」匹配的。&lt;/p&gt;
-
-&lt;h4 id=&quot;举栗子&quot;&gt;举栗子&lt;/h4&gt;
-&lt;p&gt;造成跨域问题，往往是因为请求头部「Origin」要匹配响应头部的「Access-Control-Allow-Origin」，一旦匹配失败，则会报跨域错误。&lt;/p&gt;
-
-&lt;p&gt;在使用缓存时，请求头部的If-Modified-Since、If-None-Match分别和响应头部的Last-Modified、ETag对应&lt;/p&gt;
-
-&lt;h3 id=&quot;什么是实体头&quot;&gt;什么是实体头？&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tKfTcgy1g07d19zojoj30h00abmxi.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;可以理解为「实体信息」的头部&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;什么是实体信息&quot;&gt;什么是实体信息？&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;消息实体分为响应实体、请求实体&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在http请求中，会将一些需要的参数放入，你比如POST请求。&lt;/p&gt;
-
-&lt;p&gt;实体信息中可以放入参数（data=ab&amp;amp;query=123），也可以直接通过表单对象（Form Data对象，上传时可以带参数、文件、二进制流）&lt;/p&gt;
-
-&lt;p&gt;而http响应时候，服务端就会返回实体信息（没错，就是reponse）&lt;/p&gt;
-
-&lt;p&gt;一般的接口请求，实体信息就是JSON格式的数据，然而接口返回的可以使JSON格式的数据也可以使html，然后通过JS渲染&lt;/p&gt;
-
-&lt;h3 id=&quot;最后讲一下crlf&quot;&gt;最后讲一下，CRLF&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Carriage-Return Line-Feed), 回车换行符&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;（我也不明白这东西有什么用）&lt;/p&gt;
-
-&lt;p&gt;请求头和实体消息之间有一个CRLF分隔，响应头部和响应实体之间用一个CRLF分隔&lt;/p&gt;
-
-&lt;p&gt;一般来说（分隔符类别）:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CRLF-&amp;gt;Windows-style
-LF-&amp;gt;Unix Style
-CR-&amp;gt;Mac Style
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;结束下面附上一个http请求栗子&lt;/p&gt;
-
-&lt;h3 id=&quot;http请求报文结构栗子&quot;&gt;http请求报文结构栗子：&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g07e2c2i61j30gk0m80uo.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;再说点什么&quot;&gt;再说点什么？&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;今天的内容其实我已经整理的差不多，两天把大牛的http请求，简单的整理（抄）了一遍，收获很多，之前一直不懂跨域的原理，以及request/response的头部匹配，基本也理解了。从HTTP报文结构表面来看至少看出来跨域的问题来自哪里，具体如何解决还需要仔细研究&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;2019年02月15日20:40:48
-袁凯忻&lt;/p&gt;
-</description>
-        <pubDate>Fri, 15 Feb 2019 21:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/15/http(2)/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/15/http(2)/</guid>
-        
-        <category>笔记</category>
-        
-        
-        <category>前端</category>
-        
-      </item>
-    
-      <item>
-        <title>浏览器如何发起一个完整的HTTP请求(1)</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#浏览器如何发起一个完整的http请求&quot; id=&quot;markdown-toc-浏览器如何发起一个完整的http请求&quot;&gt;浏览器如何发起一个完整的HTTP请求？&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#五层因特网协议栈&quot; id=&quot;markdown-toc-五层因特网协议栈&quot;&gt;五层因特网协议栈&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#http&quot; id=&quot;markdown-toc-http&quot;&gt;HTTP&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#dns&quot; id=&quot;markdown-toc-dns&quot;&gt;DNS&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#cdn&quot; id=&quot;markdown-toc-cdn&quot;&gt;CDN&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是tcpip协议&quot; id=&quot;markdown-toc-什么是tcpip协议&quot;&gt;什么是TCP/IP协议？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是三次握手四次握手&quot; id=&quot;markdown-toc-什么是三次握手四次握手&quot;&gt;什么是三次握手、四次握手？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#get和post的区别&quot; id=&quot;markdown-toc-get和post的区别&quot;&gt;GET和POST的区别&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#后台处理流程&quot; id=&quot;markdown-toc-后台处理流程&quot;&gt;后台处理流程&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#http的报文接口&quot; id=&quot;markdown-toc-http的报文接口&quot;&gt;http的报文接口&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#通用头部&quot; id=&quot;markdown-toc-通用头部&quot;&gt;通用头部&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;浏览器如何发起一个完整的http请求&quot;&gt;浏览器如何发起一个完整的HTTP请求？&lt;/h2&gt;
-&lt;p&gt;答:==应用层==的发送http请求，==DNS==将域名解析成IP，然后到==传输层==通过==三次握手==建立==TCP/IP请求==，再到==网络层==的ip寻址，再到==数据链路层==的封装成帧，最后到==物理层==的利用物理介质传输。&lt;/p&gt;
-
-&lt;h3 id=&quot;五层因特网协议栈&quot;&gt;五层因特网协议栈&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.应用层(dns,http) DNS解析成IP并发送http请求
-
-2.传输层(tcp,udp) 建立tcp连接（三次握手）
-
-3.网络层(IP,ARP) IP寻址
-
-4.数据链路层(PPP) 封装成帧
-
-5.物理层(利用物理介质传输比特流) 物理传输（然后传输的时候通过双绞线，电磁波等各种介质）
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;http&quot;&gt;HTTP&lt;/h3&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;超文本传输协议，Web浏览器和Web服务器之间的通信，一般基于TCP/IP协议&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;dns&quot;&gt;DNS&lt;/h3&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;Domain Name System，即域名系统。它作为将域名和IP地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。DNS使用TCP和UDP端口53[1]。当前，对于每一级域名长度的限制是63个字符，域名总长度则不能超过253个字符。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;可以理解为一个工具将域名和IP关联了起来，通过让快速访问到IP,域名查询到IP。
-比较牛逼的网站可能会用CDN来进行均衡用户访问负载量。&lt;/p&gt;
-
-&lt;h3 id=&quot;cdn&quot;&gt;CDN&lt;/h3&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;Content Delivery Network，即内容分发网络。网络之上的内容分发网络，依靠部署在各地的边缘服务器，通过中心平台的负载均衡、内容分发、调度等功能模块，使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。CDN的关键技术主要有内容存储和分发技术。
-通俗的讲就是在人多的地方放置更多的服务器，当访问量激增，CDN可以通过全局负载技术将流量平均分配到不同的服务器中，保证流量均很，减少网络拥堵。一般域名查询时会用到CDN，保证用户访问域名是能获得最快的访问速度&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;什么是tcpip协议&quot;&gt;什么是TCP/IP协议？&lt;/h3&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;TCP（传输控制协议）和IP（网际协议）。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;通俗的讲，我们所接触的绝大多数HTTP请求都是TCP/IP请求。
-tcp将http长报文划分为短报文，通过三次握手与服务端建立连接，进行可靠传输以及断开连接的四次握手。&lt;/p&gt;
-
-&lt;h3 id=&quot;什么是三次握手四次握手&quot;&gt;什么是三次握手、四次握手？&lt;/h3&gt;
-
+&lt;p&gt;要了解闭包，首先必须了解JavaScript特殊的变量作用域。&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;三次握手
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第一次握手：建立连接时，客户端发送syn包（syn=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。
-第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；
-第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;通俗的讲&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.客户端告诉服务端，请求建交
-2.服务端告诉客户端，我已经收到请求信息，请确认是否为正确的服务端？
-3.客户端确认，正式建交
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;四次握手
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第一次握手：TCP客户端发送一个FIN，用来关闭客户到服务器的数据传送。
-第二次握手：服务器收到这个FIN，它发回一个ACK，确认序号为收到的序号加1。和SYN一样，一个FIN将占用一个序号。
-第三次握手：服务器关闭客户端的连接，发送一个FIN给客户端。
-第四次握手：客户端发回ACK报文确认，并将确认序号设置为收到序号加1。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;通俗的讲&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.客户端告诉服务器，我要开始和你断交了
-2.服务端收到这个断交信息
-3.服务器断开连接，并且告诉客户端，服务端断交。
-4.客户端获取服务器断交信息，数据通道关闭。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;&lt;strong&gt;浏览器对于同一域名的tcp/ip并发是有数量限制的，一般是2~10个不等，就是POST/GET请求在同一域名下请求并发量是有限制的！&lt;/strong&gt;&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;全局变量&lt;/li&gt;
+  &lt;li&gt;局部变量&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;get和post的区别&quot;&gt;GET和POST的区别&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var a = 12345； // 全局变量
 
-&lt;p&gt;POST会发送2个TCP的包，首先发起预请求，会向服务端发送headers，如果的到100 continue,则会发送data包，返回数据
-GET只会发送一个TCP的包，直接向服务端发送header和data，返回数据。&lt;/p&gt;
-&lt;h3 id=&quot;后台处理流程&quot;&gt;后台处理流程&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.一般有的后端是有统一的验证的，如安全拦截，跨域验证
-2.如果这一步不符合规则，就直接返回了相应的http报文（如拒绝请求等）
-3.然后当验证通过后，才会进入实际的后台代码，此时是程序接收到请求，然后执行（譬如查询数据库，大量计算等等）
-4.等程序执行完毕后，就会返回一个http响应包（一般这一步也会经过多层封装）
-5.然后就是将这个包从后端发送到前端，完成交互
+function f1(){
+    alert(a);
+}
+
+f1(); //12345
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;http的报文接口&quot;&gt;http的报文接口&lt;/h3&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;报文接口包含：通用头部，请求/响应头部，请求/响应体&lt;/p&gt;
-&lt;/blockquote&gt;
 
-&lt;h4 id=&quot;通用头部&quot;&gt;通用头部&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Request Url：请求的web服务器地址
-Request Method：请求方式（POST/GET/OPTIONS/PUT/DELETED等）
-Status Code：状态码（10X/404/200)
-Remote Address： 请求远程的web服务器地址（IP）
+&lt;p&gt;但是在函数外部自然不能读取函数内部的变量。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function f1(){
+    var a = 12345;
+}
+
+alert(a); // error
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;blockquote&gt;
-  &lt;p&gt;值得注意的是，在存在跨域问题的时候，可能是method为options，状态码为404/405等&lt;/p&gt;
+  &lt;p&gt;在函数内部声明变量的时候，一定要使用var，如果不使用，实际上你生命了一个全局变量&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;在这里主要归纳下状态码：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1XX——指示信息，表示请求已接收，继续处理
-2XX——成功，表示请求已被成功接收、理解、接受
-3XX——重定向，要完成请求必须进行更进一步的操作
-4XX——客户端错误，请求有语法错误或请求无法实现
-5XX——服务器端错误，服务器未能实现合法的请求
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function f1(){
+    a = 12345;
+}
+f1();
+alert(n); // 12345
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;也就是4XX可能是客户端的问题，不单单是服务器端的问题，个人觉得应该优先排除客户端的容器问题（tomcat、iis等）&lt;/p&gt;
-
-</description>
-        <pubDate>Thu, 14 Feb 2019 21:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/14/http/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/14/http/</guid>
-        
-        <category>笔记</category>
-        
-        
-        <category>前端</category>
-        
-      </item>
-    
-      <item>
-        <title>url和正则表达式的学习</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#浏览器的url的构成&quot; id=&quot;markdown-toc-浏览器的url的构成&quot;&gt;浏览器的URL的构成&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#windowlocation&quot; id=&quot;markdown-toc-windowlocation&quot;&gt;window.location&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#如何获取url的额外参数与分析正则表达式&quot; id=&quot;markdown-toc-如何获取url的额外参数与分析正则表达式&quot;&gt;如何获取url的额外参数与分析正则表达式&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#正则表达式&quot; id=&quot;markdown-toc-正则表达式&quot;&gt;正则表达式&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#限定符&quot; id=&quot;markdown-toc-限定符&quot;&gt;限定符&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#特殊符号&quot; id=&quot;markdown-toc-特殊符号&quot;&gt;特殊符号&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#定位符&quot; id=&quot;markdown-toc-定位符&quot;&gt;定位符&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#正则匹配匹配的一些demo&quot; id=&quot;markdown-toc-正则匹配匹配的一些demo&quot;&gt;正则匹配匹配的一些demo&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;浏览器的url的构成&quot;&gt;浏览器的URL的构成&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;portocal，协议头，例如：http、ftp等&lt;/li&gt;
-  &lt;li&gt;host，主机域名或IP地址&lt;/li&gt;
-  &lt;li&gt;port，端口号&lt;/li&gt;
-  &lt;li&gt;path，目录路径&lt;/li&gt;
-  &lt;li&gt;query，即查询参数&lt;/li&gt;
-  &lt;li&gt;fragment，即#后的hash值，一般用来定位到某个位置&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;‘http://note.youdao.com/?user=admin&amp;amp;query=123#page=top’ = portocal(https://) + host(www.jianshu.com) + port(80) + path(/p/d31f494ad6f5) + query(?user=admin&amp;amp;query=123) + fragment(#page=top)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;windowlocation&quot;&gt;window.location&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;window.location.hostname，返回web主机的域名 (segmentfault.com)&lt;/li&gt;
-  &lt;li&gt;window.location.pathname，返回当前页面的路径和文件名(a/119….6)&lt;/li&gt;
-  &lt;li&gt;window.location.port，返回web主机的端口&lt;/li&gt;
-  &lt;li&gt;window.location.portocal，返回所使用的web协议（http://）&lt;/li&gt;
-  &lt;li&gt;window.location.assign(‘https://www.baidu.com”)，assign(url)，导航到一个新的页面&lt;/li&gt;
-  &lt;li&gt;window.location.reload(true) 刷新页面&lt;/li&gt;
-  &lt;li&gt;window.location.search，获取url后额外的数据&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;如何获取url的额外参数与分析正则表达式&quot;&gt;如何获取url的额外参数与分析正则表达式&lt;/h2&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function getQueryString(name) {
-    var reg = new RegExp(&quot;(^|&amp;amp;)&quot; + name + &quot;=([^&amp;amp;]*)(&amp;amp;|$)&quot;, &quot;i&quot;),
-        r = window.location.search.substr(1).match(reg);
-        
-    if (r != null) return unescape(r[2]);
-        return null;
+&lt;h2 id=&quot;如何从外部读取局部变脸&quot;&gt;如何从外部读取局部变脸？&lt;/h2&gt;
+&lt;h3 id=&quot;在函数内部在定义一个函数&quot;&gt;在函数内部，在定义一个函数&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function f1(){
+    var n = 999;
+    function f2(){
+        alert(n); // 999
+    }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;在代码中，函数f2就被包含在函数f1内部，这是f1内部的所有全局变量，对f2都是可见的。但是反过来不行，f2内部的局部变量，对f1是不可见的。只能子对象一级以及网上寻找所有父对象的变量。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function f1(){
+    var n=999;
+    function f2(){
+        alert(n);
+    }
+    
+    return f2;
+}
 
-&lt;h3 id=&quot;正则表达式&quot;&gt;正则表达式&lt;/h3&gt;
-&lt;h4 id=&quot;限定符&quot;&gt;限定符&lt;/h4&gt;
+var res = f1();
 
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;字符&lt;/th&gt;
-      &lt;th&gt;描述&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;*&lt;/td&gt;
-      &lt;td&gt;匹配前面的子表达式零次或者多次。例如，zo*能匹配「z」以及「zoo」。等价于{0,}（只要包含「z」、「o」的字符全直接匹配出来）&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;+&lt;/td&gt;
-      &lt;td&gt;匹配前面的子表达式一次或多次，例如，zo+能匹配「zo」以及「zoo」。等价于{0,1}（只要包含「zo」的字符会直接匹配出来）&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;?&lt;/td&gt;
-      &lt;td&gt;匹配前面的子表达式零次或者多次，例如，「do(es)?」能匹配到「do」，「does」能匹配到「does」，「doxy」中的「do」。（讲包含「do」或者「does」的字符中的「do」、「does」匹配展现出来）&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;{n}&lt;/td&gt;
-      &lt;td&gt;n为一个非负整数。匹配确定的n次。例如，「o{2}」不能匹配「Bob」中的「o」，但是能匹配「food」的两个o（o{2}匹配出至少包含2个含有o的符合对象）&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;{n,}&lt;/td&gt;
-      &lt;td&gt;n为一个非负整数。至少匹配n次。例如，「o{2,}」不能匹配「Bob」中的「o」，但是能匹配「foooooood」的所以的o（o{2,}匹配出包含大于等于2个含有o的符合对象），「o{1,}」 等价于 「o+」。「o{0,}」 则等价于 「o*」。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;{n,m}&lt;/td&gt;
-      &lt;td&gt;m 和 n 均为非负整数，其中n &amp;lt;= m。最少匹配 n 次且最多匹配 m 次。例如，「o{1,3}」将匹配 「fooooood」 中的前三个 o。「o{0,1}」 等价于 「o?」。请注意在逗号和两个数之间不能有空格。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+res(); // 999
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h4 id=&quot;特殊符号&quot;&gt;特殊符号&lt;/h4&gt;
-&lt;p&gt;特别字符 | 描述
-—|—
-$ | 匹配输入字符全的结尾位置。如果设置了RegExp对象的Multiline属性，则$也匹配「\n」「\r」。要匹配$字符本身，请使用$ （以下特殊字符均可以使用\形式匹配）
-( ) | 标记一个字表达式的开始和结束。子表达式可以获取提供以后使用。&lt;/p&gt;
+&lt;p&gt;如上面的代码所示，f2函数就是闭包。&lt;/p&gt;
+
+&lt;h2 id=&quot;闭包的用途&quot;&gt;闭包的用途&lt;/h2&gt;
+&lt;p&gt;闭包主要的在&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;table&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;匹配前面的子表达式零次或者多次。&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;table&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;匹配前面的子表达式一次或者多次。&lt;/td&gt;
-          &lt;td&gt; &lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;.&lt;/td&gt;
-          &lt;td&gt;匹配除换行符\n之外的任何单字符。&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;[&lt;/td&gt;
-          &lt;td&gt;标记一个中括号表达式的开始。&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;?&lt;/td&gt;
-          &lt;td&gt;匹配前面的子表达式零次或者一次，或者指明一个非贪婪限定符。&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;\&lt;/td&gt;
-          &lt;td&gt;将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义字符。&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;^&lt;/td&gt;
-          &lt;td&gt;匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;{&lt;/td&gt;
-          &lt;td&gt;标记限定符表达式的开始。&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;|&lt;/td&gt;
-          &lt;td&gt;指明两项之间的一个选择.&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
-  &lt;/li&gt;
+  &lt;li&gt;可以读取函数内部的变量&lt;/li&gt;
+  &lt;li&gt;让这些变脸的值始终保持在内存中&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&quot;定位符&quot;&gt;定位符&lt;/h4&gt;
-&lt;p&gt;字符 | 描述
-—|—
-^ | 匹配输入字符开始的位置
-$ | 匹配输入字符结束的位置
-\b | 匹配一个单词边间，即字与空间间的位置
-\B | 非单词边界匹配&lt;/p&gt;
-
-&lt;p&gt;注意：不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如 ^* 之类的表达式。&lt;/p&gt;
-
-&lt;p&gt;若要匹配一行文本开始处的文本，请在正则表达式的开始使用 ^ 字符。不要将 ^ 的这种用法与中括号表达式内的用法混淆。&lt;/p&gt;
-
-&lt;p&gt;若要匹配一行文本的结束处的文本，请在正则表达式的结束处使用 $ 字符。&lt;/p&gt;
-
-&lt;h4 id=&quot;正则匹配匹配的一些demo&quot;&gt;正则匹配匹配的一些demo&lt;/h4&gt;
-&lt;p&gt;参考：&lt;a href=&quot;https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499503920bb7b42ff6627420da2ceae4babf6c4f2000&quot;&gt;RegExp-廖雪峰&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // 匹配大小写、字母和数字
-    function isReg(reg, con, isGlobal) {
-        const res = reg.test(con);
-        const execRes = reg.exec(con);
-        console.log(res);
-        console.log(execRes);
-
-        if (isGlobal == 1) {
-            console.log(res.lastIndex);
-            isReg(reg, con, 0);
-        }
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function f1(){
+    var n = 999;
+    
+    nAdd = function(){
+        n += 1;
     }
+    
+    function f2(){
+        alert(n);
+    }
+    
+    return f2;
+}
 
-    // 可以匹配一个大小写字母、一个数字或者下划线
-    isReg(/[a-zA-Z0-9\_]/, '_');
-    // 可以匹配一个大小写字母、下划线开头，等
-    isReg(/^([a-zA-Z\$\_])[a-zA-Z0-9\_\$]{0,19}/, 'ab2c3');
-    // 三个数字+「-」+ 五个字母或者数字
-    isReg(/^(\d{3})-(\w{5})$/, '123-sdaws');
-    // 三个数字+「-」或者 空格+ 五个字母或者数字
-    isReg(/^(\d{3})(-|\s)(\w{5})$/, '123 sdaws');
-    // 贪婪匹配 [&quot;120300000&quot;, &quot;120300000&quot;, &quot; &quot;, index: 0, input: &quot;120300000&quot;, groups: undefined]
-    isReg(/^(\d+)(0*)$/, 120300000);
-    // 非贪婪匹配 （也就是尽可能少匹配,精确匹配)[&quot;120300000&quot;, &quot;1203&quot;, &quot;00000&quot;, index: 0, input: &quot;120300000&quot;, groups: undefined]
-    isReg(/^(\d+?)(0*)$/, 120300000);
-    // 全局匹配
-    isReg(/[a-zA-Z]+Team/g, 'sTeam, bTeam, cTeam', 1);
-    // 可以验证并提取出带名字的Email地址：
-    isReg(/^\&amp;lt;(\w+\s?\w+)\&amp;gt;\s?(\w+@\w+\.\w+)$/, '&amp;lt;Tom Paris&amp;gt; tom@voyager.org');
-    // 验证Email地址
-    isReg(/^([a-zA-Z0-9\.\_])+@([0-9]|[A-Za-z])+.(com|org)$/, 'szaf93671@126.com');
+var res = f1();
+
+res(); // 999
+
+nAdd();
+
+res(); // 1000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在上述代码中，res实际上就是闭包f2函数。他一共运行了2次，第一次的值是999，第二次的值是1000。这证明了，函数f1中的局部变量n一直保持在内存中，并没有在f1调用后被自动清除。&lt;/p&gt;
+
+&lt;p&gt;f1是f2的富含，而f2被赋予了一个全局变脸，这导致f2永远存在内存中，而f2的存在依赖于f1，因此f1也必须始终存在于内存中，不会在调用结束后，被垃圾回收机制回收。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;值得注意&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nAdd = function(){
+    n += 1;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;首先，在nAdd前面没有加&lt;strong&gt;var&lt;/strong&gt;,因此nAdd是一个全局变量，而不是局部棉量，其次nAdd的值是一个匿名函数，而这个匿名函数本身也是个闭包，所以nAdd相当于是一个setter，可以在函数外部对内部的局部变量进行操作。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意！ 「onAdd」这种函数写法，在严格模式（’use strict’）下是会报错的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;使用闭包的注意点&quot;&gt;使用闭包的注意点&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;由于闭包会使得函数的变量都被保存在内存中，内存消耗是很严重的，所以不能滥用闭包，否则会造成网页的性能问题，在IE中会导致内存泄漏。解决方法是，在退出函数前，将不使用的局部变量全部删除&lt;/li&gt;
+  &lt;li&gt;闭包会在函数外部，改变父函数的内部变量的值。所以，如果你把父函数当做对象使用，把闭包当做他的公用方法，把内部变量当做他的私有属性，必须注意，不能随便改变父函数内部变量的值。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;好了写完了&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-1&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-2&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-3&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-4&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-5&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-6&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-7&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-8&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-9&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-10&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-11&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-12&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-13&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-14&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-15&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-16&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-17&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-18&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-19&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-20&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-21&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-22&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-23&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-24&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-25&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-26&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-27&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-28&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-29&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-30&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-31&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-32&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-33&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-34&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-35&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-36&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-37&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-38&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-39&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-40&quot;&gt;好了写完了&lt;/h4&gt;
+&lt;h4 id=&quot;好了写完了-41&quot;&gt;好了写完了&lt;/h4&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;再说点？&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;今天整理完，感觉还有一些时间，分享下上周看的奥斯卡最佳影片「绿皮书」&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;特别喜欢这句对白&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;「如果我不够黑人，也不够白人，又或不够男人，那请你告诉我，托尼，那我到底算是什么人！？」&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;从学校踏入社会，也有快三年时间了，接触的人也越来越多。在我三观里，对于男女平权、种族仇恨等等，都比较模糊，我只是一直觉得人不可能存在在中立阶段，更多可能是偏左、右，不管从自然选择、和平演变，我觉得大多数人类更多站在自己的利益面发表自己的言论。&lt;/p&gt;
+
+&lt;p&gt;在我看来，这部电影给我最大的思考就就是Don Shirley在雨中对Tony的歇斯底里的怒吼，为什么人活着就要偏向人群所希望亦或一致认知的生活状态。乃至已经到了Don这种高度学历、地位、教育的人依旧困在自己的思想桎梏。&lt;/p&gt;
+
+&lt;p&gt;我经常告诉自己「可能你改不了世界的现状，也改不了身边的朋友、亲人的环境，至少在自己认知方面觉得可以坚持的事，认真坚持到底。」乃至可能也不够「黑」、不够「白」。&lt;/p&gt;
+
 </description>
-        <pubDate>Wed, 13 Feb 2019 21:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/13/url/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/13/url/</guid>
+        <pubDate>Wed, 06 Mar 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/03/06/%E9%97%AD%E5%8C%85(Closurce)/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/03/06/%E9%97%AD%E5%8C%85(Closurce)/</guid>
         
         <category>笔记</category>
         
         
         <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-03-05-JS的回收机制</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#回收机制&quot; id=&quot;markdown-toc-回收机制&quot;&gt;回收机制&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是内存泄漏&quot; id=&quot;markdown-toc-什么是内存泄漏&quot;&gt;什么是内存泄漏？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#gc的缺陷&quot; id=&quot;markdown-toc-gc的缺陷&quot;&gt;GC的缺陷&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#gc的优化策略&quot; id=&quot;markdown-toc-gc的优化策略&quot;&gt;GC的优化策略&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#分带回收generation-gc&quot; id=&quot;markdown-toc-分带回收generation-gc&quot;&gt;分带回收（Generation GC）&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;回收机制&quot;&gt;回收机制&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;JS为了防止内存泄露，会执行回收机制&lt;/p&gt;
+  &lt;h3 id=&quot;什么是内存泄漏&quot;&gt;什么是内存泄漏？&lt;/h3&gt;
+  &lt;p&gt;当已经不需要某块内存时，内存却还存在。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所以，回收机制就是阶段性的不定期去寻找不再使用的变量，并释放他们所指向的内存&lt;/p&gt;
+
+&lt;p&gt;比如如何处理哪些已经执行完毕的函数，如果么有外部应用，则会回收。&lt;/p&gt;
+
+&lt;p&gt;常用的两种垃圾回收规则：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;标记清除&lt;/li&gt;
+  &lt;li&gt;引用计数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Javascript引擎基础GC方案是（Simple GC）：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;mark and sweep&lt;/strong&gt; —&amp;gt; 标记清楚&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;遍历所以可访问的对象&lt;/li&gt;
+  &lt;li&gt;回收已不可访问的对象
+比如：
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;当变量进入环境时，例如，在函数中声明一个变量，就将它标记为「进入环境」
+从逻辑上来讲，永远不能释放进入环境的变量所占用的内存，因为只要执行流进入相应的环境，就可能会用他它们。
+而当变量离开环境的时候，则会标记「离开环境」
+垃圾回收机在运行的时候会给存储在内存中的所有边浪都加上标记
+然后，它会去掉环境中的变量以及被环境中的变量引用的变量的标记（闭包，也就是说在环境中的以及相关引用的变量会被去除标记）
+而在此之后再被加上标记的变量会将被视为准备删除的变量，原因是环境中的变量已经无法访问到这些变量了
+最后垃圾回收期完成内存清除工作，销毁哪些带标记的值，并回收他们所占用的内存空间
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;简单的阐述：&lt;/p&gt;
+
+&lt;p&gt;跟踪记录每个值被引用的次数，当一个值被引用时，次数-1，减持时-1，下次垃圾回收器会收回次数为0的值的内存。&lt;/p&gt;
+
+&lt;h3 id=&quot;gc的缺陷&quot;&gt;GC的缺陷&lt;/h3&gt;
+
+&lt;p&gt;出于安全考虑&lt;strong&gt;GC时，停止响应其他操作&lt;/strong&gt;
+但是它操作时候在&lt;strong&gt;100ms&lt;/strong&gt;甚至以上&lt;/p&gt;
+
+&lt;p&gt;对于一般应用还可以，但是对于js游戏，动画对连贯性要求比较高的应用，需要另外处理。&lt;/p&gt;
+
+&lt;h3 id=&quot;gc的优化策略&quot;&gt;GC的优化策略&lt;/h3&gt;
+
+&lt;h4 id=&quot;分带回收generation-gc&quot;&gt;分带回收（Generation GC）&lt;/h4&gt;
+&lt;p&gt;目的是通过区分「临时」与「持久」对象:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;多回收「临时对象」区（young generation）&lt;/li&gt;
+  &lt;li&gt;少回收「持久对象」区（tenured generation）&lt;/li&gt;
+  &lt;li&gt;减少每次需遍历的对象，从而减少每次GC的耗时。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;结语&quot;&gt;结语&lt;/h2&gt;
+
+&lt;p&gt;「从输入url到页面渲染」文章已经整理（抄）完了，面对如此复杂的机制，很多地方依旧不理解，明天开始准备从基础慢慢开始学习。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 05 Mar 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/03/05/JS%E7%9A%84%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/03/05/JS%E7%9A%84%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-03-04-JS的执行阶段</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#js的执行阶段&quot; id=&quot;markdown-toc-js的执行阶段&quot;&gt;JS的执行阶段&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#执行上下文&quot; id=&quot;markdown-toc-执行上下文&quot;&gt;执行上下文&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#每个执行上下文都有三个重要属性&quot; id=&quot;markdown-toc-每个执行上下文都有三个重要属性&quot;&gt;每个执行上下文都有三个重要属性&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#vo和ao&quot; id=&quot;markdown-toc-vo和ao&quot;&gt;VO和AO&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#作用域链&quot; id=&quot;markdown-toc-作用域链&quot;&gt;作用域链&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#流程简述&quot; id=&quot;markdown-toc-流程简述&quot;&gt;流程简述&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#this指针&quot; id=&quot;markdown-toc-this指针&quot;&gt;this指针&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;js的执行阶段&quot;&gt;JS的执行阶段&lt;/h2&gt;
+
+&lt;p&gt;当解释器解释完语法规则后，就开始执行，然后整个执行流程中大致包含：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;执行上下文，执行堆栈概念（如全局上下文，当前活动上下文）&lt;/li&gt;
+  &lt;li&gt;VO（变量对象）和AO（活动对象）&lt;/li&gt;
+  &lt;li&gt;作用域脸&lt;/li&gt;
+  &lt;li&gt;this机制&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;执行上下文&quot;&gt;执行上下文&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;JS有执行山下文&lt;/li&gt;
+  &lt;li&gt;浏览器首次载入脚本，它将创建「全局执行上下文」，并亚压入执行栈栈顶（不可以被弹出）&lt;/li&gt;
+  &lt;li&gt;然后每进入其他作用域就创建对应的执行上下文并把它压入执行栈的顶部&lt;/li&gt;
+  &lt;li&gt;一旦对应的上下文执行完毕，就会从栈顶端弹出，并将上下文控制权交给当前的栈&lt;/li&gt;
+  &lt;li&gt;依次进行，直至回到全局执行上下文&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果程序执行完成，被弹出执行栈，然后有没有被应用（没有形成闭包），那么这个函数中用的内存就被垃圾处理自动回收。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0qztu4q9vj30cv02fmx2.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;每个执行上下文都有三个重要属性&quot;&gt;每个执行上下文都有三个重要属性&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;变量对象（Variable object ， VO）&lt;/li&gt;
+  &lt;li&gt;作用域链（Scope chain）&lt;/li&gt;
+  &lt;li&gt;this&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0qzwz985ij309g06xq2x.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;vo和ao&quot;&gt;VO和AO&lt;/h4&gt;
+&lt;p&gt;VO是执行上下文的属性，但是只有全局上下文的变量对象允许通过VO的属性名称来间接访问（因为在全局上下文里，全局对象自身就是变量对象）&lt;/p&gt;
+
+&lt;p&gt;AO（activation object），当函数被调用者激活，AO就被创建了。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在函数上下文中：VO === AO
+在全局上下文中：VO === this === global
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;总体来说，VO中会存放些变量信息（比如声明的变量，函数，arguments参数等等）&lt;/p&gt;
+
+&lt;h3 id=&quot;作用域链&quot;&gt;作用域链&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;作为执行上下文的一个属性，原理和原型链很相似，作用很重要。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;流程简述&quot;&gt;流程简述&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在函数上下文中，查找一个变量foo
+如果函数的VO中找到了，就直接使用
+否则去它的父级作用域中（__parent__）找
+以此往上级找寻，直到全局上下文中没有找到报错。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0r08hdnhcj30650bu0sv.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;this指针&quot;&gt;this指针&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;this是执行上下文环境的一个属性，而不是某个变量对象的属性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;因此：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;this是没有一个类似搜寻变量的过程&lt;/li&gt;
+  &lt;li&gt;当代码中使用了this，这个this的值就直接从执行上下文中获取了，而不会从作用域链中搜寻&lt;/li&gt;
+  &lt;li&gt;this的值在取决中进入上下文时的情况&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;举个例子&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var baz = 200;
+var bar = {
+    baz: 100,
+    foo: function() {
+        consoloe.log(this.baz)
+    }
+}
+
+var foo = bar.foo;
+// 进入环境： global
+foo(); // 200，但是严格环境下会报错，Cannot ready property 'baz' of undefined
+// 进入环境：global bar
+bar.foo(); // 100
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Mon, 04 Mar 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/03/04/JS%E7%9A%84%E6%89%A7%E8%A1%8C%E9%98%B6%E6%AE%B5/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/03/04/JS%E7%9A%84%E6%89%A7%E8%A1%8C%E9%98%B6%E6%AE%B5/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-02-28-JS引擎解析过程-解释阶段</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#js引擎解析过程&quot; id=&quot;markdown-toc-js引擎解析过程&quot;&gt;JS引擎解析过程&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是js引擎&quot; id=&quot;markdown-toc-什么是js引擎&quot;&gt;什么是JS引擎？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#js的解释阶段&quot; id=&quot;markdown-toc-js的解释阶段&quot;&gt;JS的解释阶段&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#js的预处理阶段&quot; id=&quot;markdown-toc-js的预处理阶段&quot;&gt;JS的预处理阶段&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#分号补全&quot; id=&quot;markdown-toc-分号补全&quot;&gt;分号补全&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;js引擎解析过程&quot;&gt;JS引擎解析过程&lt;/h2&gt;
+&lt;h3 id=&quot;什么是js引擎&quot;&gt;什么是JS引擎？&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;JavaScript解析引擎是为「读懂」JavaScript代码，并准确地给出代码运行结果的一段程序。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;举个栗子：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var a = 1 + 1;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;JavaScript引擎所做的事情就是看懂（解析）这段代码，并将a的值变成2&lt;/p&gt;
+
+&lt;h3 id=&quot;js的解释阶段&quot;&gt;JS的解释阶段&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;JS是解释型语言，所以它无需提前编译，而是由解释器实时运行的&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;引擎对JS的处理过程：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.读取代码，进行词法分析（Lexical analysis），然后讲代码分解成词元（token）
+2.对词元进行语法分析（parsing），然后将代码整理成语法书（syntax tree）
+3.使用翻译器（translator），将代码转为字节码（bytecode）
+4.使用字节码解释器（bytecode interpreter），讲字节码转为机器码
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;最终计算机执行的就是机器码。
+为了提高运行速度，浏览器一般采用即时翻译（JIT-JustIn Time compiler）&lt;/p&gt;
+
+&lt;p&gt;即字节码只在运行时编译，用到哪一行就编译哪一行，并且把编码结果缓存（iniline cache）&lt;/p&gt;
+
+&lt;p&gt;这样会使整个程序的运行速度提升
+而且对于不同的浏览器可能策略不同，有的浏览器为了省略了字节码的翻译过程，直接转为机器码（比如chrome的v8）&lt;/p&gt;
+
+&lt;p&gt;总结：核心的JIT编译器可以将源码编译成机器码运行&lt;/p&gt;
+
+&lt;h3 id=&quot;js的预处理阶段&quot;&gt;JS的预处理阶段&lt;/h3&gt;
+
+&lt;p&gt;上述讲的解释器的整体过程，再讲一下在正式执行JS之前，还会有一个预处理阶段&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;变量提升&lt;/li&gt;
+  &lt;li&gt;分号补全&lt;/li&gt;
+  &lt;li&gt;处理变量冲突&lt;/li&gt;
+  &lt;li&gt;···&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;分号补全&quot;&gt;分号补全&lt;/h4&gt;
+
+&lt;p&gt;这个比较简单&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;console.log('a')
+console.log('b')
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;JS预处理会在后面加上分号，因为JS解释器有一个「Semicolon Insertion」规则，他会按照一定规则，在适当的位置补充分号&lt;/p&gt;
+
+&lt;p&gt;规则（不全）:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;当有换行符的时候（包括含有换行符的多行注释），并且下一句token没有根前面的语法匹配时，自动添加分号。&lt;/li&gt;
+  &lt;li&gt;当有}时候，如果缺少分号，会添加分号&lt;/li&gt;
+  &lt;li&gt;程序源代码结束是，如果缺少分号，会补分号。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最终&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;console.log('a');
+console.log('b');
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;举一个反例&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function b() {
+    return
+    {
+        a: 'a'
+    };
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;可能你想输入的结果是：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{a: 'a'}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;但是由于分号补全机制，最后会变成：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function b(){
+    return;
+    {
+        a:'a'
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;运行以后就是&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;undefined
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;变量提升&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;在执行过程中，可能开头没有定义变量或者函数，但是往往并没有报错。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;其中包括函数提升和变量提升&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a  = 1;
+b();
+function b(){
+    console.log('b');
+}
+
+var a;
+b();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;由于变量提升，最终结果,2个b()都会执行，a会被赋值。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 28 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/28/JS%E5%BC%95%E6%93%8E%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B-%E8%A7%A3%E9%87%8A%E9%98%B6%E6%AE%B5/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/28/JS%E5%BC%95%E6%93%8E%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B-%E8%A7%A3%E9%87%8A%E9%98%B6%E6%AE%B5/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-02-27-CSS的可视化格式模型(2)</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#fc&quot; id=&quot;markdown-toc-fc&quot;&gt;FC&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ifcinline-formatting-context&quot; id=&quot;markdown-toc-ifcinline-formatting-context&quot;&gt;IFC（inline Formatting Context）&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ifc规则&quot; id=&quot;markdown-toc-ifc规则&quot;&gt;IFC规则&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#行匡&quot; id=&quot;markdown-toc-行匡&quot;&gt;行匡&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#行框的规则&quot; id=&quot;markdown-toc-行框的规则&quot;&gt;行框的规则&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#总结&quot; id=&quot;markdown-toc-总结&quot;&gt;总结&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#相比较bfc规则ifc可能更加抽奖因为没有那么清晰的规则和触发条件&quot; id=&quot;markdown-toc-相比较bfc规则ifc可能更加抽奖因为没有那么清晰的规则和触发条件&quot;&gt;相比较BFC规则，IFC可能更加抽奖（因为没有那么清晰的规则和触发条件）&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#但是总体来说它就是行内元素自身如何显示以及在框内如何摆放的渲染规则&quot; id=&quot;markdown-toc-但是总体来说它就是行内元素自身如何显示以及在框内如何摆放的渲染规则&quot;&gt;但是总体来说，它就是行内元素自身如何显示以及在框内如何摆放的渲染规则。&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;上一篇忘了说明什么是格式上下文（FC）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;fc&quot;&gt;FC&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Formattinf Context,格式上下文。它定义了框内部的元素渲染规则，比较抽象。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;FC像是一个容器，里面内部包含元素。容器可以隔开里面的额元素和外面的元素，保护内部元素被外部元素影响。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意，并不是说所有的框都产生FC，而是符合特定条件才会产生，只有产生了对于的FC后才会应用对应渲染规则&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;ifcinline-formatting-context&quot;&gt;IFC（inline Formatting Context）&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;行内框产生的格式上下文&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;ifc规则&quot;&gt;IFC规则&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在行内格式化上下文中框一个接一个水平排列，七点是包含块的顶部。
+
+水平方向上的margin，border和padding在框之间得以保留
+
+框在垂直方向上可以以不同的方式对齐：它们的顶部或底部对齐，或根据其中文字的基线对齐
+
+浮动元素可能会处于包含块的边缘和行款边缘之间
+
+尽管在相同的行内格式胡上下问中的行框通常拥有相同的宽度，他们可能会因为浮动元素缩短了可用宽度，而在宽度上发生变化
+
+同一行内格式化上下文中的行框通常高度不一样（如，一行包含了一个高的图形，而其他行只包含了文本）
+
+当一行中行内宽度和总和小鱼包含他们的行框的宽，他们在水平方向上对齐，取决于「text-align」的属性
+
+空的行内框应该被忽略
+
+及不包含,保留空白符，margrin/padding/border非0的行内元素，以及其他常规流中的内容（比如，图片，inline-blcoks和inline-tables）并且不是以换行结束的行框，
+必须被当做零高度行框对待
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;行匡&quot;&gt;行匡&lt;/h3&gt;
+&lt;p&gt;包含那些框的长方形区域，会形成一行，叫行框&lt;/p&gt;
+
+&lt;p&gt;行框的宽度由它的包含块和其中的浮动元素决定，高度的确定由行高度计算规则决定&lt;/p&gt;
+
+&lt;h3 id=&quot;行框的规则&quot;&gt;行框的规则&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;如果几个行内框在水平方向无法放入一个行框内，它们可以分配在两个或者多个行框垂直堆叠的行框内
+行框在堆叠时没有垂直方向上的分割且永不重叠
+行框的高度总是足够容纳所包含的所有框，不过他可能高于它包含的最高的框
+行框的左边接触到其包含快的左边，后边接触到其包含块的右边
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;总结&quot;&gt;总结&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;行内元素总会应用IFC渲染规则&lt;/li&gt;
+  &lt;li&gt;行内元素会应用IFC规则渲染，例如「text-align」可以用来居中&lt;/li&gt;
+  &lt;li&gt;块框内部，对语文本这类的匿名元素，会产生匿名行框包围，而行框内部就应用IFC渲染规则&lt;/li&gt;
+  &lt;li&gt;行内框内部，对于那些行内元素，应该应用IFC渲染规则&lt;/li&gt;
+  &lt;li&gt;另外， 「inline-block」，挥着元素外层生成IFC（所以这个元素是可以通过「text-align」来水平居中的），当然它内部则是按照BFC规则渲染&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;相比较bfc规则ifc可能更加抽奖因为没有那么清晰的规则和触发条件&quot;&gt;相比较BFC规则，IFC可能更加抽奖（因为没有那么清晰的规则和触发条件）&lt;/h4&gt;
+&lt;h4 id=&quot;但是总体来说它就是行内元素自身如何显示以及在框内如何摆放的渲染规则&quot;&gt;但是总体来说，它就是行内元素自身如何显示以及在框内如何摆放的渲染规则。&lt;/h4&gt;
+
+</description>
+        <pubDate>Wed, 27 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/27/CSS%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B(2)/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/27/CSS%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B(2)/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-02-26-CSS的可视化格式模型</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#css的可视化格式模型&quot; id=&quot;markdown-toc-css的可视化格式模型&quot;&gt;CSS的可视化格式模型&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#简介&quot; id=&quot;markdown-toc-简介&quot;&gt;简介&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#包含快containing-block&quot; id=&quot;markdown-toc-包含快containing-block&quot;&gt;包含快（Containing Block）&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#控制框controlling-box&quot; id=&quot;markdown-toc-控制框controlling-box&quot;&gt;控制框（Controlling Box）&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#匿名块框&quot; id=&quot;markdown-toc-匿名块框&quot;&gt;匿名块框&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#行内框&quot; id=&quot;markdown-toc-行内框&quot;&gt;行内框&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#display属性影响&quot; id=&quot;markdown-toc-display属性影响&quot;&gt;display属性影响&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#总结&quot; id=&quot;markdown-toc-总结&quot;&gt;总结&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#bfcblock-formatting-context&quot; id=&quot;markdown-toc-bfcblock-formatting-context&quot;&gt;BFC（Block Formatting Context）&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#特点&quot; id=&quot;markdown-toc-特点&quot;&gt;特点：&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#如何触发bfc&quot; id=&quot;markdown-toc-如何触发bfc&quot;&gt;如何触发BFC？&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;css的可视化格式模型&quot;&gt;CSS的可视化格式模型&lt;/h2&gt;
+&lt;h3 id=&quot;简介&quot;&gt;简介&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CSS中规定每个元素都有自己的盒子模型&lt;/li&gt;
+  &lt;li&gt;可视化格式模型则是把这些盒子按照规则摆放到页面上布局&lt;/li&gt;
+  &lt;li&gt;盒子模型规定了怎么在页面上布局盒子和盒子之间的相互作用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;CSS的可视化格式模型规定了浏览器在页面中如何处理文档树&lt;/p&gt;
+
+&lt;p&gt;其中包括了&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;包含块（Containing Block)
+控制框（Controlling Box）
+BFC（Block Formatting Context）
+IF（Inline Formatting Context）
+定位体系
+浮动
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;CSS包含了三种定位机制：&lt;strong&gt;普通&lt;/strong&gt;，&lt;strong&gt;浮动&lt;/strong&gt;，&lt;strong&gt;决定定位&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;包含快containing-block&quot;&gt;包含快（Containing Block）&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;一个元素的box的定位尺寸，会与某个矩形框有关，这个框就称之为包含块。元素会为他的子孙元素创建包含块，但是并不是说元素的包含块就是它的父元素，元素的包含块与它的祖先元素的样式等有关系&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;通俗的讲，就是定位参考框或者定位左边参考系&lt;/p&gt;
+
+&lt;p&gt;比如：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;根元素是最顶端的元素，它没有父节点，它的包含块就是初始包含块&lt;/li&gt;
+  &lt;li&gt;static和relative的包含块是由它最近的块级、单元格或者行内块祖先元素的内容框（content）创建的。&lt;/li&gt;
+  &lt;li&gt;fixed的包含块是当前的可是窗口&lt;/li&gt;
+  &lt;li&gt;absolute的包含块由他最近的position属性为&lt;strong&gt;abosolute&lt;/strong&gt;，&lt;strong&gt;relative&lt;/strong&gt;，&lt;strong&gt;fixed&lt;/strong&gt;的祖先元素创建
+    &lt;ul&gt;
+      &lt;li&gt;如果其祖先元素是行内元素，则包含块取决于其祖先元素的direction特性&lt;/li&gt;
+      &lt;li&gt;如果祖先元素不是行内元素，那么包含块的区域应该为祖先元素的内边距边界&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;direction: 设置文本方向&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;div{
+    direction: rtl;
+    
+    rtl //文本方向从右到左。
+    ltl //默认。文本方向从左到右。
+    inherit //规定应该从父元素继承 direction 属性的值。
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;控制框controlling-box&quot;&gt;控制框（Controlling Box）&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;块级元素和块框以及行内元素和行框的相关概念&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;块框&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;块级元素会生成一个块框（Block Box），块框会占据一整行，用来包含子box和生成的内容&lt;/li&gt;
+  &lt;li&gt;块框同时也是一个块包含框（Containing Box），里面要么只包含块框，要么只能包含行内块（不能混淆），如果块框内部有块级元素也有行内元素，那么行内元素会被匿名块框包围&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;匿名块框&quot;&gt;匿名块框&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;div&amp;gt;
+    Some text
+    &amp;lt;p&amp;gt;More text&amp;lt;/p&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;div生成一个块框，包含了另外一个块框p以及文本内容「Sometext」，此时「Some text」文本会被强制加上一个匿名的块框里面，被div生成的块框包含&lt;/p&gt;
+
+&lt;p&gt;如果一个块框在其中包含了另外一个块框，那么我们强迫它只能包含块框，因此其他文本内容生产出来的都是匿名块框&lt;/p&gt;
+
+&lt;h4 id=&quot;行内框&quot;&gt;行内框&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;一个行内元素生成一个行内框&lt;/li&gt;
+  &lt;li&gt;行内元素能排在一行，允许左右有其他元素&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;关于匿名行内框的生成：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;P&amp;gt;Some &amp;lt;EM&amp;gt;emphasized&amp;lt;/EM&amp;gt; text&amp;lt;/P&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;p元素生成一个块框，其中有几个行内框（如EM），以及文本「Some」「text」，此时会专门为这些文本生成匿名行内狂&lt;/p&gt;
+
+&lt;h4 id=&quot;display属性影响&quot;&gt;display属性影响&lt;/h4&gt;
+
+&lt;p&gt;display的几个属性也可以影响不同框的生成：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;block：元素生成一个块框&lt;/li&gt;
+  &lt;li&gt;inline：元素生成一个或多个行内框&lt;/li&gt;
+  &lt;li&gt;inline-block：元素生成一个行内块级框，行内块级的内部会被当做块级来格式化，因此元素本身会被当做行内框来格式化&lt;/li&gt;
+  &lt;li&gt;none：不生成框，不在格式化结构中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;visibility:hidden 产生一个不可见的框&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;总结&quot;&gt;总结&lt;/h4&gt;
+&lt;p&gt;1.如果一个框内有一个块级元素，那么这个框里的内容都会被当做块框来进行格式化，因为只要出现块级元素，就会将里面的内容分块几块，每一块独占一行（出现行内，则用匿名块框包含）
+2.如果一个框内，没有任何块级元素，那么这个框里的内容会被当做行内框来格式化，因为里面的内容按照顺序成行的排列&lt;/p&gt;
+
+&lt;h3 id=&quot;bfcblock-formatting-context&quot;&gt;BFC（Block Formatting Context）&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;块级格式化上下文，浮动元素和绝对定位元素，非块级盒子的块级，以及overflow不为「visiable」的块级盒子，都会为他们的内容创建新的BFC&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在块级格式化上下文中，每个元素左边与包含块的左边相接触（对于从右到左的格式化，右外边接触右边），即使寸浮动也是如此（所以浮动元素正常会直接贴近它的包含块的左边，与普通元素重合）&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;除非这个元素也创建一个新的BFC&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;特点&quot;&gt;特点：&lt;/h4&gt;
+
+&lt;p&gt;1.内部box在垂直防线，一个接一个的放置
+2.box的垂直方向由margin决定，属于同一个BFC的两个box间的margin会重叠（这个比较重要）
+3.BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响外卖的元素。
+4.计算BFC的高度时候，浮动元素也会计算（不会浮动坍塌）&lt;/p&gt;
+
+&lt;h4 id=&quot;如何触发bfc&quot;&gt;如何触发BFC？&lt;/h4&gt;
+&lt;p&gt;1.根元素
+2.float不为none
+3.position为absolute或者fixed
+4.dispaly为inline-block、flex、inline-flex、table、tablec-cell、table-caption
+5.overflow不为visible&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ps:「display:table」，它本身不产生BFC，但是它会产生匿名框（包含display:table-cell的框），而这个匿名框产生BFC&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Tue, 26 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/26/CSS%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/26/CSS%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A0%BC%E5%BC%8F%E6%A8%A1%E5%9E%8B/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#chrome中的调试&quot; id=&quot;markdown-toc-chrome中的调试&quot;&gt;Chrome中的调试&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#资源外链的下载&quot; id=&quot;markdown-toc-资源外链的下载&quot;&gt;资源外链的下载&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#遇到外链时的处理&quot; id=&quot;markdown-toc-遇到外链时的处理&quot;&gt;遇到外链时的处理&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#遇到css样式资源&quot; id=&quot;markdown-toc-遇到css样式资源&quot;&gt;遇到CSS样式资源&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#遇到js脚本资源&quot; id=&quot;markdown-toc-遇到js脚本资源&quot;&gt;遇到JS脚本资源&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#domcontentloaded事件和onload事件的区别&quot; id=&quot;markdown-toc-domcontentloaded事件和onload事件的区别&quot;&gt;DOMContentLoaded事件和onload事件的区别&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#遇到img图片类资源&quot; id=&quot;markdown-toc-遇到img图片类资源&quot;&gt;遇到img图片类资源&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;chrome中的调试&quot;&gt;Chrome中的调试&lt;/h2&gt;
+&lt;p&gt;Chrome的开发者工具中，Perfromance中可以看到详细的渲染工程
+&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g0ebgvx4h6j30p00c0ab4.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;资源外链的下载&quot;&gt;资源外链的下载&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;在解析html时，会遇到一些资源链接，此时需要进行单独处理&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一般情况，静态资源分为几个大类（未全列举）：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;CSS样式资源&lt;/li&gt;
+  &lt;li&gt;JS脚本资源&lt;/li&gt;
+  &lt;li&gt;img图片资源&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;遇到外链时的处理&quot;&gt;遇到外链时的处理&lt;/h4&gt;
+
+&lt;p&gt;当遇到上述外链的时候，会独立开启一个下载线程去下载资源（HTTP1.1）&lt;/p&gt;
+
+&lt;h4 id=&quot;遇到css样式资源&quot;&gt;遇到CSS样式资源&lt;/h4&gt;
+
+&lt;p&gt;CSS资源的处理有几个特点&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CSS下载时异步，不会阻塞浏览器构建DOM树&lt;/li&gt;
+  &lt;li&gt;但是会阻塞渲染，也就是在构建render时候，会等到css下载解析完毕才会进行。（这与浏览器优化有关，防止css规则不断改变，避免了重复的构建）&lt;/li&gt;
+  &lt;li&gt;「media query」声明的CSS是不会阻塞渲染的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;遇到js脚本资源&quot;&gt;遇到JS脚本资源&lt;/h3&gt;
+&lt;p&gt;JS脚本资源的处理有几个特点：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;阻塞浏览器的解析，也就是说发现一个外链脚本时，需等待脚本下载完成并执行后才会解析HTML&lt;/li&gt;
+  &lt;li&gt;浏览器的优化，一般现代浏览器有优化，在脚本阻塞时，也会继续下载其他资源（当然也有并发上限），但是虽然脚本可以并行下载，但是解析过程仍然是阻塞的，也即是说必须这个脚本和执行完成后才能继续解析，并行下载只是一个优化操作&lt;/li&gt;
+  &lt;li&gt;defer与async，普通德积小本是会阻塞浏览器解析的，但是可以加上defer或者async属性，这样脚本就会变成异步了，可以等待解析结束后执行脚本。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;值得注意的是，defer是延迟执行，async是异步执行&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;简单的来说：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;「async」是异步执行，异步下载完毕后就会执行，不确保执行顺序，一定在onload钱，但是不确定在「DOMContentLoaded」事件的前或者后&lt;/li&gt;
+  &lt;li&gt;「defer」是延迟执行，在浏览器看起来的效果像是将脚本放在body后面一样。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;domcontentloaded事件和onload事件的区别&quot;&gt;DOMContentLoaded事件和onload事件的区别&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;DOMContentLoaded: 当初始的HTML文档被完全加载和解析后，被触发，无需等待样式表、图像和子框架的加载完成。
+onload:仅用于检测一个完全加载的页面（图像、CSS资源等）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;遇到img图片类资源&quot;&gt;遇到img图片类资源&lt;/h4&gt;
+
+&lt;p&gt;遇到图片资源时候，直接是异步下载，不会阻塞解析，下载完成后直接使用图片替换原有SRC&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;html基本整理好了，明天和同事有个聚会，就暂时偷个懒，下周开始整理CSS&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Thu, 21 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/21/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-3-HTML%E5%88%9D%E5%A7%8B%E5%8C%96%E9%81%87%E5%88%B0%E5%A4%96%E9%93%BE%E7%9A%84%E5%A4%84%E7%90%86/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/21/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-3-HTML%E5%88%9D%E5%A7%8B%E5%8C%96%E9%81%87%E5%88%B0%E5%A4%96%E9%93%BE%E7%9A%84%E5%A4%84%E7%90%86/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-02-20 解析页面流程（2）生成CSS规则和构建渲染</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#生成css规则&quot; id=&quot;markdown-toc-生成css规则&quot;&gt;生成CSS规则&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#举个例子&quot; id=&quot;markdown-toc-举个例子&quot;&gt;举个例子&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#css代码&quot; id=&quot;markdown-toc-css代码&quot;&gt;CSS代码&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#dom树&quot; id=&quot;markdown-toc-dom树&quot;&gt;DOM树：&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#构建渲染书&quot; id=&quot;markdown-toc-构建渲染书&quot;&gt;构建渲染书&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#渲染&quot; id=&quot;markdown-toc-渲染&quot;&gt;渲染&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是回流&quot; id=&quot;markdown-toc-什么是回流&quot;&gt;什么是回流?&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是重绘&quot; id=&quot;markdown-toc-什么是重绘&quot;&gt;什么是重绘？&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么会引起回流&quot; id=&quot;markdown-toc-什么会引起回流&quot;&gt;什么会引起回流？&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#回流优化方案&quot; id=&quot;markdown-toc-回流优化方案&quot;&gt;回流优化方案&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#简单层与复杂层&quot; id=&quot;markdown-toc-简单层与复杂层&quot;&gt;简单层与复杂层&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;生成css规则&quot;&gt;生成CSS规则&lt;/h2&gt;
+&lt;p&gt;同理，CSS规则树的生成也是类似&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bytes -&amp;gt; character -&amp;gt; tokens -&amp;gt; nodes -&amp;gt; CSSOM
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.Conversion：浏览器将获得的HTML内容（Bytes）基于他的编码转换为单个字符
+2.Tokenizing分词：浏览器按照HTML规范标准将这些字符转换为不同的标记token。每个token都他有自己独特的含义以及规则及
+3.Lexing词法分析：分词的结果是得到了堆的token，此时把他们的转换为对象，这些对象分别定义了他们的属性和规则
+4.DOM构建：因为HTML标记定义的就是不同标签之间的关系，这个关系就像是一个树形结构。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;举个例子&quot;&gt;举个例子&lt;/h3&gt;
+&lt;h4 id=&quot;css代码&quot;&gt;CSS代码&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;body { font-size: 16px }
+p { font-weight: bold }
+span { color: red }
+p span { display: none }
+img { float: right }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;dom树&quot;&gt;DOM树：&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0csljk8rsj30g608bq38.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;构建渲染书&quot;&gt;构建渲染书&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;现在「CSS树」和「DOM树」都已经完成，浏览器现在要开始构建渲染树了。
+一般情况，「渲染树」和「DOM树」相对应的， 但是也不定，因为有些不可见的（display:none;）等等不可见的标签会影响「渲染树」
+&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0cspjnnvqj30p00bo0ti.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;渲染&quot;&gt;渲染&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;有了渲染书（render），开始渲染：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g0csqsdknsj30m8064q3c.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;分为四个步骤:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.计算CSS样式
+2.构建渲染书
+3.布局，主要定位坐标的和大小，是否换行，各种position overflow z-index 属性
+4.绘制，将图像绘制出来
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;然后，图中的线与箭头表示通过JS动态修改了DOM或者CSS，会导致页面「重新布局（Layout）」、「渲染（Repaint）」&lt;/p&gt;
+
+&lt;h3 id=&quot;什么是回流&quot;&gt;什么是回流?&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Layout,也叫Reflow。html的内容。结构、位置或尺寸发送了变化，需要重新计划样式和渲染树&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;什么是重绘&quot;&gt;什么是重绘？&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Repaint。元素发生的改变只是影响了元素本身的一些外观之类的（背景，边框颜色等），此时只需要应用新样式绘制这个元素就可以了&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;回流的成本开销&amp;gt;重绘的成本开销，而且一个节点的回流往往导致子节点以及同级节点的回流。&lt;/p&gt;
+
+&lt;h3 id=&quot;什么会引起回流&quot;&gt;什么会引起回流？&lt;/h3&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.页面渲染初始化
+2.DOM结构改变，比如删除了某个节点
+3.render树变化，比如减少了padding
+4.窗口resize
+5.获取某些属性
+6.改变字体大小
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;很多浏览器会对回流做优化，会等到数量足够是做一次批处理回流，
+但是处理render树的直接变化，当获取一些属性的时候，浏览器为了获得正确的值也会触发回流，这样使得浏览器优化无效，包括：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1.offset（Top/Left/Width/Height）
+    2.scroll（Top/Left/Width/Height）
+    3.cilent（Top/Left/Width/Height）
+    4.width,height
+    5.调用了getComputedStyle()/IE的currentStyle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;回流优化方案&quot;&gt;回流优化方案&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;减少逐项更改样式，最好一次性更改style，或者将样式定义为Class并一次性更新&lt;/li&gt;
+  &lt;li&gt;避免循环操作dom，创建一个documentFragment或者div，在它上面应用所以DOM操作，最后把它添加到window.document上&lt;/li&gt;
+  &lt;li&gt;避免多次读取offest等属性。无法避免则将他们缓存为变量。&lt;/li&gt;
+  &lt;li&gt;将复杂的元素绝对定位或者固定定位，使得他们脱离文档流，否则回流代价会很高&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;举个栗子：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var s = document.body.style;
+
+s.padding = &quot;2px&quot;; // 回流+重绘
+s.border = &quot;1px solid red&quot;; // 再一次 回流+重绘
+s.color = &quot;blue&quot;; // 再一次重绘
+s.backgroundColor = &quot;#ccc&quot;; // 再一次 重绘
+s.fontSize = &quot;14px&quot;; // 再一次 回流+重绘
+// 添加node，再一次 回流+重绘
+document.body.appendChild(document.createTextNode('abc!'));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;简单层与复杂层&quot;&gt;简单层与复杂层&lt;/h3&gt;
+&lt;p&gt;上述中的渲染中止步于绘制，但实际上绘制这一步，需要从简单层和复杂层来讲。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;可以默认只有一个复合图层，所有的DOM节点都在这个图层上面，&lt;/li&gt;
+  &lt;li&gt;如果开启了硬件加速功能，可以将某个节点转为复合图层&lt;/li&gt;
+  &lt;li&gt;复合涂层之间的绘制互不干扰，由GPU控制&lt;/li&gt;
+  &lt;li&gt;而简单图层中，就算是absolute等布局，变化的时候不影响整体的回流，但是由于在同一个图层中，仍然是会影响绘制的，因此做动画的时候性能仍然很低，而复合图层是独立的，所以一般动画推荐使用硬件加速。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 20 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/20/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-2-%E7%94%9F%E6%88%90CSS%E8%A7%84%E5%88%99%E5%92%8C%E6%9E%84%E5%BB%BA%E6%B8%B2%E6%9F%93/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/20/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-2-%E7%94%9F%E6%88%90CSS%E8%A7%84%E5%88%99%E5%92%8C%E6%9E%84%E5%BB%BA%E6%B8%B2%E6%9F%93/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-02-19 解析页面流程(1) 解析HTML，构建DOM树</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#总体流程&quot; id=&quot;markdown-toc-总体流程&quot;&gt;总体流程&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#解析html构建dom树&quot; id=&quot;markdown-toc-解析html构建dom树&quot;&gt;解析HTML，构建DOM树&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#浏览器处理流程大概是这个样子&quot; id=&quot;markdown-toc-浏览器处理流程大概是这个样子&quot;&gt;浏览器处理流程大概是这个样子&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#浏览器处理示意图&quot; id=&quot;markdown-toc-浏览器处理示意图&quot;&gt;浏览器处理示意图：&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#形成dom树&quot; id=&quot;markdown-toc-形成dom树&quot;&gt;形成DOM树：&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;http请求完成，浏览器获取到了html，开始解析并且渲染HTML&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;总体流程&quot;&gt;总体流程&lt;/h3&gt;
+
+&lt;p&gt;浏览器内核拿到内容后，渲染步骤：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.解析HTML，构建DOM树
+2.解析CSS，生成CSS规则树
+3.合并DOM树和CSS规则，生成render树
+4.布局render树（Layout/reflow），负责各元素尺寸、位置的计算
+5.绘制render数据（paint），绘制页面像素信息
+6.浏览器会将各层的信息发送给GPU,GPU会将各层合成（composite），显示在屏幕上
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0c03h0oqqj30p009sq33.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;解析html构建dom树&quot;&gt;解析HTML，构建DOM树&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;这是渲染流程第一步，浏览器将解析HTML，构建成DOM树，&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;流程：Bytes  -&amp;gt;  characters -&amp;gt;  tokens   -&amp;gt;  node  -&amp;gt;  DOM
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;width=device-width,initial-scale=1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;style.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Critical Path&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Hello &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&amp;gt;&lt;/span&gt;web performance&lt;span class=&quot;nt&quot;&gt;&amp;lt;/span&amp;gt;&lt;/span&gt; students!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&amp;gt;&amp;lt;img&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;awesome-photo.jpg&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;浏览器处理流程大概是这个样子&quot;&gt;浏览器处理流程大概是这个样子&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.Conversion转换 -&amp;gt;  数据字节流（HTML内容Btyes）基于他的编码生成单个字符
+2.Tokenizing分词  -&amp;gt;  由数据字节按浏览器HTML规范标准版生成标签、内容（标记TOKEN），每个TOKEN有他自己的定义和规则集
+3.Lexing词法分析 -&amp;gt;  由白标签、内容成Token，此时把它们转换为对象，这些对象分别定义了他们的属性和4规则（header/p/span）
+4.DOM构建-&amp;gt;  开始构建由不同的html标签的关系来渲染父-&amp;gt;子结构的树状结构。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;浏览器处理示意图&quot;&gt;浏览器处理示意图：&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0c06x3e19j30p00du3zh.jpg&quot; alt=&quot;iamge&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;形成dom树&quot;&gt;形成DOM树：&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g0c083cudtj30ih07wq36.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;结语&quot;&gt;结语&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;今天的内容比较少，一是最近工作挺多的，二是今天家里换了200M的网（免费的~~~~~~~ 开心~~~~~），突然发现原先的路由器「小米路由器3」和「小米电力猫」、交换机均不支持200M的速率，LAN和WAN端口支持100M，so要花点时间挑选一个性价比高的路由器的电力猫。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tKfTcgy1g0c0foevnhj30hs0gyq3u.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 19 Feb 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/19/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-1-%E8%A7%A3%E6%9E%90HTML-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/19/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-1-%E8%A7%A3%E6%9E%90HTML-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>Http2.0、https（2）</title>
+        <description>
+&lt;hr /&gt;
+&lt;p&gt;layout: post
+title:  “2019-02-18-http2.0、https（2）”
+date:    2019-02-18 21:00:00 +0800
+categories: 前端
+tag: 笔记
+—&lt;/p&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#头部的区别&quot; id=&quot;markdown-toc-头部的区别&quot;&gt;头部的区别&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#max-age与expires的区别&quot; id=&quot;markdown-toc-max-age与expires的区别&quot;&gt;Max-Age与Expires的区别&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#ps同时启动了cache-control与expirescache-contrl优先级更高&quot; id=&quot;markdown-toc-ps同时启动了cache-control与expirescache-contrl优先级更高&quot;&gt;PS：同时启动了Cache-Control与Expires，Cache-Contrl优先级更高。&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#e-tag和last-modified的区别&quot; id=&quot;markdown-toc-e-tag和last-modified的区别&quot;&gt;E-tag和Last-Modified的区别&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#图解&quot; id=&quot;markdown-toc-图解&quot;&gt;图解&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;头部的区别&quot;&gt;头部的区别&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;从http1.0到http1.1，改进了很多头部&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;http1.0的缓存控制：
+    &lt;ul&gt;
+      &lt;li&gt;Pragma：严格来说，它不属于专门的缓存控制头，但是它设置了「no-cache」可以让本地强缓存失效（相当于一个配置项）&lt;/li&gt;
+      &lt;li&gt;Expires：服务器配置，属于强缓存，用来控制在规定的时间之前，浏览器不会发出请求，而是直接使用本地缓存，注意，Expires一般对应服务器端时间，如Expires：Fri，30 Oct 2001 12:22:12&lt;/li&gt;
+      &lt;li&gt;If-Modifien-Since/Last-Modifed:这个、两个是成对出现的，属于协商缓存的内容，其中浏览器的头部是「If-Modified-Since」，而服务端的是「Last-Modified」，他的作用是，在发起请求时，如果「If-Modified-Since」和「Last-Modified」匹配， 那么代表服务器资源并未改变，因此服务器不会返回资源实体，而是只返回头部，通知浏览器可以使用本地缓存。「Last-Modified」-&amp;gt; 文件最后修改的时间，只能精确到1s&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;http1.1的缓存控制：
+    &lt;ul&gt;
+      &lt;li&gt;Cache-Control：缓存控制头部，有no-cache、max-age等多种取值。&lt;/li&gt;
+      &lt;li&gt;Max-Age： 服务器配置的，用来控制强缓存，在规定的时间之内，浏览器无需发送请求，直接使用本地缓存，注意「Max-Age」是「Cache-Control」的值，不是独立的头部，例如「Cache-Control:max-age=3600」,而且它的值是绝对时间，由服务器计算&lt;/li&gt;
+      &lt;li&gt;If-None-Match/E-tag:这两个是成对出现的，属于协商缓存的内容，其实浏览器头部的是「If-None-Match」，而服务端的是「E-tag」，同样，发出请求后， 如果「If-None-Match」和「E-tag」匹配，则代表内容未变，通知浏览器使用本地缓存，和「Last-Modified」不同，「E-tag」更精确，它是类似于指纹一样的东西，基于「FileEtag INode Mtime Size」生成的，也是只要文件变，指纹就会变，而且没有任何精度限制&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;max-age与expires的区别&quot;&gt;Max-Age与Expires的区别&lt;/h3&gt;
+&lt;p&gt;「Expires」使用的是服务器端的本地时间，但是有时客户端时间好服务器端时间不同步，导致了浏览器本地的缓存失效或者过期&lt;/p&gt;
+
+&lt;p&gt;所以不推荐Expires，而且Max-Age使用的是客户端本地时间计算，所以不会有这个问题，所以推荐使用Max-Age&lt;/p&gt;
+
+&lt;h4 id=&quot;ps同时启动了cache-control与expirescache-contrl优先级更高&quot;&gt;PS：同时启动了Cache-Control与Expires，Cache-Contrl优先级更高。&lt;/h4&gt;
+
+&lt;h3 id=&quot;e-tag和last-modified的区别&quot;&gt;E-tag和Last-Modified的区别&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Last-Modified:
+    &lt;ul&gt;
+      &lt;li&gt;表明服务器端的文件时最后何时改变的&lt;/li&gt;
+      &lt;li&gt;缺点：只能精确到1s&lt;/li&gt;
+      &lt;li&gt;服务端的文件会周期性改变，导致缓存失效&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;E-tag：
+    &lt;ul&gt;
+      &lt;li&gt;是一种种指纹机制，可以代表文件的相关唯一性&lt;/li&gt;
+      &lt;li&gt;只有文件改变，缓存才会变&lt;/li&gt;
+      &lt;li&gt;没有精确时间的限定&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;图解&quot;&gt;图解&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0atbc7vpfj30m80djq34.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;结语&quot;&gt;结语&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;第一步，HTTP请求终于讲完了，其实我之前对整个请求体系基本不知道多少。明天开始我会开始整理（抄）解析页面流程，敬请期待！&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Mon, 18 Feb 2019 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/02/18/http2.0-https-2/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/02/18/http2.0-https-2/</guid>
+        
         
       </item>
     
