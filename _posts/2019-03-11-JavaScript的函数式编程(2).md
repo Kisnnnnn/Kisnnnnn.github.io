@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2019-03-07-JavaScript的函数式编程(1)"
+title:  "2019-03-07-JavaScript的函数式编程(2)"
 date:   2019-03-07 21:00:00 +0800
 categories: 前端
 tag: 笔记
