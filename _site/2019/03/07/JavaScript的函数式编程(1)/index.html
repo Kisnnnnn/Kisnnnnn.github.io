@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>2019-03-07-JavaScript的函数式编程(1) - 翻山越岭遇到一条狗的Blog</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/styles/css/syntax.css">
+	<link rel="canonical" href="/2019/03/07/JavaScript%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B(1)/">
+	<link rel="alternate" type="application/rss+xml" title="翻山越岭遇到一条狗的Blog" href="/feed.xml">
+	
+	<meta name="keywords" content="2019-03-07-JavaScript的函数式编程(1), 翻山越岭遇到一条狗的Blog, 袁凯忻;个人博客;前端技术;">
+	<meta name="description" content="袁凯忻;个人博客;前端技术;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a> -->
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">Categories</a>
+        </li>
+        <li>
+          <a href="/tag">Tag</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <!-- <a><span id="busuanzi_container_site_pv" style="display:non">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a> -->
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/Kisnnnnn/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="https://kisnnnnn.github.io/kisnStudy/">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>2019-03-07-JavaScript的函数式编程(1)</h1>
+		    <p>Post on Mar 07, 2019 by <a href="/about">Kisn</a></p>
+		-->
+		    <h1>「今でもあなたはわたしの光」</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#前端-ref">前端</a>	/
+    	<a href="/tag/#笔记-ref">笔记</a>
+    
+  </div>
+</div>
+
+    
+
+    <!-- <script src=""></script> -->
+<div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+    <h1>目录</h1>
+    <ul class="nav sidenav">
+    </ul>
+    <!-- <div style="height: 200px;width: 200px;">
+      <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"> 
+      </script>
+    </div> -->
+  </div>
+  
+   
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">2019-03-07-JavaScript的函数式编程(1)</h1>
+              <!--
+                <p class="post-meta">Mar 7, 2019</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Mar 07, 2019</span> By <a target="_blank" href="http://localhost:4000">Kisn</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#函数式编程-funtional-programming" id="markdown-toc-函数式编程-funtional-programming">函数式编程 Funtional programming</a></li>
+  <li><a href="#什么是范畴论" id="markdown-toc-什么是范畴论">什么是范畴论？</a>    <ul>
+      <li><a href="#数学模型" id="markdown-toc-数学模型">数学模型</a></li>
+      <li><a href="#范畴与容器" id="markdown-toc-范畴与容器">范畴与容器</a></li>
+      <li><a href="#范畴论和函数式编程的关系" id="markdown-toc-范畴论和函数式编程的关系">范畴论和函数式编程的关系</a></li>
+    </ul>
+  </li>
+  <li><a href="#函数的合成与柯里化" id="markdown-toc-函数的合成与柯里化">函数的合成与柯里化</a>    <ul>
+      <li><a href="#合成" id="markdown-toc-合成">合成</a></li>
+      <li><a href="#柯里化" id="markdown-toc-柯里化">柯里化</a></li>
+      <li><a href="#javascript的class" id="markdown-toc-javascript的class">JavaScript的class</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="函数式编程-funtional-programming">函数式编程 Funtional programming</h2>
+
+<p>函数式编程是一种编程范式，也就和如何写程序的方法论，属于结构化编程的一中，主要思想是把运算过程尽量写成一系列嵌套的函数调用</p>
+
+<p><strong>学习函数式编程需要了解什么？</strong></p>
+
+<ul>
+  <li>了解什么时候范畴论</li>
+  <li>数学模型和范畴之间的关系</li>
+  <li>范畴与函数式编程的关系</li>
+</ul>
+
+<h2 id="什么是范畴论">什么是范畴论？</h2>
+
+<p>函数式编程的起源，是一门叫范畴论（Caregory Theory）的数学分支</p>
+
+<p>理解函数式编程的关键，就是理解范畴论。它是一门复杂的数学，认为世界上的所有的概念体系，都可以抽象成一个的‘范畴’</p>
+
+<p><strong>范畴就是使用箭头连接的物体</strong></p>
+
+<p>通俗的讲，就是彼此之间存在某种关系的概念、事务、对象等等，都构成范畴。</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbfe6jej30hq0dbjrg.jpg" alt="image" /></p>
+
+<p>箭头表示范畴成员之间的关系，正式名称叫做“态射”（morphism）。范畴论任务，同一个范畴的所有成员，就是不同状态的“形变”。通过“态射”就可以从一个成员形变成另一个成员。</p>
+
+<h3 id="数学模型">数学模型</h3>
+<p>既然“范畴“是满足某种形变关系的所有对象，就可以总结出来它的数学模型。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1.所有成员是一种集合
+2.形变关系是函数
+</code></pre></div></div>
+<p>也就是说，范畴论是集合论更上层的抽象，简单的理解就是“集合+函数”</p>
+
+<p>理论上通过函数，就可以从范畴的一个成员，算出其他所有成员</p>
+
+<h3 id="范畴与容器">范畴与容器</h3>
+
+<p>如果把“范畴”想象成一个容器，里面包含两样东西。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>值（value）
+值得变形关系，（函数）
+</code></pre></div></div>
+<p>下面我们来定义一个简单的范畴</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    class Category {
+        // 实例化时，传过来的参数
+        constructor(a, b, c) {
+            this.val = a + b + c;
+        }
+
+        addOn(x) {
+            return x + 1;
+        }
+    }
+
+    var a = new Category(12, 3, 4);
+
+    console.log(a); // Category {val: 19}
+</code></pre></div></div>
+
+<p>上面代码中，Category是一个类，也是一个容器，里面包含了一个值(this.val)和一种变形关系(addOne)。该关系就是彼此之间都相差1的数字。</p>
+
+<h3 id="范畴论和函数式编程的关系">范畴论和函数式编程的关系</h3>
+
+<blockquote>
+  <p>范畴论使用函数，表达范畴之间的关系</p>
+</blockquote>
+
+<p>伴随着范畴论的发展，就发展除了一整套函数的运算方法。方法起初只是适用于数学算法，后来有人将它在计算机上实现了，成为了今天的“函数式编程”。</p>
+
+<p><strong>本质上，函数式编程只是范畴论的预算方法，跟数学逻辑、微积分、行列式都是一类东西，都是数学方法，只是正好用它来写程序。</strong></p>
+
+<h2 id="函数的合成与柯里化">函数的合成与柯里化</h2>
+
+<p>函数式编程有2个最基本的运算</p>
+<ul>
+  <li>合成</li>
+  <li>柯里化</li>
+</ul>
+
+<h3 id="合成">合成</h3>
+
+<p>如果一个值要经过多个函数，才能变成另外一个值，就可以把所有的中间步骤合并成一个函数，叫做“函数的合成”</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbv9nszj309608swec.jpg" alt="image" /></p>
+
+<p>上图中，X和Y之间的变形关系是函数f，Y和Z的变形关系是g，那么X和Z之间的关系，就是g和f的合成函数g·f。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    const compose = function (f, g) {
+        return function (x) {
+            return f(g(y));
+        }
+    }
+</code></pre></div></div>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0ujc6qw2fj30m808pdfz.jpg" alt="image" /></p>
+
+<p>函数的合成还必须要满足结合律</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compose(f,compse(g.h));
+// 等同于
+compose(compose(f,g),h);
+// 等同于
+compose(f,g,h);
+</code></pre></div></div>
+<h3 id="柯里化">柯里化</h3>
+<p>f(x)和g(x)合成为f(g(x)),有一个隐藏的前提，就是f和g都只能接受一个参数。如果接受多个参数，比如f(x,y)和g(a,b,c)，函数合成就很麻烦。
+所以需要函数柯里化，把一个多参数的函数，转化为一个单参数的函数；</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    "use strict";
+
+    // 未柯里化
+    function add(x, y) {
+        return alert(x + y);
+    }
+
+    // 柯里化后
+    function Xadd(x) {
+        return function (y) {
+            return alert(x + y);
+        }
+    }
+
+    Xadd(2)(3);// 5
+</code></pre></div></div>
+<p>有了柯里化以后，我们就能做到，所以函数只能接受一个参数。</p>
+
+<blockquote>
+  <p>这里面包含了ES6的class、constructor等特性</p>
+</blockquote>
+
+<h3 id="javascript的class">JavaScript的class</h3>
+
+<p>在ES5的时候，我们编写JavaScript很多时候只能使用构造函数和原型链进行方法属性，实现class的功能</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // ES5环境
+    'use strict';
+    // Box是一个构造函数
+    function Box(val) {
+        this.type = 'double';
+        this.color = val;
+    }
+    // 我们通过prototype的方式来添加一条属性
+    Box.prototype.hello = function () {
+        console.log('hello,' + this.type + "," + this.color);
+    }
+
+    // 对于私有属性（static method），  我们当然不能放在原型链上，我们直接放在构造函数上面。
+    Box.fn = function () {
+        console.log('static');
+    }
+
+    //通过new来创建
+    var circle = new Box('red');
+    circle.hello(); // hello,double,red
+</code></pre></div></div>
+
+<p>但是在ES6的规范中，可以使用class语法，ES6的class可以看做只是一个语法糖，它绝大部分都可以做到，新的class写法只是让对象原型的写法更加清晰、更想面对对象编程的语法。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // es6
+    class BoxES6 {
+        constructor(val) {
+            this.type = 'double';
+            this.color = val;
+        }
+        hello() {
+            console.log('hello,' + this.type + ',' + this.color);
+        }
+    }
+    
+    //通过new来创建
+    var helloBlue = new BoxES6('blue');
+
+    helloBlue.hello(); // hello,double,blue
+</code></pre></div></div>
+
+            </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2019 <a href="https://kisnnnnn.github.io/kisnStudy/"><code>Kisn</code></a>.</p>
+		<!-- <p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, themed from <a href="http://lesscss.cn/">Less</a>, refactored by <a href="http://www.hifreud.com/">Freud Kang</a></p> -->
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/jquery.zoom.min.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+	(function ($) {
+		window.onload = function () {
+			var imgELemList = $('.container img');
+
+			imgELemList.on('click', function () {
+				console.log(imgELemList);
+
+				window.location.href = this.src;
+			});
+		}
+	})(jQuery)
+</script>
+
+  </body>
+</html>

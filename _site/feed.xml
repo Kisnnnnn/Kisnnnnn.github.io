@@ -5,9 +5,632 @@
     <description>「今でもあなたはわたしの光」</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Mar 2019 21:27:55 +0800</pubDate>
-    <lastBuildDate>Thu, 07 Mar 2019 21:27:55 +0800</lastBuildDate>
+    <pubDate>Thu, 30 May 2019 09:46:20 +0800</pubDate>
+    <lastBuildDate>Thu, 30 May 2019 09:46:20 +0800</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>2019-05-29-VUE中的$ref、$on、$emit</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#emiteventnanmeargs&quot; id=&quot;markdown-toc-emiteventnanmeargs&quot;&gt;$emit(eventNanme,[…args])&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ref&quot; id=&quot;markdown-toc-ref&quot;&gt;ref&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ref-1&quot; id=&quot;markdown-toc-ref-1&quot;&gt;$ref&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#适用环境&quot; id=&quot;markdown-toc-适用环境&quot;&gt;适用环境：&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#交互过程&quot; id=&quot;markdown-toc-交互过程&quot;&gt;交互过程&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#oneventcallback&quot; id=&quot;markdown-toc-oneventcallback&quot;&gt;$on(event,callback)&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#示例&quot; id=&quot;markdown-toc-示例&quot;&gt;示例&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#交互过程-1&quot; id=&quot;markdown-toc-交互过程-1&quot;&gt;交互过程：&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;emiteventnanmeargs&quot;&gt;$emit(eventNanme,[…args])&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;参数：
+    &lt;ul&gt;
+      &lt;li&gt;{string} eventName 触发事件名字&lt;/li&gt;
+      &lt;li&gt;[…args] 附加的参数&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;用法：
+    &lt;ul&gt;
+      &lt;li&gt;触发当前实例上的事件。附加参数都会传给监听器回调。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;使用场景
+    &lt;ul&gt;
+      &lt;li&gt;子组件调用父组件的方法并且传递数据&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：子组件标签中的时间也不区分大小写要用“-”隔开&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;子组件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+  &amp;lt;button @click=&quot;emitEvent&quot;&amp;gt;点击我&amp;lt;/button&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+  export default {
+    data() {
+      return {
+        msg: &quot;我是子组件中的数据&quot;
+      }
+    },
+    methods: {
+      emitEvent(){
+        this.$emit('my-event', this.msg)
+        //通过按钮的点击事件触发方法，然后用$emit触发一个my-event的自定义方法，传递this.msg数据。
+      }
+    }
+  }
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;父组件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+  &amp;lt;div id=&quot;app&quot;&amp;gt;
+    &amp;lt;child-a @my-event=&quot;getMyEvent&quot;&amp;gt;&amp;lt;/child-a&amp;gt;
+    &amp;lt;!--父组件中通过监测my-event事件执行一个方法，然后取到子组件中传递过来的值--&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+  import ChildA from './components/child.vue'
+  export default {
+    components: {
+      ChildA
+    },
+    methods: {
+      getMyEvent(msg){
+          console.log('接收的数据---------&amp;gt;'+msg)//接收的数据---------&amp;gt;我是子组件中的数据
+      }
+    }
+  }
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;交互过程：
+    &lt;ul&gt;
+      &lt;li&gt;child.vue为子组件，当在child.vue，点击button。&lt;/li&gt;
+      &lt;li&gt;触发子组件的「emitEvent」方法&lt;/li&gt;
+      &lt;li&gt;在emitEvent方法中执行「this.$emit)(‘my-event’,this.msg)」,调用父组件的「my-event」的方法&lt;/li&gt;
+      &lt;li&gt;执行「getMyEvent」方法&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;实际上就是在子组件上操作，但是作用在父组件上。&lt;/p&gt;
+
+&lt;h2 id=&quot;ref&quot;&gt;ref&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;被用来给元素或者子组件注册引用信息。引用信息将会被注册在父组件的$refs对象上。如果在普通的DOM元素上使用，引用指向的就是DOM元素；如果用在子组件上，引用就是指向组件实例：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;!-- `vm.$refs.p` will be the DOM node --&amp;gt;
+&amp;lt;!-- `vm.$refs.p` 指向这个DOM --&amp;gt;
+&amp;lt;p ref=&quot;p&quot;&amp;gt;hello&amp;lt;/p&amp;gt;
+&amp;lt;!-- `vm.$refs.child` will be the child component instance --&amp;gt;
+&amp;lt;!-- `vm.$refs.child` 指向这个子组件 --&amp;gt;
+&amp;lt;child-com ref=&quot;chil&quot;&amp;lt;/child-com&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ref 本身是作为渲染结果被创建的，在初始化渲染的时候你不能访问他们，因为他们还不存在，$refs也不是响应式的，因此你不应该试图用它在模板中做数据绑定。&lt;/p&gt;
+
+&lt;h2 id=&quot;ref-1&quot;&gt;$ref&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;但是我们可以使用$ref在直接访问这个子组件。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;h4 id=&quot;适用环境&quot;&gt;适用环境：&lt;/h4&gt;
+    &lt;ul&gt;
+      &lt;li&gt;父组件调用子组件的方法，可以传递数据。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;父组件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+  &amp;lt;div id=&quot;app&quot;&amp;gt;
+    &amp;lt;child-a ref=&quot;child&quot;&amp;gt;&amp;lt;/child-a&amp;gt;
+    &amp;lt;!--用ref给子组件起个名字--&amp;gt;
+    &amp;lt;button @click=&quot;getMyEvent&quot;&amp;gt;点击父组件&amp;lt;/button&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+  import ChildA from './components/child.vue'
+  export default {
+    components: {
+      ChildA
+    },
+    data() {
+      return {
+        msg: &quot;我是父组件中的数据&quot;
+      }
+    },
+    methods: {
+      getMyEvent(){
+          this.$refs.child.emitEvent(this.msg);
+          //调用子组件的方法，child是上边ref起的名字，emitEvent是子组件的方法。
+      }
+    }
+  }
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;子组件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+  &amp;lt;button&amp;gt;点击我&amp;lt;/button&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+  export default {
+    methods: {
+      emitEvent(msg){
+        console.log('接收的数据---------&amp;gt;'+msg)//接收的数据---------&amp;gt;我是父组件中的数据
+      }
+    }
+  }
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;h4 id=&quot;交互过程&quot;&gt;交互过程&lt;/h4&gt;
+    &lt;ul&gt;
+      &lt;li&gt;绑定「child-a」组件，定义为「child」&lt;/li&gt;
+      &lt;li&gt;触发父组件的「getMyEvent」&lt;/li&gt;
+      &lt;li&gt;调用子组件的方法，child是上边ref起的名字，emitEvent是子组件的方法。&lt;/li&gt;
+      &lt;li&gt;子组件中「emitEvent」方法触发。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;oneventcallback&quot;&gt;$on(event,callback)&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;参数：
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;table&gt;
+          &lt;tbody&gt;
+            &lt;tr&gt;
+              &lt;td&gt;{string&lt;/td&gt;
+              &lt;td&gt;Array&lt;string&gt;} event&lt;/string&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      &lt;/li&gt;
+      &lt;li&gt;{Funtion} callback&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;用法：
+    &lt;ul&gt;
+      &lt;li&gt;监听当前示例上的自定义事件。事件可以由vm.$emit触发。回调函数会接收所传入事件触发函数的额外参数&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;适用环境：
+    &lt;ul&gt;
+      &lt;li&gt;兄弟组件进行通信&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;示例&quot;&gt;示例&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;首先创建一个vue的空白实例（兄弟间的桥梁）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;父组件&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+     &amp;lt;div&amp;gt;
+      &amp;lt;childa&amp;gt;&amp;lt;/childa&amp;gt;	
+      &amp;lt;br /&amp;gt;
+      &amp;lt;childb&amp;gt;&amp;lt;/childb&amp;gt;  	
+     &amp;lt;/div&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+   import childa from './childa.vue';
+   import childb from './childb.vue';
+   export default {
+   	components:{
+   		childa,
+   		childb
+   	},
+   	data(){
+   		return {
+   			msg:&quot;&quot;
+   		}
+   	},
+   	methods:{
+   		
+   	}
+   }
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;子组件A  childa&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;发送方使用 ==$emit== 自定义时间把数据带过去&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+    &amp;lt;div&amp;gt;
+        &amp;lt;span&amp;gt;A组件-&amp;gt;&amp;lt;/span&amp;gt;
+        &amp;lt;input type=&quot;button&quot; value=&quot;把a组件数据传给b&quot; @click =&quot;send&quot;&amp;gt;
+    &amp;lt;/div&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+
+// 空的组件(兄弟的桥梁)
+import vmson from &quot;../../../util/emptyVue&quot;
+
+export default {
+    data(){
+        return {
+            msg:{
+            	a:'111',
+            	b:'222'
+            }
+        }
+    },
+    methods:{
+        send:function(){
+            vmson.$emit(&quot;aevent&quot;,this.msg)
+        }
+    }
+}
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;子组件 childb&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而接收方通过 ==$on==监听自定义时间的callback接收数据&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+ &amp;lt;div&amp;gt;
+    &amp;lt;span&amp;gt;b组件,a传的的数据为-&amp;gt;&amp;lt;/span&amp;gt;
+ &amp;lt;/div&amp;gt;
+&amp;lt;/template&amp;gt;
+&amp;lt;script&amp;gt;
+	  import vmson from &quot;../../../util/emptyVue&quot;
+	  export default {
+		 data(){
+		        return {
+		            msg:&quot;&quot;
+		        }
+		    },
+		 mounted(){
+		        vmson.$on(&quot;aevent&quot;,(val)=&amp;gt;{
+		            //监听事件aevent，回调函数要使用箭头函数;
+		            console.log(val);//打印结果：我是a组件的数据
+		            this.msg = val;
+		        })
+		  }
+	}
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;交互过程-1&quot;&gt;交互过程：&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;定义一个父组件，作为A/B子组件的通信桥梁&lt;/li&gt;
+  &lt;li&gt;在A组件来中设定一个自定义事件「aevent」&lt;/li&gt;
+  &lt;li&gt;在B组件中，通过父组件「vmson」进行监听「aevent」事件的触发，进行回调&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当然还有其他API&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tNc79gy1g3j3ej34uaj30jm0jlaah.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 May 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/05/29/VUE%E4%B8%AD%E7%9A%84$ref-$on-$emit/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/05/29/VUE%E4%B8%AD%E7%9A%84$ref-$on-$emit/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-03-07-JavaScript的函数式编程(2)</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#涵子&quot; id=&quot;markdown-toc-涵子&quot;&gt;涵子&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是涵子&quot; id=&quot;markdown-toc-什么是涵子&quot;&gt;什么是涵子&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#涵子的代码实现&quot; id=&quot;markdown-toc-涵子的代码实现&quot;&gt;涵子的代码实现&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;本文中的知识点，我也不是很懂，比较难理解。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;涵子&quot;&gt;涵子&lt;/h2&gt;
+
+&lt;h3 id=&quot;什么是涵子&quot;&gt;什么是涵子&lt;/h3&gt;
+
+&lt;p&gt;涵子是函数式编程里面最重要的数据类型，也是最基本的运算单位和功能单位。&lt;/p&gt;
+
+&lt;p&gt;它是一种范畴（也是一种容器），包含了值和变形关系。比较特殊的是，它的变形关系可以依次作用于每一个值，&lt;strong&gt;将当前容器变形为另一个容器&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tKfTcgy1g0yw1xe4azj30of081q34.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图中，左侧的圆圈就是一个汉字，表示人名的范畴。外部传入函数f，会转成右边标示早餐的范畴。&lt;/p&gt;
+
+&lt;h3 id=&quot;涵子的代码实现&quot;&gt;涵子的代码实现&lt;/h3&gt;
+
+&lt;p&gt;任何具有map方法的素具结构，都可以当做涵子的实现。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Functor{
+    constructor(val){
+        this.val=val;
+    }
+    map(f){
+        return new Functor(f(this.val));
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;在上述代码中，FUnctor是一个涵子，它的map方法接受函数f作为参数，最后返回一个新的涵子，里面包含的值是被f处理过的(f(this.val));&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(new Functor(2)).map(function (a) {
+    // 由函数式表面，这是Funtor的return返回执行f(this.val)
+    return a + 5; // 7
+});
+
+(new Functor(&quot;mynameisKisn&quot;)).map(function (a) {
+    return a.toUpperCase(); //MYNAMEISKISN
+});
+
+var res = (new Functor('bombs')).map(function (a) {
+    return a.concat(' away');
+}).map(function (a) {
+    console.log(a); // bombs away
+    return a.length;
+});
+
+console.log(res); // Functor(10),this.val = 10;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;上面的栗子说明，函数式编程里面的运算，都是通过了涵子完成，即运算不直接针对值，而是针对这个值的容器-涵子，涵子本身具有对外接口（map方法），各种函数就是运算符，通过接口接入容器， 引发容器值的变形。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;其实后面还有一些别的涵子介绍，但是我就不对这个方面继续整理了，整体对能力、数据分析、逻辑要求都比较高，我比较菜就不深入学习，主要为了了解基础原理以及基础逻辑即可，后期等我学习完VUE，我会继续深入学习。&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Thu, 07 Mar 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/03/07/JavaScript%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B(2)/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/03/07/JavaScript%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B(2)/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
+    
+      <item>
+        <title>2019-03-07-JavaScript的函数式编程(1)</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#函数式编程-funtional-programming&quot; id=&quot;markdown-toc-函数式编程-funtional-programming&quot;&gt;函数式编程 Funtional programming&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#什么是范畴论&quot; id=&quot;markdown-toc-什么是范畴论&quot;&gt;什么是范畴论？&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#数学模型&quot; id=&quot;markdown-toc-数学模型&quot;&gt;数学模型&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#范畴与容器&quot; id=&quot;markdown-toc-范畴与容器&quot;&gt;范畴与容器&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#范畴论和函数式编程的关系&quot; id=&quot;markdown-toc-范畴论和函数式编程的关系&quot;&gt;范畴论和函数式编程的关系&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#函数的合成与柯里化&quot; id=&quot;markdown-toc-函数的合成与柯里化&quot;&gt;函数的合成与柯里化&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#合成&quot; id=&quot;markdown-toc-合成&quot;&gt;合成&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#柯里化&quot; id=&quot;markdown-toc-柯里化&quot;&gt;柯里化&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#javascript的class&quot; id=&quot;markdown-toc-javascript的class&quot;&gt;JavaScript的class&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;函数式编程-funtional-programming&quot;&gt;函数式编程 Funtional programming&lt;/h2&gt;
+
+&lt;p&gt;函数式编程是一种编程范式，也就和如何写程序的方法论，属于结构化编程的一中，主要思想是把运算过程尽量写成一系列嵌套的函数调用&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;学习函数式编程需要了解什么？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;了解什么时候范畴论&lt;/li&gt;
+  &lt;li&gt;数学模型和范畴之间的关系&lt;/li&gt;
+  &lt;li&gt;范畴与函数式编程的关系&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;什么是范畴论&quot;&gt;什么是范畴论？&lt;/h2&gt;
+
+&lt;p&gt;函数式编程的起源，是一门叫范畴论（Caregory Theory）的数学分支&lt;/p&gt;
+
+&lt;p&gt;理解函数式编程的关键，就是理解范畴论。它是一门复杂的数学，认为世界上的所有的概念体系，都可以抽象成一个的‘范畴’&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;范畴就是使用箭头连接的物体&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;通俗的讲，就是彼此之间存在某种关系的概念、事务、对象等等，都构成范畴。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbfe6jej30hq0dbjrg.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;箭头表示范畴成员之间的关系，正式名称叫做“态射”（morphism）。范畴论任务，同一个范畴的所有成员，就是不同状态的“形变”。通过“态射”就可以从一个成员形变成另一个成员。&lt;/p&gt;
+
+&lt;h3 id=&quot;数学模型&quot;&gt;数学模型&lt;/h3&gt;
+&lt;p&gt;既然“范畴“是满足某种形变关系的所有对象，就可以总结出来它的数学模型。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.所有成员是一种集合
+2.形变关系是函数
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;也就是说，范畴论是集合论更上层的抽象，简单的理解就是“集合+函数”&lt;/p&gt;
+
+&lt;p&gt;理论上通过函数，就可以从范畴的一个成员，算出其他所有成员&lt;/p&gt;
+
+&lt;h3 id=&quot;范畴与容器&quot;&gt;范畴与容器&lt;/h3&gt;
+
+&lt;p&gt;如果把“范畴”想象成一个容器，里面包含两样东西。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;值（value）
+值得变形关系，（函数）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;下面我们来定义一个简单的范畴&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    class Category {
+        // 实例化时，传过来的参数
+        constructor(a, b, c) {
+            this.val = a + b + c;
+        }
+
+        addOn(x) {
+            return x + 1;
+        }
+    }
+
+    var a = new Category(12, 3, 4);
+
+    console.log(a); // Category {val: 19}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;上面代码中，Category是一个类，也是一个容器，里面包含了一个值(this.val)和一种变形关系(addOne)。该关系就是彼此之间都相差1的数字。&lt;/p&gt;
+
+&lt;h3 id=&quot;范畴论和函数式编程的关系&quot;&gt;范畴论和函数式编程的关系&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;范畴论使用函数，表达范畴之间的关系&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;伴随着范畴论的发展，就发展除了一整套函数的运算方法。方法起初只是适用于数学算法，后来有人将它在计算机上实现了，成为了今天的“函数式编程”。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;本质上，函数式编程只是范畴论的预算方法，跟数学逻辑、微积分、行列式都是一类东西，都是数学方法，只是正好用它来写程序。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;函数的合成与柯里化&quot;&gt;函数的合成与柯里化&lt;/h2&gt;
+
+&lt;p&gt;函数式编程有2个最基本的运算&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;合成&lt;/li&gt;
+  &lt;li&gt;柯里化&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;合成&quot;&gt;合成&lt;/h3&gt;
+
+&lt;p&gt;如果一个值要经过多个函数，才能变成另外一个值，就可以把所有的中间步骤合并成一个函数，叫做“函数的合成”&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbv9nszj309608swec.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图中，X和Y之间的变形关系是函数f，Y和Z的变形关系是g，那么X和Z之间的关系，就是g和f的合成函数g·f。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    const compose = function (f, g) {
+        return function (x) {
+            return f(g(y));
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0ujc6qw2fj30m808pdfz.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;函数的合成还必须要满足结合律&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;compose(f,compse(g.h));
+// 等同于
+compose(compose(f,g),h);
+// 等同于
+compose(f,g,h);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;柯里化&quot;&gt;柯里化&lt;/h3&gt;
+&lt;p&gt;f(x)和g(x)合成为f(g(x)),有一个隐藏的前提，就是f和g都只能接受一个参数。如果接受多个参数，比如f(x,y)和g(a,b,c)，函数合成就很麻烦。
+所以需要函数柯里化，把一个多参数的函数，转化为一个单参数的函数；&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &quot;use strict&quot;;
+
+    // 未柯里化
+    function add(x, y) {
+        return alert(x + y);
+    }
+
+    // 柯里化后
+    function Xadd(x) {
+        return function (y) {
+            return alert(x + y);
+        }
+    }
+
+    Xadd(2)(3);// 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;有了柯里化以后，我们就能做到，所以函数只能接受一个参数。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;这里面包含了ES6的class、constructor等特性&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;javascript的class&quot;&gt;JavaScript的class&lt;/h3&gt;
+
+&lt;p&gt;在ES5的时候，我们编写JavaScript很多时候只能使用构造函数和原型链进行方法属性，实现class的功能&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // ES5环境
+    'use strict';
+    // Box是一个构造函数
+    function Box(val) {
+        this.type = 'double';
+        this.color = val;
+    }
+    // 我们通过prototype的方式来添加一条属性
+    Box.prototype.hello = function () {
+        console.log('hello,' + this.type + &quot;,&quot; + this.color);
+    }
+
+    // 对于私有属性（static method），  我们当然不能放在原型链上，我们直接放在构造函数上面。
+    Box.fn = function () {
+        console.log('static');
+    }
+
+    //通过new来创建
+    var circle = new Box('red');
+    circle.hello(); // hello,double,red
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;但是在ES6的规范中，可以使用class语法，ES6的class可以看做只是一个语法糖，它绝大部分都可以做到，新的class写法只是让对象原型的写法更加清晰、更想面对对象编程的语法。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    // es6
+    class BoxES6 {
+        constructor(val) {
+            this.type = 'double';
+            this.color = val;
+        }
+        hello() {
+            console.log('hello,' + this.type + ',' + this.color);
+        }
+    }
+    
+    //通过new来创建
+    var helloBlue = new BoxES6('blue');
+
+    helloBlue.hello(); // hello,double,blue
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Thu, 07 Mar 2019 21:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2019/03/07/JavaScript%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B(1)/</link>
+        <guid isPermaLink="true">http://localhost:4000/2019/03/07/JavaScript%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B(1)/</guid>
+        
+        <category>笔记</category>
+        
+        
+        <category>前端</category>
+        
+      </item>
     
       <item>
         <title>2019-03-06-闭包(Closurce)</title>
@@ -938,321 +1561,6 @@ onload:仅用于检测一个完全加载的页面（图像、CSS资源等）
         
         
         <category>前端</category>
-        
-      </item>
-    
-      <item>
-        <title>2019-02-20 解析页面流程（2）生成CSS规则和构建渲染</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#生成css规则&quot; id=&quot;markdown-toc-生成css规则&quot;&gt;生成CSS规则&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#举个例子&quot; id=&quot;markdown-toc-举个例子&quot;&gt;举个例子&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#css代码&quot; id=&quot;markdown-toc-css代码&quot;&gt;CSS代码&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#dom树&quot; id=&quot;markdown-toc-dom树&quot;&gt;DOM树：&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#构建渲染书&quot; id=&quot;markdown-toc-构建渲染书&quot;&gt;构建渲染书&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#渲染&quot; id=&quot;markdown-toc-渲染&quot;&gt;渲染&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是回流&quot; id=&quot;markdown-toc-什么是回流&quot;&gt;什么是回流?&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是重绘&quot; id=&quot;markdown-toc-什么是重绘&quot;&gt;什么是重绘？&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么会引起回流&quot; id=&quot;markdown-toc-什么会引起回流&quot;&gt;什么会引起回流？&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#回流优化方案&quot; id=&quot;markdown-toc-回流优化方案&quot;&gt;回流优化方案&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#简单层与复杂层&quot; id=&quot;markdown-toc-简单层与复杂层&quot;&gt;简单层与复杂层&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;生成css规则&quot;&gt;生成CSS规则&lt;/h2&gt;
-&lt;p&gt;同理，CSS规则树的生成也是类似&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bytes -&amp;gt; character -&amp;gt; tokens -&amp;gt; nodes -&amp;gt; CSSOM
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.Conversion：浏览器将获得的HTML内容（Bytes）基于他的编码转换为单个字符
-2.Tokenizing分词：浏览器按照HTML规范标准将这些字符转换为不同的标记token。每个token都他有自己独特的含义以及规则及
-3.Lexing词法分析：分词的结果是得到了堆的token，此时把他们的转换为对象，这些对象分别定义了他们的属性和规则
-4.DOM构建：因为HTML标记定义的就是不同标签之间的关系，这个关系就像是一个树形结构。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;举个例子&quot;&gt;举个例子&lt;/h3&gt;
-&lt;h4 id=&quot;css代码&quot;&gt;CSS代码&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;body { font-size: 16px }
-p { font-weight: bold }
-span { color: red }
-p span { display: none }
-img { float: right }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h4 id=&quot;dom树&quot;&gt;DOM树：&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0csljk8rsj30g608bq38.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;构建渲染书&quot;&gt;构建渲染书&lt;/h2&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;现在「CSS树」和「DOM树」都已经完成，浏览器现在要开始构建渲染树了。
-一般情况，「渲染树」和「DOM树」相对应的， 但是也不定，因为有些不可见的（display:none;）等等不可见的标签会影响「渲染树」
-&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0cspjnnvqj30p00bo0ti.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;渲染&quot;&gt;渲染&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;有了渲染书（render），开始渲染：&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g0csqsdknsj30m8064q3c.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;分为四个步骤:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.计算CSS样式
-2.构建渲染书
-3.布局，主要定位坐标的和大小，是否换行，各种position overflow z-index 属性
-4.绘制，将图像绘制出来
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;然后，图中的线与箭头表示通过JS动态修改了DOM或者CSS，会导致页面「重新布局（Layout）」、「渲染（Repaint）」&lt;/p&gt;
-
-&lt;h3 id=&quot;什么是回流&quot;&gt;什么是回流?&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Layout,也叫Reflow。html的内容。结构、位置或尺寸发送了变化，需要重新计划样式和渲染树&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;什么是重绘&quot;&gt;什么是重绘？&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Repaint。元素发生的改变只是影响了元素本身的一些外观之类的（背景，边框颜色等），此时只需要应用新样式绘制这个元素就可以了&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;回流的成本开销&amp;gt;重绘的成本开销，而且一个节点的回流往往导致子节点以及同级节点的回流。&lt;/p&gt;
-
-&lt;h3 id=&quot;什么会引起回流&quot;&gt;什么会引起回流？&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.页面渲染初始化
-2.DOM结构改变，比如删除了某个节点
-3.render树变化，比如减少了padding
-4.窗口resize
-5.获取某些属性
-6.改变字体大小
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;很多浏览器会对回流做优化，会等到数量足够是做一次批处理回流，
-但是处理render树的直接变化，当获取一些属性的时候，浏览器为了获得正确的值也会触发回流，这样使得浏览器优化无效，包括：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    1.offset（Top/Left/Width/Height）
-    2.scroll（Top/Left/Width/Height）
-    3.cilent（Top/Left/Width/Height）
-    4.width,height
-    5.调用了getComputedStyle()/IE的currentStyle
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;回流优化方案&quot;&gt;回流优化方案&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;减少逐项更改样式，最好一次性更改style，或者将样式定义为Class并一次性更新&lt;/li&gt;
-  &lt;li&gt;避免循环操作dom，创建一个documentFragment或者div，在它上面应用所以DOM操作，最后把它添加到window.document上&lt;/li&gt;
-  &lt;li&gt;避免多次读取offest等属性。无法避免则将他们缓存为变量。&lt;/li&gt;
-  &lt;li&gt;将复杂的元素绝对定位或者固定定位，使得他们脱离文档流，否则回流代价会很高&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;举个栗子：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var s = document.body.style;
-
-s.padding = &quot;2px&quot;; // 回流+重绘
-s.border = &quot;1px solid red&quot;; // 再一次 回流+重绘
-s.color = &quot;blue&quot;; // 再一次重绘
-s.backgroundColor = &quot;#ccc&quot;; // 再一次 重绘
-s.fontSize = &quot;14px&quot;; // 再一次 回流+重绘
-// 添加node，再一次 回流+重绘
-document.body.appendChild(document.createTextNode('abc!'));
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;简单层与复杂层&quot;&gt;简单层与复杂层&lt;/h3&gt;
-&lt;p&gt;上述中的渲染中止步于绘制，但实际上绘制这一步，需要从简单层和复杂层来讲。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;可以默认只有一个复合图层，所有的DOM节点都在这个图层上面，&lt;/li&gt;
-  &lt;li&gt;如果开启了硬件加速功能，可以将某个节点转为复合图层&lt;/li&gt;
-  &lt;li&gt;复合涂层之间的绘制互不干扰，由GPU控制&lt;/li&gt;
-  &lt;li&gt;而简单图层中，就算是absolute等布局，变化的时候不影响整体的回流，但是由于在同一个图层中，仍然是会影响绘制的，因此做动画的时候性能仍然很低，而复合图层是独立的，所以一般动画推荐使用硬件加速。&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 20 Feb 2019 21:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/20/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-2-%E7%94%9F%E6%88%90CSS%E8%A7%84%E5%88%99%E5%92%8C%E6%9E%84%E5%BB%BA%E6%B8%B2%E6%9F%93/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/20/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-2-%E7%94%9F%E6%88%90CSS%E8%A7%84%E5%88%99%E5%92%8C%E6%9E%84%E5%BB%BA%E6%B8%B2%E6%9F%93/</guid>
-        
-        <category>笔记</category>
-        
-        
-        <category>前端</category>
-        
-      </item>
-    
-      <item>
-        <title>2019-02-19 解析页面流程(1) 解析HTML，构建DOM树</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#总体流程&quot; id=&quot;markdown-toc-总体流程&quot;&gt;总体流程&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#解析html构建dom树&quot; id=&quot;markdown-toc-解析html构建dom树&quot;&gt;解析HTML，构建DOM树&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#浏览器处理流程大概是这个样子&quot; id=&quot;markdown-toc-浏览器处理流程大概是这个样子&quot;&gt;浏览器处理流程大概是这个样子&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#浏览器处理示意图&quot; id=&quot;markdown-toc-浏览器处理示意图&quot;&gt;浏览器处理示意图：&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#形成dom树&quot; id=&quot;markdown-toc-形成dom树&quot;&gt;形成DOM树：&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;http请求完成，浏览器获取到了html，开始解析并且渲染HTML&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;总体流程&quot;&gt;总体流程&lt;/h3&gt;
-
-&lt;p&gt;浏览器内核拿到内容后，渲染步骤：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.解析HTML，构建DOM树
-2.解析CSS，生成CSS规则树
-3.合并DOM树和CSS规则，生成render树
-4.布局render树（Layout/reflow），负责各元素尺寸、位置的计算
-5.绘制render数据（paint），绘制页面像素信息
-6.浏览器会将各层的信息发送给GPU,GPU会将各层合成（composite），显示在屏幕上
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0c03h0oqqj30p009sq33.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;解析html构建dom树&quot;&gt;解析HTML，构建DOM树&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;这是渲染流程第一步，浏览器将解析HTML，构建成DOM树，&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;流程：Bytes  -&amp;gt;  characters -&amp;gt;  tokens   -&amp;gt;  node  -&amp;gt;  DOM
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;width=device-width,initial-scale=1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;style.css&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stylesheet&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Critical Path&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Hello &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&amp;gt;&lt;/span&gt;web performance&lt;span class=&quot;nt&quot;&gt;&amp;lt;/span&amp;gt;&lt;/span&gt; students!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&amp;gt;&amp;lt;img&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;awesome-photo.jpg&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;浏览器处理流程大概是这个样子&quot;&gt;浏览器处理流程大概是这个样子&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.Conversion转换 -&amp;gt;  数据字节流（HTML内容Btyes）基于他的编码生成单个字符
-2.Tokenizing分词  -&amp;gt;  由数据字节按浏览器HTML规范标准版生成标签、内容（标记TOKEN），每个TOKEN有他自己的定义和规则集
-3.Lexing词法分析 -&amp;gt;  由白标签、内容成Token，此时把它们转换为对象，这些对象分别定义了他们的属性和4规则（header/p/span）
-4.DOM构建-&amp;gt;  开始构建由不同的html标签的关系来渲染父-&amp;gt;子结构的树状结构。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h4 id=&quot;浏览器处理示意图&quot;&gt;浏览器处理示意图：&lt;/h4&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tKfTcgy1g0c06x3e19j30p00du3zh.jpg&quot; alt=&quot;iamge&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;形成dom树&quot;&gt;形成DOM树：&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcgy1g0c083cudtj30ih07wq36.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;结语&quot;&gt;结语&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;今天的内容比较少，一是最近工作挺多的，二是今天家里换了200M的网（免费的~~~~~~~ 开心~~~~~），突然发现原先的路由器「小米路由器3」和「小米电力猫」、交换机均不支持200M的速率，LAN和WAN端口支持100M，so要花点时间挑选一个性价比高的路由器的电力猫。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tKfTcgy1g0c0foevnhj30hs0gyq3u.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-</description>
-        <pubDate>Tue, 19 Feb 2019 21:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/19/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-1-%E8%A7%A3%E6%9E%90HTML-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/19/%E8%A7%A3%E6%9E%90%E9%A1%B5%E9%9D%A2%E6%B5%81%E7%A8%8B-1-%E8%A7%A3%E6%9E%90HTML-%E6%9E%84%E5%BB%BADOM%E6%A0%91/</guid>
-        
-        <category>笔记</category>
-        
-        
-        <category>前端</category>
-        
-      </item>
-    
-      <item>
-        <title>Http2.0、https（2）</title>
-        <description>
-&lt;hr /&gt;
-&lt;p&gt;layout: post
-title:  “2019-02-18-http2.0、https（2）”
-date:    2019-02-18 21:00:00 +0800
-categories: 前端
-tag: 笔记
-—&lt;/p&gt;
-
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#头部的区别&quot; id=&quot;markdown-toc-头部的区别&quot;&gt;头部的区别&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#max-age与expires的区别&quot; id=&quot;markdown-toc-max-age与expires的区别&quot;&gt;Max-Age与Expires的区别&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#ps同时启动了cache-control与expirescache-contrl优先级更高&quot; id=&quot;markdown-toc-ps同时启动了cache-control与expirescache-contrl优先级更高&quot;&gt;PS：同时启动了Cache-Control与Expires，Cache-Contrl优先级更高。&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#e-tag和last-modified的区别&quot; id=&quot;markdown-toc-e-tag和last-modified的区别&quot;&gt;E-tag和Last-Modified的区别&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#图解&quot; id=&quot;markdown-toc-图解&quot;&gt;图解&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#结语&quot; id=&quot;markdown-toc-结语&quot;&gt;结语&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;头部的区别&quot;&gt;头部的区别&lt;/h2&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;从http1.0到http1.1，改进了很多头部&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;http1.0的缓存控制：
-    &lt;ul&gt;
-      &lt;li&gt;Pragma：严格来说，它不属于专门的缓存控制头，但是它设置了「no-cache」可以让本地强缓存失效（相当于一个配置项）&lt;/li&gt;
-      &lt;li&gt;Expires：服务器配置，属于强缓存，用来控制在规定的时间之前，浏览器不会发出请求，而是直接使用本地缓存，注意，Expires一般对应服务器端时间，如Expires：Fri，30 Oct 2001 12:22:12&lt;/li&gt;
-      &lt;li&gt;If-Modifien-Since/Last-Modifed:这个、两个是成对出现的，属于协商缓存的内容，其中浏览器的头部是「If-Modified-Since」，而服务端的是「Last-Modified」，他的作用是，在发起请求时，如果「If-Modified-Since」和「Last-Modified」匹配， 那么代表服务器资源并未改变，因此服务器不会返回资源实体，而是只返回头部，通知浏览器可以使用本地缓存。「Last-Modified」-&amp;gt; 文件最后修改的时间，只能精确到1s&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;http1.1的缓存控制：
-    &lt;ul&gt;
-      &lt;li&gt;Cache-Control：缓存控制头部，有no-cache、max-age等多种取值。&lt;/li&gt;
-      &lt;li&gt;Max-Age： 服务器配置的，用来控制强缓存，在规定的时间之内，浏览器无需发送请求，直接使用本地缓存，注意「Max-Age」是「Cache-Control」的值，不是独立的头部，例如「Cache-Control:max-age=3600」,而且它的值是绝对时间，由服务器计算&lt;/li&gt;
-      &lt;li&gt;If-None-Match/E-tag:这两个是成对出现的，属于协商缓存的内容，其实浏览器头部的是「If-None-Match」，而服务端的是「E-tag」，同样，发出请求后， 如果「If-None-Match」和「E-tag」匹配，则代表内容未变，通知浏览器使用本地缓存，和「Last-Modified」不同，「E-tag」更精确，它是类似于指纹一样的东西，基于「FileEtag INode Mtime Size」生成的，也是只要文件变，指纹就会变，而且没有任何精度限制&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;max-age与expires的区别&quot;&gt;Max-Age与Expires的区别&lt;/h3&gt;
-&lt;p&gt;「Expires」使用的是服务器端的本地时间，但是有时客户端时间好服务器端时间不同步，导致了浏览器本地的缓存失效或者过期&lt;/p&gt;
-
-&lt;p&gt;所以不推荐Expires，而且Max-Age使用的是客户端本地时间计算，所以不会有这个问题，所以推荐使用Max-Age&lt;/p&gt;
-
-&lt;h4 id=&quot;ps同时启动了cache-control与expirescache-contrl优先级更高&quot;&gt;PS：同时启动了Cache-Control与Expires，Cache-Contrl优先级更高。&lt;/h4&gt;
-
-&lt;h3 id=&quot;e-tag和last-modified的区别&quot;&gt;E-tag和Last-Modified的区别&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Last-Modified:
-    &lt;ul&gt;
-      &lt;li&gt;表明服务器端的文件时最后何时改变的&lt;/li&gt;
-      &lt;li&gt;缺点：只能精确到1s&lt;/li&gt;
-      &lt;li&gt;服务端的文件会周期性改变，导致缓存失效&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;E-tag：
-    &lt;ul&gt;
-      &lt;li&gt;是一种种指纹机制，可以代表文件的相关唯一性&lt;/li&gt;
-      &lt;li&gt;只有文件改变，缓存才会变&lt;/li&gt;
-      &lt;li&gt;没有精确时间的限定&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;图解&quot;&gt;图解&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tKfTcgy1g0atbc7vpfj30m80djq34.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;结语&quot;&gt;结语&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;第一步，HTTP请求终于讲完了，其实我之前对整个请求体系基本不知道多少。明天开始我会开始整理（抄）解析页面流程，敬请期待！&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-        <pubDate>Mon, 18 Feb 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/02/18/http2.0-https-2/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/02/18/http2.0-https-2/</guid>
-        
         
       </item>
     

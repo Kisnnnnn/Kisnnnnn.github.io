@@ -1,13 +1,14 @@
 ---
-layout: VUE
+layout: post
 title:  "2019-05-29-VUE中的$ref、$on、$emit"
-date:    2019-05-29 21:00:00 +0800
+date:   2019-05-29 21:00:00 +0800
 categories: 前端
 tag: 笔记
 ---
 
 * content
 {:toc}
+
 
 
 ## $emit(eventNanme,[...args])
@@ -45,7 +46,9 @@ tag: 笔记
   }
 </script>
 ```
+
 父组件：
+
 ```
 <template>
   <div id="app">
@@ -67,6 +70,7 @@ tag: 笔记
   }
 </script>
 ```
+
 - 交互过程：
     - child.vue为子组件，当在child.vue，点击button。
     - 触发子组件的「emitEvent」方法
@@ -86,17 +90,19 @@ tag: 笔记
 <!-- `vm.$refs.child` will be the child component instance -->
 <!-- `vm.$refs.child` 指向这个子组件 -->
 <child-com ref="chil"</child-com>
-
 ```
+
 ref 本身是作为渲染结果被创建的，在初始化渲染的时候你不能访问他们，因为他们还不存在，$refs也不是响应式的，因此你不应该试图用它在模板中做数据绑定。
 
 ## $ref
+
 > 但是我们可以使用$ref在直接访问这个子组件。
 
 - #### 适用环境：
     - 父组件调用子组件的方法，可以传递数据。
 
 父组件：
+
 ```
 <template>
   <div id="app">
@@ -127,6 +133,7 @@ ref 本身是作为渲染结果被创建的，在初始化渲染的时候你不�
 ```
 
 子组件：
+
 ```
 <template>
   <button>点击我</button>
@@ -148,6 +155,7 @@ ref 本身是作为渲染结果被创建的，在初始化渲染的时候你不�
     - 子组件中「emitEvent」方法触发。
 
 ## $on(event,callback)
+
 - 参数：
     - {string | Array<string>} event 
     - {Funtion} callback
@@ -157,9 +165,11 @@ ref 本身是作为渲染结果被创建的，在初始化渲染的时候你不�
     - 兄弟组件进行通信
 
 ### 示例
+
 - 首先创建一个vue的空白实例（兄弟间的桥梁）
 
 - 父组件
+
 ```
 <template>
      <div>
@@ -249,6 +259,7 @@ export default {
 	}
 </script>
 ```
+
 #### 交互过程：
 - 定义一个父组件，作为A/B子组件的通信桥梁
 - 在A组件来中设定一个自定义事件「aevent」
