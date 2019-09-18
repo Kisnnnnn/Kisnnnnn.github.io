@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', () => {
     slice.hits.forEach(hit => {
       result += text.substring(prevEnd, hit.position);
       let end = hit.position + hit.length;
-      result += `<b class="search-keyword">${text.substring(hit.position, end)}</b>`;
+      result += '<b class="search-keyword">'+text.substring(hit.position, end)+'</b>';
       prevEnd = end;
     });
     result += text.substring(prevEnd, slice.end);
