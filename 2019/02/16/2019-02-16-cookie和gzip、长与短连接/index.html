@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="今天有些忙，晚上二刷完「流浪地球」才回家，继续整理下昨天接下来的「Cookie」 Cookie什么是 Cookie？ Cookie, 网站为了辨别用户身份、进行 session 跟踪而存储在用户本地终端的数据（加密），规范为 RFC6265 通俗的来说，就是「浏览器缓存」，在网站上来用帮助客户端和服务器校验身份，或者交换数据（通信），结合服务器的 seesion 使用。">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cookie和gizp压缩、长连接与短连接">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/02/16/2019-02-16-cookie和gzip、长与短连接/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="今天有些忙，晚上二刷完「流浪地球」才回家，继续整理下昨天接下来的「Cookie」 Cookie什么是 Cookie？ Cookie, 网站为了辨别用户身份、进行 session 跟踪而存储在用户本地终端的数据（加密），规范为 RFC6265 通俗的来说，就是「浏览器缓存」，在网站上来用帮助客户端和服务器校验身份，或者交换数据（通信），结合服务器的 seesion 使用。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g08oox73ggj30nq0mewht.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g08p2fv8khj30pg0grwf7.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g08pipshysj30i613egnd.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g08pvo9n9pj31e70u0wo1.jpg">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cookie和gizp压缩、长连接与短连接">
+<meta name="twitter:description" content="今天有些忙，晚上二刷完「流浪地球」才回家，继续整理下昨天接下来的「Cookie」 Cookie什么是 Cookie？ Cookie, 网站为了辨别用户身份、进行 session 跟踪而存储在用户本地终端的数据（加密），规范为 RFC6265 通俗的来说，就是「浏览器缓存」，在网站上来用帮助客户端和服务器校验身份，或者交换数据（通信），结合服务器的 seesion 使用。">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g08oox73ggj30nq0mewht.jpg">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/02/16/2019-02-16-cookie和gzip、长与短连接/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Cookie和gizp压缩、长连接与短连接 | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/02/16/2019-02-16-cookie和gzip、长与短连接/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Cookie和gizp压缩、长连接与短连接
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-16 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-16T21:00:00+08:00">2019-02-16</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>今天有些忙，晚上二刷完「流浪地球」才回家，继续整理下昨天接下来的「Cookie」</p>
+</blockquote><h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><h3 id="什么是-Cookie？"><a href="#什么是-Cookie？" class="headerlink" title="什么是 Cookie？"></a>什么是 Cookie？</h3><blockquote>
+<p>Cookie, 网站为了辨别用户身份、进行 session 跟踪而存储在用户本地终端的数据（加密），规范为 RFC6265</p>
+</blockquote><p>通俗的来说，就是「浏览器缓存」，在网站上来用帮助客户端和服务器校验身份，或者交换数据（通信），结合服务器的 seesion 使用。</p><a id="more"></a>
+
+
+<p>举个栗子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在login页面进行登录的时候，用户点击「登录」</span><br><span class="line">此时，服务端会生成一个seesion，seesion中有对于用户的信息（账号、密码等）</span><br><span class="line">然后会生成一个sessionid（相当于是服务端的这个seesion对应的key）</span><br><span class="line">然后服务器端在登录页面中写入cookie，值就是jessionid=xxx</span><br><span class="line">最后浏览器中本地就有这个cookie，以后再访问同域名下的页面的时候，自动就带上这个sessionid了，就不需要自动登录了。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g08oox73ggj30nq0mewht.jpg" alt="image"><br>一般来说 cookie 是不允许存放敏感信息的（禁止明文存储账号、密码）</p>
+<p>因为在同域名的资源氢气下，浏览器会默认带上本地的 cookie，所以在某些不想带 cookie 信息的情况下，还需要另外处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">客户端在域名A下有cookie</span><br><span class="line">但是A下有一个页面，页面中有很多依赖的静态资源（资源都在域名A服务器下面）</span><br><span class="line">此时就在请求这些静态页面的时候，浏览器就会默认带上cookie</span><br><span class="line">这样就会降低访问速度，浪费效能</span><br></pre></td></tr></table></figure>
+
+<p>比较稳当的解决办法，就是「多域名拆分」。具体作坊就是</p>
+<ul>
+<li>讲静态资源，分别放在不同的域名下（带 cookie 的：<a href="http://www.a.com,不需要带" target="_blank" rel="noopener">www.a.com,不需要带</a> cookie：w<a href="http://www.c.com）" target="_blank" rel="noopener">www.c.com）</a></li>
+<li>而 a.com 在加载页面的时候，加载静态页面就不会带 cookie</li>
+</ul>
+<h4 id="多域名拆分"><a href="#多域名拆分" class="headerlink" title="多域名拆分"></a>多域名拆分</h4><p>在移动端，如果请求的域名过多，会降低请求速度，因为域名解析流程也是需要时间<br>此时，就需要再加一份优化方案「dns-prefetch」，让浏览器在空闲时提前解析 dns 域名。</p>
+<h3 id="cookie-的交互"><a href="#cookie-的交互" class="headerlink" title="cookie 的交互"></a>cookie 的交互</h3><p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g08p2fv8khj30pg0grwf7.jpg" alt="image"></p>
+<h2 id="gzip-压缩"><a href="#gzip-压缩" class="headerlink" title="gzip 压缩"></a>gzip 压缩</h2><blockquote>
+<p>http 协议上的 gzip 编码是中用来改进 WEB 应用程序性能的技术。可以让用户更快的速度请求。</p>
+</blockquote>
+<p>gzip 是一中压缩格式，需要浏览器支持才有效，压缩效率比较优秀<br>gzip 一般在「apache」、「tomcat」等 web 服务器开启</p>
+<h2 id="长连接与短连接"><a href="#长连接与短连接" class="headerlink" title="长连接与短连接"></a>长连接与短连接</h2><h3 id="tcp-ip-中的定义"><a href="#tcp-ip-中的定义" class="headerlink" title="tcp/ip 中的定义"></a>tcp/ip 中的定义</h3><ul>
+<li>长连接：一个 tcp/ip 连接上可以连续发送多个数据包，在 tcp 保持连接期间，如果没有数据包发送，需要双方发检验测试包以维持连接，一般需要自己做在线维持。</li>
+<li>短连接：通信双方有数据交互时，就建立一个 tcp 连接，数据交互完成，销毁。</li>
+</ul>
+<h3 id="http-的定义："><a href="#http-的定义：" class="headerlink" title="http 的定义："></a>http 的定义：</h3><ul>
+<li>http1.0 中，默认使用的是短连接，浏览器每进行一次 http 操作，就会建立一次连接，交互结束销毁连接。</li>
+<li>http1.1 中，默认使用长连接，使用长连接会有「Connection:keep-alive」，在长连接情况下，当一个页面打开完成后，客户端和服务端之前用于传输 http 的 tcvp 就不会关闭，如果客户端再次访问这个服务器页面，则会继续使用这条建立过的连接</li>
+</ul>
+<blockquote>
+<p>PS：keep-alive 不会永远保持，也有时间，一般配置在服务器中，另外长连接也需要客户端和服务器都支持该配置才有效。</p>
+</blockquote>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>本来还想整理（抄）一下 http2.0 和 https 的定义和区别，但是时间不早了，该睡了。<br>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<p>该睡了。</p>
+<h3 id="诶…你怎么还不睡-那么我来写（copy）个彩蛋吧？"><a href="#诶…你怎么还不睡-那么我来写（copy）个彩蛋吧？" class="headerlink" title="诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？"></a>诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？</h3><blockquote>
+<p>事情是这样的，我 banner 上写的是一句日文「今でもあなたはわたしの光」，来自米津玄師的「Lemon」。然后我哥提醒我「わたし」一般是女的才用，毕竟我哥日文水平还是可以不错的，于是我和我哥就去查了下资料。</p>
+</blockquote>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g08pipshysj30i613egnd.jpg" alt></p>
+<p>以下是来 wiki 的解释</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g08pvo9n9pj31e70u0wo1.jpg" alt="image"></p>
+<ul>
+<li><p>私（わたし／watashi）<br>日本人用得最多的一人称。「わたくし」的谦逊说法。男女老少都用，礼貌用语。特别公开场合男的用这个就很礼貌，用「わたくし」就更礼貌了。女性更比男性常用。</p>
+</li>
+<li><p>私（わたくし／watakushi）<br>「私」的自谦、郑重语，对年龄比自己大，地位比自己高的时候使用。公开郑重场合用这个最礼貌。特别是皇族公开演说必须用这个，因为皇族在面向国民的时候需要用自谦的语气说话。</p>
+</li>
+<li><p>自分（じぶん／zibun）</p>
+</li>
+</ul>
+<p>体育协会那些男生多用。相扑力士和棒球选手常用。刑事日剧『西部警察』里面渡哲也演的主人公大門圭介使用这个很有名で、一时期成为了流行語。<br>在文章里面也常用语一人称，这种时候女的也有用的。但是在正式的文书和商务文书禁用。</p>
+<ul>
+<li>僕（ぼく／boku）</li>
+</ul>
+<p>男性在私下场合对同辈或长辈常用，在较正式的场合也有用的，给人亲近、随和的感觉是一种自谦语。就像字面上说的“请把我作为仆人召唤”的感觉，这种时候女性可以用「妾（ショウ）」。</p>
+<ul>
+<li>俺（おれ／ore）</li>
+</ul>
+<p>一般只能男的私下场合用，只能对同辈或者晚辈使用。因为是俗语，所以公开场合不用。用在路飞身上再好不过。</p>
+<blockquote>
+<p>还有好多语法，我就不一一 google translate 了…附上链接:<a href="https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%81%AE%E4%B8%80%E4%BA%BA%E7%A7%B0%E4%BB%A3%E5%90%8D%E8%A9%9E#%E7%A7%81%EF%BC%88%E3%82%8F%E3%81%9F%E3%81%97%EF%BC%89" target="_blank" rel="noopener">https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%81%AE%E4%B8%80%E4%BA%BA%E7%A7%B0%E4%BB%A3%E5%90%8D%E8%A9%9E#%E7%A7%81%EF%BC%88%E3%82%8F%E3%81%9F%E3%81%97%EF%BC%89</a> （查看请示用「科学上网」）</p>
+</blockquote>
+<h4 id="现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。"><a href="#现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。" class="headerlink" title="现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。"></a>现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。</h4>
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/02/15/2019-02-15-http(2)/" rel="next" title="浏览器如何发起一个完整的HTTP请求(2)">
+                  <i class="fa fa-chevron-left"></i> 浏览器如何发起一个完整的HTTP请求(2)
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/02/17/2019-02-17-http2.0、https（1）/" rel="prev" title="2019-02-17-http2.0、https（1）">
+                  2019-02-17-http2.0、https（1） <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookie"><span class="nav-number">1.</span> <span class="nav-text">Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-Cookie？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是 Cookie？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#多域名拆分"><span class="nav-number">1.1.1.</span> <span class="nav-text">多域名拆分</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cookie-的交互"><span class="nav-number">1.2.</span> <span class="nav-text">cookie 的交互</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gzip-压缩"><span class="nav-number">2.</span> <span class="nav-text">gzip 压缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#长连接与短连接"><span class="nav-number">3.</span> <span class="nav-text">长连接与短连接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp-ip-中的定义"><span class="nav-number">3.1.</span> <span class="nav-text">tcp/ip 中的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-的定义："><span class="nav-number">3.2.</span> <span class="nav-text">http 的定义：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">3.3.</span> <span class="nav-text">结语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#诶…你怎么还不睡-那么我来写（copy）个彩蛋吧？"><span class="nav-number">3.4.</span> <span class="nav-text">诶…你怎么还不睡..? 那么我来写（copy）个彩蛋吧？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。"><span class="nav-number">3.4.1.</span> <span class="nav-text">现在发现有很多东西需要学习，不单单为了我个人的薪资或者理想，可能更多的是想更加了解一点世界。</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:szaf93671@16.com" title="E-Mail &rarr; mailto:szaf93671@16.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

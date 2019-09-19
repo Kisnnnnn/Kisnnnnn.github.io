@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="什么是生命周期？每个 Vue 实例在被创建时都经过了一系列的初始化过程 设置数据监听 编译模板 将实例挂载到 DOM 数据变化时更新 DOM 在这一系列过程中，也会运行一些「生命周期钩子」的函数，用在给开发者在不同阶段添加自己的代码的机会。 「created」钩子，在一个实例被创建后执行代码 12345678910new Vue(&amp;#123;  data: &amp;#123;    a: 1  &amp;#12">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue的生命周期">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/06/04/2019-06-04-Vue的生命周期/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="什么是生命周期？每个 Vue 实例在被创建时都经过了一系列的初始化过程 设置数据监听 编译模板 将实例挂载到 DOM 数据变化时更新 DOM 在这一系列过程中，也会运行一些「生命周期钩子」的函数，用在给开发者在不同阶段添加自己的代码的机会。 「created」钩子，在一个实例被创建后执行代码 12345678910new Vue(&amp;#123;  data: &amp;#123;    a: 1  &amp;#12">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://cn.vuejs.org/images/lifecycle.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006tNc79gy1g3p47s9i2qj30u01y0jwq.jpg">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.188Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue的生命周期">
+<meta name="twitter:description" content="什么是生命周期？每个 Vue 实例在被创建时都经过了一系列的初始化过程 设置数据监听 编译模板 将实例挂载到 DOM 数据变化时更新 DOM 在这一系列过程中，也会运行一些「生命周期钩子」的函数，用在给开发者在不同阶段添加自己的代码的机会。 「created」钩子，在一个实例被创建后执行代码 12345678910new Vue(&amp;#123;  data: &amp;#123;    a: 1  &amp;#12">
+<meta name="twitter:image" content="https://cn.vuejs.org/images/lifecycle.png">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/06/04/2019-06-04-Vue的生命周期/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Vue的生命周期 | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/06/04/2019-06-04-Vue的生命周期/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Vue的生命周期
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-04 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-04T21:00:00+08:00">2019-06-04</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="什么是生命周期？"><a href="#什么是生命周期？" class="headerlink" title="什么是生命周期？"></a>什么是生命周期？</h2><p>每个 Vue 实例在被创建时都经过了一系列的初始化过程</p><ul>
+<li>设置数据监听</li>
+<li>编译模板</li>
+<li>将实例挂载到 DOM</li>
+<li>数据变化时更新 DOM</li>
+</ul><p>在这一系列过程中，也会运行一些「生命周期钩子」的函数，用在给开发者在不同阶段添加自己的代码的机会。</p><blockquote>
+<p>「created」钩子，在一个实例被创建后执行代码</p>
+</blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">new Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    a: 1</span><br><span class="line">  &#125;,</span><br><span class="line">  created: function () &#123;</span><br><span class="line">    // `this` 指向 vm 实例</span><br><span class="line">    console.log(&apos;a is: &apos; + this.a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">// =&gt; &quot;a is: 1&quot;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+
+
+<blockquote>
+<p>不要在选项属性或回调上使用箭头函数，比如 created: () =&gt; console.log(this.a) 或 vm.$watch(‘a’, newValue =&gt; this.myMethod())。因为箭头函数并没有 this，this 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 Uncaught TypeError: Cannot read property of undefined 或 Uncaught TypeError: this.myMethod is not a function 之类的错误。</p>
+</blockquote>
+<p><img src="https://cn.vuejs.org/images/lifecycle.png" alt="流程图"></p>
+<blockquote>
+<p>参考 <a href="https://cn.vuejs.org/v2/guide/instance.html#生命周期图示" target="_blank" rel="noopener">Vue 实例</a></p>
+</blockquote>
+<p>通俗的讲：就是在.Vue 从加载前到销毁后，这一些系列过程中，有特定的阶段 fn 可以提供我们开发者来进行操作。</p>
+<h2 id="阶段"><a href="#阶段" class="headerlink" title="阶段"></a>阶段</h2><table>
+<thead>
+<tr>
+<th>钩子函数方法</th>
+<th>触发阶段</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>beforeCreate</td>
+<td>创建前</td>
+<td>组件实例刚被创建，组件属性计算前，数据对象 data 都未定义，未初始化</td>
+</tr>
+<tr>
+<td>created</td>
+<td>创建后</td>
+<td>组件实例创建完成，属性已经绑定，数据对象 data 已经定义存在，DOM 没为生成，$el 未存在</td>
+</tr>
+<tr>
+<td>beforeMount</td>
+<td>挂载前</td>
+<td>Vue 实例的$el 和 data 都已经初始化完成，挂在前为虚拟的 dom 节点，模板还没有渲染到 HTML 页面上去，data.message 未替换。</td>
+</tr>
+<tr>
+<td>mounted</td>
+<td>挂载后</td>
+<td>Vue 实例挂载完成，模板已经渲染到 HTML 中，dota.message 成功渲染。这个阶段可以做一些 ajax 请求操作，mounted 在周期中只会执行一次。</td>
+</tr>
+<tr>
+<td>beforeUpdate</td>
+<td>更新前</td>
+<td>当 dota 更新之前，会触发 beforeUpdate 方法。</td>
+</tr>
+<tr>
+<td>updated</td>
+<td>更新后</td>
+<td>当 data 更新完成后，触发 updated 方法。</td>
+</tr>
+<tr>
+<td>beforeDestory</td>
+<td>销毁前</td>
+<td>Vue 组件实例销毁前执行的方法。</td>
+</tr>
+<tr>
+<td>destroyed</td>
+<td>销毁后</td>
+<td>组件销毁后，调用的方法，对 data 的改变不会再触发函数周，vue 实例已经解除事件监听和 dom 绑定，但 dom 结构依然存在。</td>
+</tr>
+</tbody></table>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1g3p47s9i2qj30u01y0jwq.jpg" alt="图解"></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import Axios from &apos;axios&apos;       // 这是一个轻量级的ajax库，import是es6模块导入的语法。</span><br><span class="line">export default &#123;                // 这是一个vue的模块，后面讲奥。</span><br><span class="line">  name: &apos;app&apos;,</span><br><span class="line">  components: &#123;</span><br><span class="line">  &#125;,</span><br><span class="line">  data: function () &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      list: []</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  mounted: function () &#123;          // 挂在完成后的生命周期钩子注册。</span><br><span class="line">    this.$nextTick(function () &#123;  // 等待下一次更新完成后执行业务处理代码。</span><br><span class="line">      Axios.get(&apos;/api/menulist&apos;, &#123;// 将回调延迟到下次 DOM 更新循环之后执行。在修改数据之后立即使用它，然后等待 DOM 更新</span><br><span class="line">        params: &#123;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;).then(function (res) &#123;</span><br><span class="line">        this.list = res.data</span><br><span class="line">      &#125;.bind(this))</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Vue-实例的全局配置"><a href="#Vue-实例的全局配置" class="headerlink" title="Vue 实例的全局配置"></a>Vue 实例的全局配置</h2><ul>
+<li><p>silent</p>
+<ul>
+<li>类型：boolean</li>
+<li>默认值：false</li>
+<li>用法：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Vue.config.silent = true</span><br><span class="line">// 取消Vue所有的日志与警告</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>optionMergeStrategies</p>
+<ul>
+<li>类型： { [key: string]: Function }</li>
+<li>默认值： {}</li>
+<li>用法：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Vue.config.optionMergeStrategies._my_option=function( parent,child,vm)&#123;</span><br><span class="line">    return child+1</span><br><span class="line">&#125;</span><br><span class="line">const Profile = Vue.extend(&#123;</span><br><span class="line">    _my_option: 1</span><br><span class="line">&#125;)</span><br><span class="line">Profile.options._my_option = 2</span><br><span class="line">// 自定义合并策略选项</span><br><span class="line">// 合并策略选项分别接受第一个参数作为父实例，第二个参数为子实例，Vue实例上下文被作为第三个参数传入。</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>devtools</p>
+<ul>
+<li>类型：boolean</li>
+<li>默认值：true</li>
+<li>用法：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 务必在加载 Vue 之后，立即同步设置以下内容Vue.config.devtools = true</span><br><span class="line">// 配置是否允许 vue-devtools 检查代码。开发版本默认为 true，生产版本默认为 false。生产版本设为 true 可以启用检查。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Vue-的全局-API"><a href="#Vue-的全局-API" class="headerlink" title="Vue 的全局 API"></a>Vue 的全局 API</h2><ul>
+<li>Vue.nextTick</li>
+</ul>
+<blockquote>
+<p>语法：Vue.nextTick([callback, context])</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;Function&#125;[callback]</span><br><span class="line">&#123;Object&#125;[callback]</span><br></pre></td></tr></table></figure>
+
+<p>用法：</p>
+<p>在下次 DOM 更新循环结束后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 修改数据</span><br><span class="line">vm.msg = &apos;msg&apos;</span><br><span class="line">// DOM未更新</span><br><span class="line">Vue.nexTick(function() &#123;</span><br><span class="line">    // DOM更新了</span><br><span class="line">    // 执行操作</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Vue.set</li>
+</ul>
+<blockquote>
+<p>语法：Vue.set( object, key, value)</p>
+</blockquote>
+<p>参数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;Object&#125; object</span><br><span class="line">&#123;String&#125; key</span><br><span class="line">&#123;any&#125; value</span><br></pre></td></tr></table></figure>
+
+<p>用法：</p>
+<p>设置对象数据。如果对象是响应式的，确保属性被创建后也是响应式的，同时触发视图更新，这个方法主要用于避开 Vue 不能检测属性被添加的限制。注意对象不能使 Vue 示例，或者 Vue 实例的根数据对象。</p>
+<ul>
+<li>Vue.complie</li>
+</ul>
+<blockquote>
+<p>语法：Vue.compile(template)</p>
+</blockquote>
+<p>参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;string&#125; template</span><br></pre></td></tr></table></figure>
+
+<p>用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 在render函数中编译模板字符串</span><br><span class="line">// 在独立构建时有效</span><br><span class="line">var res = Vue.Compile(`&lt;div&gt;&lt;span&gt;&#123;&#123; msg &#125;&#125;&lt;/span&gt;&lt;/div&gt;`)</span><br><span class="line"></span><br><span class="line">new Vuew(&#123;</span><br><span class="line">    data:&#123;</span><br><span class="line">        msg:&apos;hello&apos;</span><br><span class="line">    &#125;,</span><br><span class="line">    render:res.render,</span><br><span class="line">    staticRenderFns:res.staticRenderFns</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>更多的 API 和用法请看-&gt; <a href="https://cn.vuejs.org/v2/api/" target="_blank" rel="noopener">API-Vue</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/06/03/2019-06-03-Express.js之路-基础/" rel="next" title="Express.js之路-基础">
+                  <i class="fa fa-chevron-left"></i> Express.js之路-基础
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/06/05/2020-06-05-ES6的解构赋值/" rel="prev" title="ES6-解构赋值-数组和对象">
+                  ES6-解构赋值-数组和对象 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是生命周期？"><span class="nav-number">1.</span> <span class="nav-text">什么是生命周期？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段"><span class="nav-number">2.</span> <span class="nav-text">阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">2.1.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-实例的全局配置"><span class="nav-number">3.</span> <span class="nav-text">Vue 实例的全局配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-的全局-API"><span class="nav-number">4.</span> <span class="nav-text">Vue 的全局 API</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:szaf93671@16.com" title="E-Mail &rarr; mailto:szaf93671@16.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

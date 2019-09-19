@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="昨天看到请求头部分，整理一些通用请求头，下面整理下常用的响应/请求头 常用的请求头部12345678910111213Accept：接受类型，标示浏览器支持的MIME类型（对标服务器返回的Centent-Type）Accept-Encoding： 浏览器支持的压缩类型，比如gzip等，超过类型不能接受Content-Type：客户端发送出去实体内容的类型Cache-Control：指定请求和响应">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器如何发起一个完整的HTTP请求(2)">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/02/15/2019-02-15-http(2)/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="昨天看到请求头部分，整理一些通用请求头，下面整理下常用的响应/请求头 常用的请求头部12345678910111213Accept：接受类型，标示浏览器支持的MIME类型（对标服务器返回的Centent-Type）Accept-Encoding： 浏览器支持的压缩类型，比如gzip等，超过类型不能接受Content-Type：客户端发送出去实体内容的类型Cache-Control：指定请求和响应">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g07d0evn94j30h807u3yq.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g07d2tzlz5j30gq08zglu.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1g07d19zojoj30h00abmxi.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g07e2c2i61j30gk0m80uo.jpg">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器如何发起一个完整的HTTP请求(2)">
+<meta name="twitter:description" content="昨天看到请求头部分，整理一些通用请求头，下面整理下常用的响应/请求头 常用的请求头部12345678910111213Accept：接受类型，标示浏览器支持的MIME类型（对标服务器返回的Centent-Type）Accept-Encoding： 浏览器支持的压缩类型，比如gzip等，超过类型不能接受Content-Type：客户端发送出去实体内容的类型Cache-Control：指定请求和响应">
+<meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g07d0evn94j30h807u3yq.jpg">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/02/15/2019-02-15-http(2)/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>浏览器如何发起一个完整的HTTP请求(2) | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/02/15/2019-02-15-http(2)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">浏览器如何发起一个完整的HTTP请求(2)
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-15 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-15T21:00:00+08:00">2019-02-15</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>昨天看到请求头部分，整理一些通用请求头，下面整理下常用的响应/请求头</p>
+</blockquote><h2 id="常用的请求头部"><a href="#常用的请求头部" class="headerlink" title="常用的请求头部"></a>常用的请求头部</h2><p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g07d0evn94j30h807u3yq.jpg" alt="image"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Accept：接受类型，标示浏览器支持的MIME类型（对标服务器返回的Centent-Type）</span><br><span class="line">Accept-Encoding： 浏览器支持的压缩类型，比如gzip等，超过类型不能接受</span><br><span class="line">Content-Type：客户端发送出去实体内容的类型</span><br><span class="line">Cache-Control：指定请求和响应遵循的缓存机制，如no-cache、no-store</span><br><span class="line">If-Modified-Since：对应服务器的Last-Modified,用来匹配看文件是否变动，精确到1s</span><br><span class="line">Expires：缓存控制，在这个时间内不会请求，直接使用缓存（http1.0，而且是服务器端时间）</span><br><span class="line">Max-age： 代表资源在本地缓存多少秒，有效时间不会请求，而是使用缓存（http1.1）</span><br><span class="line">If-None-Match：对于服务端的ETag，用于匹配文件内容是否改变（非常精确）（http1.1）</span><br><span class="line">Cookie：有cookie并且同域访问时会自动带上（www.baidu.com/a.baidu.com非同域名！）</span><br><span class="line">Host：请求的服务器URL</span><br><span class="line">Origin：最初请求是从哪里发起的（精确到端口），Origin比Referer更遵循隐私</span><br><span class="line">Referer：该页面的来源URL（适用于所有类型的请求，会精确到详细页面，csrf通常会拦截该字段）</span><br><span class="line">User-Agent：用户客户端的一些必要信息</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<p><strong>备注</strong></p>
+<blockquote>
+<p>no-cache:可以在本地缓存，可以代理服务器缓存，但是和这个缓存需要服务器验证以后才可以使用</p>
+</blockquote>
+<blockquote>
+<p>no-store:禁用缓存，本地和代理服务器均不准使用,必须从服务器获取</p>
+</blockquote>
+<h3 id="Accept-和-Content-Type-的区别"><a href="#Accept-和-Content-Type-的区别" class="headerlink" title="Accept 和 Content-Type 的区别"></a>Accept 和 Content-Type 的区别</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Accpet属于请求头，Content-Type属于实体头</span><br><span class="line">Accpet：告诉服务端，客户端接收什么类型的信息</span><br><span class="line">Content-Type：发送端（客户端|服务器端）发送的实体数据的数据类型</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用的响应头"><a href="#常用的响应头" class="headerlink" title="常用的响应头"></a>常用的响应头</h2><p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g07d2tzlz5j30gq08zglu.jpg" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Access-Control-Allow-Hedaers：服务器端允许的Headers</span><br><span class="line">Access-Control-Allow-Methods：服务器端允许的请求方法</span><br><span class="line">Acees-Control-Allow-Origin：服务器端允许的请求Origin头部</span><br><span class="line">Content-Type：服务器返回的实体内容类型</span><br><span class="line">Data：数据从服务器发起的时间</span><br><span class="line">Cache-Control：告诉浏览器或其他用户，什么环境可以安全的缓存文档</span><br><span class="line">Last-Modified：请求资源的最后修改时间</span><br><span class="line">Expires：文档的过期时间，删除缓存</span><br><span class="line">Max-age：客户端的本地资源的缓存时间(单位-秒)，开启了Cache-Contral后有效</span><br><span class="line">ETag：请求标量的实体标签的当前值</span><br><span class="line">Set-Cookie：设置和页面关联的cookie，服务器通过整个头部把cookie传给客户端</span><br><span class="line">Keep-Alive：客户端有keep-alive，服务端也会响应（timeout=38）</span><br><span class="line">Server：服务器的一些相关信息</span><br></pre></td></tr></table></figure>
+
+<p>请求头部和响应头部是彼此匹配分析的。</p>
+<p>最常见的：<br>请求头部的 Accept 要和响应头部的 Content-Type 进行匹配，否则会报错。</p>
+<h4 id="其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？"><a href="#其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？" class="headerlink" title="其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？"></a>其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？</h4><p>后来，我整理的时候发现，「Content-Type」是实体头部，指的是：「发送端（可以使客户端，也可以是服务端），用来表明发送信息的文档类型的」，也就是说他是发送性质的，「Accept」是接受性质，so 请求头部的「Accept」和响应头部的「Cotent-Type」匹配的。</p>
+<h4 id="举栗子"><a href="#举栗子" class="headerlink" title="举栗子"></a>举栗子</h4><p>造成跨域问题，往往是因为请求头部「Origin」要匹配响应头部的「Access-Control-Allow-Origin」，一旦匹配失败，则会报跨域错误。</p>
+<p>在使用缓存时，请求头部的 If-Modified-Since、If-None-Match 分别和响应头部的 Last-Modified、ETag 对应</p>
+<h3 id="什么是实体头？"><a href="#什么是实体头？" class="headerlink" title="什么是实体头？"></a>什么是实体头？</h3><p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1g07d19zojoj30h00abmxi.jpg" alt="image"></p>
+<blockquote>
+<p>可以理解为「实体信息」的头部</p>
+</blockquote>
+<h3 id="什么是实体信息？"><a href="#什么是实体信息？" class="headerlink" title="什么是实体信息？"></a>什么是实体信息？</h3><blockquote>
+<p>消息实体分为响应实体、请求实体</p>
+</blockquote>
+<p>在 http 请求中，会将一些需要的参数放入，你比如 POST 请求。</p>
+<p>实体信息中可以放入参数（data=ab&amp;query=123），也可以直接通过表单对象（Form Data 对象，上传时可以带参数、文件、二进制流）</p>
+<p>而 http 响应时候，服务端就会返回实体信息（没错，就是 reponse）</p>
+<p>一般的接口请求，实体信息就是 JSON 格式的数据，然而接口返回的可以使 JSON 格式的数据也可以使 html，然后通过 JS 渲染</p>
+<h3 id="最后讲一下，CRLF"><a href="#最后讲一下，CRLF" class="headerlink" title="最后讲一下，CRLF"></a>最后讲一下，CRLF</h3><blockquote>
+<p>Carriage-Return Line-Feed), 回车换行符</p>
+</blockquote>
+<p>（我也不明白这东西有什么用）</p>
+<p>请求头和实体消息之间有一个 CRLF 分隔，响应头部和响应实体之间用一个 CRLF 分隔</p>
+<p>一般来说（分隔符类别）:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CRLF-&gt;Windows-style</span><br><span class="line">LF-&gt;Unix Style</span><br><span class="line">CR-&gt;Mac Style</span><br></pre></td></tr></table></figure>
+
+<p>结束下面附上一个 http 请求栗子</p>
+<h3 id="http-请求报文结构栗子："><a href="#http-请求报文结构栗子：" class="headerlink" title="http 请求报文结构栗子："></a>http 请求报文结构栗子：</h3><p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g07e2c2i61j30gk0m80uo.jpg" alt="image"></p>
+<h4 id="再说点什么？"><a href="#再说点什么？" class="headerlink" title="再说点什么？"></a>再说点什么？</h4><blockquote>
+<p>今天的内容其实我已经整理的差不多，两天把大牛的 http 请求，简单的整理（抄）了一遍，收获很多，之前一直不懂跨域的原理，以及 request/response 的头部匹配，基本也理解了。从 HTTP 报文结构表面来看至少看出来跨域的问题来自哪里，具体如何解决还需要仔细研究</p>
+</blockquote>
+<p>2019 年 02 月 15 日 20:40:48<br>袁凯忻</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/02/14/2019-02-14-http/" rel="next" title="浏览器如何发起一个完整的HTTP请求(1)">
+                  <i class="fa fa-chevron-left"></i> 浏览器如何发起一个完整的HTTP请求(1)
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/02/16/2019-02-16-cookie和gzip、长与短连接/" rel="prev" title="Cookie和gizp压缩、长连接与短连接">
+                  Cookie和gizp压缩、长连接与短连接 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的请求头部"><span class="nav-number">1.</span> <span class="nav-text">常用的请求头部</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Accept-和-Content-Type-的区别"><span class="nav-number">1.1.</span> <span class="nav-text">Accept 和 Content-Type 的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的响应头"><span class="nav-number">2.</span> <span class="nav-text">常用的响应头</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？"><span class="nav-number">2.0.1.</span> <span class="nav-text">其实我在整理之前一直在想为什么请求头部也有「Content-Type」，那为什么不是它和响应头部的「Content-Type」匹配？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#举栗子"><span class="nav-number">2.0.2.</span> <span class="nav-text">举栗子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是实体头？"><span class="nav-number">2.1.</span> <span class="nav-text">什么是实体头？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是实体信息？"><span class="nav-number">2.2.</span> <span class="nav-text">什么是实体信息？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后讲一下，CRLF"><span class="nav-number">2.3.</span> <span class="nav-text">最后讲一下，CRLF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-请求报文结构栗子："><span class="nav-number">2.4.</span> <span class="nav-text">http 请求报文结构栗子：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#再说点什么？"><span class="nav-number">2.4.1.</span> <span class="nav-text">再说点什么？</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:szaf93671@16.com" title="E-Mail &rarr; mailto:szaf93671@16.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

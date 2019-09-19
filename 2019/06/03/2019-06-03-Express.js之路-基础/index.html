@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="content{:toc} 什么是 Express.js？它是一个基于 Node.js 平台，快速、开放、极简的 web 开发框架。在 Express 中就是一个重点：API。这让我们更加注重业务的功能和开发效率。如何使用 Express.js1.安装12cd myproejctnpm install express --save">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Express.js之路-基础">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/06/03/2019-06-03-Express.js之路-基础/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="content{:toc} 什么是 Express.js？它是一个基于 Node.js 平台，快速、开放、极简的 web 开发框架。在 Express 中就是一个重点：API。这让我们更加注重业务的功能和开发效率。如何使用 Express.js1.安装12cd myproejctnpm install express --save">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006tNc79gy1g3npum8z2qj31hc0r776f.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006tNc79gy1g3nqmzen49j306l05n0sl.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g3nqmgplvuj30fo06v0sr.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006tNc79gy1g3nqs0of8oj30ri0fa3yu.jpg">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.183Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Express.js之路-基础">
+<meta name="twitter:description" content="content{:toc} 什么是 Express.js？它是一个基于 Node.js 平台，快速、开放、极简的 web 开发框架。在 Express 中就是一个重点：API。这让我们更加注重业务的功能和开发效率。如何使用 Express.js1.安装12cd myproejctnpm install express --save">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006tNc79gy1g3npum8z2qj31hc0r776f.jpg">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/06/03/2019-06-03-Express.js之路-基础/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Express.js之路-基础 | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/06/03/2019-06-03-Express.js之路-基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Express.js之路-基础
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-03 21:00:00" itemprop="dateCreated datePublished" datetime="2019-06-03T21:00:00+08:00">2019-06-03</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li>content<br>{:toc}</li>
+</ul><h2 id="什么是-Express-js？"><a href="#什么是-Express-js？" class="headerlink" title="什么是 Express.js？"></a>什么是 Express.js？</h2><p>它是一个基于 Node.js 平台，快速、开放、极简的 web 开发框架。<br>在 Express 中就是一个重点：API。这让我们更加注重业务的功能和开发效率。</p><h2 id="如何使用-Express-js"><a href="#如何使用-Express-js" class="headerlink" title="如何使用 Express.js"></a>如何使用 Express.js</h2><h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd myproejct</span><br><span class="line">npm install express --save</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<h3 id="2-在项目中引入："><a href="#2-在项目中引入：" class="headerlink" title="2.在项目中引入："></a>2.在项目中引入：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const express = require(&apos;express&apos;)</span><br><span class="line">//  获取sever示例</span><br><span class="line"></span><br><span class="line">const app = express();</span><br><span class="line"></span><br><span class="line">// 绑定服务器接收请求，并添加处理回调参数</span><br><span class="line">app.get(&apos;/&apos;,(req,res) =&gt; &#123;</span><br><span class="line">    // 成功接收后，发起回调参数。</span><br><span class="line">    res.send(&apos;Hello World&apos;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-项目运行"><a href="#3-项目运行" class="headerlink" title="3.项目运行"></a>3.项目运行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node server.js</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1g3npum8z2qj31hc0r776f.jpg" alt="image"></p>
+<blockquote>
+<p>我们利用 Express 框架可以减少我们的代码量，比起之前使用的 node 核心模块 http 构建服务器代码排版更直观。Express 底层使用的是 htp 核心模块的 API。如果要处理客户端不同请求路径，我们可以往下罗列多个 ==app.get()== 方法，无需使用 ==if…else…==来判断。Express 也不用我们设置响应头的 Content-Type 和中文编码格式，会底层自动识别添加</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">app.get(&apos;/&apos;, (req, res) =&gt; &#123;</span><br><span class="line">  res.send(&apos;Hello World&apos;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.get(&apos;/json&apos;, (req, res) =&gt; &#123;</span><br><span class="line">    res.send(&#123;</span><br><span class="line">        app:&apos;你好&apos;,</span><br><span class="line">        name:&apos;China&apos;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Express-中的静态服务"><a href="#Express-中的静态服务" class="headerlink" title="Express 中的静态服务"></a>Express 中的静态服务</h2><h3 id="什么是静态服务？"><a href="#什么是静态服务？" class="headerlink" title="什么是静态服务？"></a>什么是静态服务？</h3><p>在一些网站后端中，我们有一些静态文件暴露出来，用户可以根据 url 地址进去访问到其中的内容，这些静态文件也往往称之为公共资源，所以我们需要利用 Expree 框架来托管静态资源</p>
+<h3 id="如何使用-Express-托管静态文件？"><a href="#如何使用-Express-托管静态文件？" class="headerlink" title="如何使用 Express 托管静态文件？"></a>如何使用 Express 托管静态文件？</h3><p>请使用 Express 中的 express.static 内置中间件函数<br>此函数特征：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">express.static(root,[options])</span><br></pre></td></tr></table></figure>
+
+<p>通过下列代码就可以将 public 目录下的图片，css 文件，JavaScript 文件对外开放访问了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(&apos;/static/&apos;,express.static(&apos;public&apos;));</span><br></pre></td></tr></table></figure>
+
+<p>于是在制定用户必须以/static/开头的 url 地址才能访问到静态文件夹「public」下的文件。</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1g3nqmzen49j306l05n0sl.jpg" alt="静态文件夹"></p>
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g3nqmgplvuj30fo06v0sr.jpg" alt="指定的静态访问地址"></p>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ul>
+<li>你可以部署多个静态文件目录，请多次调用该中间件函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">app.use(express.static(&apos;public&apos;))</span><br><span class="line">app.use(express.static(&apos;files&apos;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>你可以不写一个参数，直接暴露根目录文件夹下静态文件<br>，用户根据指定的文件地址来访问对应资源。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(express.static(&apos;public&apos;))</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1g3nqs0of8oj30ri0fa3yu.jpg" alt="image"></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/05/29/2019-05-29-VUE中的ref、on、emit/" rel="next" title="2019-05-29-VUE中的$ref、$on、$emit">
+                  <i class="fa fa-chevron-left"></i> 2019-05-29-VUE中的$ref、$on、$emit
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/06/04/2019-06-04-Vue的生命周期/" rel="prev" title="Vue的生命周期">
+                  Vue的生命周期 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-Express-js？"><span class="nav-number">1.</span> <span class="nav-text">什么是 Express.js？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用-Express-js"><span class="nav-number">2.</span> <span class="nav-text">如何使用 Express.js</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-安装"><span class="nav-number">2.1.</span> <span class="nav-text">1.安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-在项目中引入："><span class="nav-number">2.2.</span> <span class="nav-text">2.在项目中引入：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-项目运行"><span class="nav-number">2.3.</span> <span class="nav-text">3.项目运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Express-中的静态服务"><span class="nav-number">3.</span> <span class="nav-text">Express 中的静态服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是静态服务？"><span class="nav-number">3.1.</span> <span class="nav-text">什么是静态服务？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何使用-Express-托管静态文件？"><span class="nav-number">3.2.</span> <span class="nav-text">如何使用 Express 托管静态文件？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意："><span class="nav-number">3.2.1.</span> <span class="nav-text">注意：</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:szaf93671@16.com" title="E-Mail &rarr; mailto:szaf93671@16.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

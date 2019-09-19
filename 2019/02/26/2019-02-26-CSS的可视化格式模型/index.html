@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="CSS 的可视化格式模型简介 CSS 中规定每个元素都有自己的盒子模型 可视化格式模型则是把这些盒子按照规则摆放到页面上布局 盒子模型规定了怎么在页面上布局盒子和盒子之间的相互作用 CSS 的可视化格式模型规定了浏览器在页面中如何处理文档树其中包括了123456包含块（Containing Block)控制框（Controlling Box）BFC（Block Formatting Context">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019-02-26-CSS的可视化格式模型">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/02/26/2019-02-26-CSS的可视化格式模型/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="CSS 的可视化格式模型简介 CSS 中规定每个元素都有自己的盒子模型 可视化格式模型则是把这些盒子按照规则摆放到页面上布局 盒子模型规定了怎么在页面上布局盒子和盒子之间的相互作用 CSS 的可视化格式模型规定了浏览器在页面中如何处理文档树其中包括了123456包含块（Containing Block)控制框（Controlling Box）BFC（Block Formatting Context">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.183Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2019-02-26-CSS的可视化格式模型">
+<meta name="twitter:description" content="CSS 的可视化格式模型简介 CSS 中规定每个元素都有自己的盒子模型 可视化格式模型则是把这些盒子按照规则摆放到页面上布局 盒子模型规定了怎么在页面上布局盒子和盒子之间的相互作用 CSS 的可视化格式模型规定了浏览器在页面中如何处理文档树其中包括了123456包含块（Containing Block)控制框（Controlling Box）BFC（Block Formatting Context">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/02/26/2019-02-26-CSS的可视化格式模型/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>2019-02-26-CSS的可视化格式模型 | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/02/26/2019-02-26-CSS的可视化格式模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2019-02-26-CSS的可视化格式模型
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-26 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-26T21:00:00+08:00">2019-02-26</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="CSS-的可视化格式模型"><a href="#CSS-的可视化格式模型" class="headerlink" title="CSS 的可视化格式模型"></a>CSS 的可视化格式模型</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>CSS 中规定每个元素都有自己的盒子模型</li>
+<li>可视化格式模型则是把这些盒子按照规则摆放到页面上布局</li>
+<li>盒子模型规定了怎么在页面上布局盒子和盒子之间的相互作用</li>
+</ul><p>CSS 的可视化格式模型规定了浏览器在页面中如何处理文档树</p><p>其中包括了</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">包含块（Containing Block)</span><br><span class="line">控制框（Controlling Box）</span><br><span class="line">BFC（Block Formatting Context）</span><br><span class="line">IF（Inline Formatting Context）</span><br><span class="line">定位体系</span><br><span class="line">浮动</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+
+<p>CSS 包含了三种定位机制：<strong>普通</strong>，<strong>浮动</strong>，<strong>决定定位</strong></p>
+<h3 id="包含快（Containing-Block）"><a href="#包含快（Containing-Block）" class="headerlink" title="包含快（Containing Block）"></a>包含快（Containing Block）</h3><blockquote>
+<p>一个元素的 box 的定位尺寸，会与某个矩形框有关，这个框就称之为包含块。元素会为他的子孙元素创建包含块，但是并不是说元素的包含块就是它的父元素，元素的包含块与它的祖先元素的样式等有关系</p>
+</blockquote>
+<p>通俗的讲，就是定位参考框或者定位左边参考系</p>
+<p>比如：</p>
+<ul>
+<li>根元素是最顶端的元素，它没有父节点，它的包含块就是初始包含块</li>
+<li>static 和 relative 的包含块是由它最近的块级、单元格或者行内块祖先元素的内容框（content）创建的。</li>
+<li>fixed 的包含块是当前的可是窗口</li>
+<li>absolute 的包含块由他最近的 position 属性为<strong>abosolute</strong>，<strong>relative</strong>，<strong>fixed</strong>的祖先元素创建<ul>
+<li>如果其祖先元素是行内元素，则包含块取决于其祖先元素的 direction 特性</li>
+<li>如果祖先元素不是行内元素，那么包含块的区域应该为祖先元素的内边距边界</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>direction: 设置文本方向</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">div&#123;</span><br><span class="line">    direction: rtl;</span><br><span class="line"></span><br><span class="line">    rtl //文本方向从右到左。</span><br><span class="line">    ltl //默认。文本方向从左到右。</span><br><span class="line">    inherit //规定应该从父元素继承 direction 属性的值。</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="控制框（Controlling-Box）"><a href="#控制框（Controlling-Box）" class="headerlink" title="控制框（Controlling Box）"></a>控制框（Controlling Box）</h3><blockquote>
+<p>块级元素和块框以及行内元素和行框的相关概念</p>
+</blockquote>
+<p><strong>块框</strong></p>
+<ul>
+<li>块级元素会生成一个块框（Block Box），块框会占据一整行，用来包含子 box 和生成的内容</li>
+<li>块框同时也是一个块包含框（Containing Box），里面要么只包含块框，要么只能包含行内块（不能混淆），如果块框内部有块级元素也有行内元素，那么行内元素会被匿名块框包围</li>
+</ul>
+<h4 id="匿名块框"><a href="#匿名块框" class="headerlink" title="匿名块框"></a>匿名块框</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    Some text</span><br><span class="line">    &lt;p&gt;More text&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>div 生成一个块框，包含了另外一个块框 p 以及文本内容「Sometext」，此时「Some text」文本会被强制加上一个匿名的块框里面，被 div 生成的块框包含</p>
+<p>如果一个块框在其中包含了另外一个块框，那么我们强迫它只能包含块框，因此其他文本内容生产出来的都是匿名块框</p>
+<h4 id="行内框"><a href="#行内框" class="headerlink" title="行内框"></a>行内框</h4><ul>
+<li>一个行内元素生成一个行内框</li>
+<li>行内元素能排在一行，允许左右有其他元素</li>
+</ul>
+<p>关于匿名行内框的生成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;P&gt;Some &lt;EM&gt;emphasized&lt;/EM&gt; text&lt;/P&gt;</span><br></pre></td></tr></table></figure>
+
+<p>p 元素生成一个块框，其中有几个行内框（如 EM），以及文本「Some」「text」，此时会专门为这些文本生成匿名行内狂</p>
+<h4 id="display-属性影响"><a href="#display-属性影响" class="headerlink" title="display 属性影响"></a>display 属性影响</h4><p>display 的几个属性也可以影响不同框的生成：</p>
+<ul>
+<li>block：元素生成一个块框</li>
+<li>inline：元素生成一个或多个行内框</li>
+<li>inline-block：元素生成一个行内块级框，行内块级的内部会被当做块级来格式化，因此元素本身会被当做行内框来格式化</li>
+<li>none：不生成框，不在格式化结构中</li>
+</ul>
+<blockquote>
+<p>visibility:hidden 产生一个不可见的框</p>
+</blockquote>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>1.如果一个框内有一个块级元素，那么这个框里的内容都会被当做块框来进行格式化，因为只要出现块级元素，就会将里面的内容分块几块，每一块独占一行（出现行内，则用匿名块框包含） 2.如果一个框内，没有任何块级元素，那么这个框里的内容会被当做行内框来格式化，因为里面的内容按照顺序成行的排列</p>
+<h3 id="BFC（Block-Formatting-Context）"><a href="#BFC（Block-Formatting-Context）" class="headerlink" title="BFC（Block Formatting Context）"></a>BFC（Block Formatting Context）</h3><blockquote>
+<p>块级格式化上下文，浮动元素和绝对定位元素，非块级盒子的块级，以及 overflow 不为「visiable」的块级盒子，都会为他们的内容创建新的 BFC</p>
+</blockquote>
+<p>在块级格式化上下文中，每个元素左边与包含块的左边相接触（对于从右到左的格式化，右外边接触右边），即使寸浮动也是如此（所以浮动元素正常会直接贴近它的包含块的左边，与普通元素重合）</p>
+<blockquote>
+<p>除非这个元素也创建一个新的 BFC</p>
+</blockquote>
+<h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><p>1.内部 box 在垂直防线，一个接一个的放置<br>2.box 的垂直方向由 margin 决定，属于同一个 BFC 的两个 box 间的 margin 会重叠（这个比较重要）<br>3.BFC 就是页面上的一个隔离的独立容器，容器里面的子元素不会影响外卖的元素。 4.计算 BFC 的高度时候，浮动元素也会计算（不会浮动坍塌）</p>
+<h4 id="如何触发-BFC？"><a href="#如何触发-BFC？" class="headerlink" title="如何触发 BFC？"></a>如何触发 BFC？</h4><p>1.根元素<br>2.float 不为 none<br>3.position 为 absolute 或者 fixed<br>4.dispaly 为 inline-block、flex、inline-flex、table、tablec-cell、table-caption<br>5.overflow 不为 visible</p>
+<blockquote>
+<p>ps:「display:table」，它本身不产生 BFC，但是它会产生匿名框（包含 display:table-cell 的框），而这个匿名框产生 BFC</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/02/21/2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理/" rel="next" title="2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理">
+                  <i class="fa fa-chevron-left"></i> 2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/02/27/2019-02-27-CSS的可视化格式模型(2)/" rel="prev" title="2019-02-27-CSS的可视化格式模型(2)">
+                  2019-02-27-CSS的可视化格式模型(2) <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-的可视化格式模型"><span class="nav-number">1.</span> <span class="nav-text">CSS 的可视化格式模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#包含快（Containing-Block）"><span class="nav-number">1.2.</span> <span class="nav-text">包含快（Containing Block）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制框（Controlling-Box）"><span class="nav-number">1.3.</span> <span class="nav-text">控制框（Controlling Box）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#匿名块框"><span class="nav-number">1.3.1.</span> <span class="nav-text">匿名块框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#行内框"><span class="nav-number">1.3.2.</span> <span class="nav-text">行内框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#display-属性影响"><span class="nav-number">1.3.3.</span> <span class="nav-text">display 属性影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.3.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BFC（Block-Formatting-Context）"><span class="nav-number">1.4.</span> <span class="nav-text">BFC（Block Formatting Context）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点："><span class="nav-number">1.4.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何触发-BFC？"><span class="nav-number">1.4.2.</span> <span class="nav-text">如何触发 BFC？</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:szaf93671@16.com" title="E-Mail &rarr; mailto:szaf93671@16.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

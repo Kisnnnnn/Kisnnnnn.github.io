@@ -55,20 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="123联系电话：18020118596联系邮箱: 312339704@qq.com微信：xi941018">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于我">
-<meta property="og:url" content="https://kisnnnnn.github.io/about/index.html">
+  <meta name="description" content="回收机制 JS 为了防止内存泄露，会执行回收机制 什么是内存泄漏？当已经不需要某块内存时，内存却还存在。所以，回收机制就是阶段性的不定期去寻找不再使用的变量，并释放他们所指向的内存比如如何处理哪些已经执行完毕的函数，如果么有外部应用，则会回收。常用的两种垃圾回收规则： 标记清除 引用计数 Javascript 引擎基础 GC 方案是（Simple GC）：">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019-03-05-JS的回收机制">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/03/05/2019-03-05-JS的回收机制/index.html">
 <meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
-<meta property="og:description" content="123联系电话：18020118596联系邮箱: 312339704@qq.com微信：xi941018">
+<meta property="og:description" content="回收机制 JS 为了防止内存泄露，会执行回收机制 什么是内存泄漏？当已经不需要某块内存时，内存却还存在。所以，回收机制就是阶段性的不定期去寻找不再使用的变量，并释放他们所指向的内存比如如何处理哪些已经执行完毕的函数，如果么有外部应用，则会回收。常用的两种垃圾回收规则： 标记清除 引用计数 Javascript 引擎基础 GC 方案是（Simple GC）：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://kisnnnnn.github.io/images/intro.jpg">
-<meta property="og:updated_time" content="2019-09-19T00:53:13.507Z">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.188Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于我">
-<meta name="twitter:description" content="123联系电话：18020118596联系邮箱: 312339704@qq.com微信：xi941018">
-<meta name="twitter:image" content="https://kisnnnnn.github.io/images/intro.jpg">
-  <link rel="canonical" href="https://kisnnnnn.github.io/about/">
+<meta name="twitter:title" content="2019-03-05-JS的回收机制">
+<meta name="twitter:description" content="回收机制 JS 为了防止内存泄露，会执行回收机制 什么是内存泄漏？当已经不需要某块内存时，内存却还存在。所以，回收机制就是阶段性的不定期去寻找不再使用的变量，并释放他们所指向的内存比如如何处理哪些已经执行完毕的函数，如果么有外部应用，则会回收。常用的两种垃圾回收规则： 标记清除 引用计数 Javascript 引擎基础 GC 方案是（Simple GC）：">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/03/05/2019-03-05-JS的回收机制/">
 
 
 <script id="page-configurations">
@@ -76,13 +75,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
-    isPage: true,
+    isPost: true,
+    isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>关于我 | 翻山越岭遇到一条狗的Blog</title>
+  <title>2019-03-05-JS的回收机制 | 翻山越岭遇到一条狗的Blog</title>
   
 
 
@@ -293,63 +292,163 @@
         <div class="content-wrap">
             
 
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-  
-
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
-    
-    
-    
-    <div class="post-block page">
-      <header class="post-header">
-
-<h1 class="post-title" itemprop="name headline">关于我
-
-</h1>
-
-<div class="post-meta">
+      <article itemscope itemtype="http://schema.org/Article">
   
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/03/05/2019-03-05-JS的回收机制/">
 
-</div>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
 
-</header>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2019-03-05-JS的回收机制
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-05 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-05T21:00:00+08:00">2019-03-05</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-      
-      
-      <div class="post-body">
-        
-          <p><img src="../images/intro.jpg" alt="image"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">联系电话：18020118596</span><br><span class="line">联系邮箱: 312339704@qq.com</span><br><span class="line">微信：xi941018</span><br></pre></td></tr></table></figure>
-        
-      </div>
-      
-      
-      
+        <h2 id="回收机制"><a href="#回收机制" class="headerlink" title="回收机制"></a>回收机制</h2><blockquote>
+<p>JS 为了防止内存泄露，会执行回收机制</p>
+</blockquote><h3 id="什么是内存泄漏？"><a href="#什么是内存泄漏？" class="headerlink" title="什么是内存泄漏？"></a>什么是内存泄漏？</h3><p>当已经不需要某块内存时，内存却还存在。</p><p>所以，回收机制就是阶段性的不定期去寻找不再使用的变量，并释放他们所指向的内存</p><p>比如如何处理哪些已经执行完毕的函数，如果么有外部应用，则会回收。</p><p>常用的两种垃圾回收规则：</p><ul>
+<li>标记清除</li>
+<li>引用计数</li>
+</ul><p>Javascript 引擎基础 GC 方案是（Simple GC）：</p><a id="more"></a>
+
+
+
+
+
+
+<p><strong>mark and sweep</strong> —&gt; 标记清楚</p>
+<ul>
+<li>遍历所以可访问的对象</li>
+<li>回收已不可访问的对象<br>比如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当变量进入环境时，例如，在函数中声明一个变量，就将它标记为「进入环境」</span><br><span class="line">从逻辑上来讲，永远不能释放进入环境的变量所占用的内存，因为只要执行流进入相应的环境，就可能会用他它们。</span><br><span class="line">而当变量离开环境的时候，则会标记「离开环境」</span><br><span class="line">垃圾回收机在运行的时候会给存储在内存中的所有边浪都加上标记</span><br><span class="line">然后，它会去掉环境中的变量以及被环境中的变量引用的变量的标记（闭包，也就是说在环境中的以及相关引用的变量会被去除标记）</span><br><span class="line">而在此之后再被加上标记的变量会将被视为准备删除的变量，原因是环境中的变量已经无法访问到这些变量了</span><br><span class="line">最后垃圾回收期完成内存清除工作，销毁哪些带标记的值，并回收他们所占用的内存空间</span><br></pre></td></tr></table></figure>
+
+<p>简单的阐述：</p>
+<p>跟踪记录每个值被引用的次数，当一个值被引用时，次数-1，减持时-1，下次垃圾回收器会收回次数为 0 的值的内存。</p>
+<h3 id="GC-的缺陷"><a href="#GC-的缺陷" class="headerlink" title="GC 的缺陷"></a>GC 的缺陷</h3><p>出于安全考虑<strong>GC 时，停止响应其他操作</strong><br>但是它操作时候在<strong>100ms</strong>甚至以上</p>
+<p>对于一般应用还可以，但是对于 js 游戏，动画对连贯性要求比较高的应用，需要另外处理。</p>
+<h3 id="GC-的优化策略"><a href="#GC-的优化策略" class="headerlink" title="GC 的优化策略"></a>GC 的优化策略</h3><h4 id="分带回收（Generation-GC）"><a href="#分带回收（Generation-GC）" class="headerlink" title="分带回收（Generation GC）"></a>分带回收（Generation GC）</h4><p>目的是通过区分「临时」与「持久」对象:</p>
+<ul>
+<li>多回收「临时对象」区（young generation）</li>
+<li>少回收「持久对象」区（tenured generation）</li>
+<li>减少每次需遍历的对象，从而减少每次 GC 的耗时。</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>「从输入 url 到页面渲染」文章已经整理（抄）完了，面对如此复杂的机制，很多地方依旧不理解，明天开始准备从基础慢慢开始学习。</p>
+
     </div>
-    
 
     
     
     
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/03/04/2019-03-04-JS的执行阶段/" rel="next" title="2019-03-04-JS的执行阶段">
+                  <i class="fa fa-chevron-left"></i> 2019-03-04-JS的执行阶段
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/03/06/2019-03-06-闭包(Closurce)/" rel="prev" title="2019-03-06-闭包(Closurce)">
+                  2019-03-06-闭包(Closurce) <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
   </div>
 
 
@@ -386,6 +485,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#回收机制"><span class="nav-number">1.</span> <span class="nav-text">回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是内存泄漏？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是内存泄漏？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GC-的缺陷"><span class="nav-number">1.2.</span> <span class="nav-text">GC 的缺陷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GC-的优化策略"><span class="nav-number">1.3.</span> <span class="nav-text">GC 的优化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分带回收（Generation-GC）"><span class="nav-number">1.3.1.</span> <span class="nav-text">分带回收（Generation GC）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">2.</span> <span class="nav-text">结语</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
