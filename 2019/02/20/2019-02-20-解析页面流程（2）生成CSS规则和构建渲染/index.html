@@ -4,7 +4,7 @@
 
 
 
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -44,12 +44,12 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
     localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
+    path: '',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: '复制',
-      copy_success: '复制成功',
-      copy_failure: '复制失败'
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
     },
     sidebarPadding: 40
   };
@@ -62,7 +62,7 @@
 <meta property="og:url" content="https://kisnnnnn.github.io/2019/02/20/2019-02-20-解析页面流程（2）生成CSS规则和构建渲染/index.html">
 <meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
 <meta property="og:description" content="生成 CSS 规则同理，CSS 规则树的生成也是类似1Bytes -&amp;gt; character -&amp;gt; tokens -&amp;gt; nodes -&amp;gt; CSSOM12341.Conversion：浏览器将获得的HTML内容（Bytes）基于他的编码转换为单个字符2.Tokenizing分词：浏览器按照HTML规范标准将这些字符转换为不同的标记token。每个token都他有自己独特的含义以">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="en">
 <meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0csljk8rsj30g608bq38.jpg">
 <meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0cspjnnvqj30p00bo0ti.jpg">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g0csqsdknsj30m8064q3c.jpg">
@@ -121,7 +121,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
   <div class="container use-motion">
     <div class="headband"></div>
 
@@ -139,7 +139,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
+    <button aria-label="Toggle navigation bar">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -254,7 +254,7 @@
       <li class="menu-item menu-item-search">
         <a href="javascript:;" class="popup-trigger">
         
-          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
       </li>
     
   </ul>
@@ -268,7 +268,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="搜索..." spellcheck="false"
+           placeholder="Searching..." spellcheck="false"
            type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
@@ -311,7 +311,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -329,13 +329,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">发表于</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="创建时间：2019-02-20 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-20T21:00:00+08:00">2019-02-20</time>
+              <time title="Created: 2019-02-20 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-20T21:00:00+08:00">2019-02-20</time>
             </span>
           
             
@@ -345,8 +345,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -354,7 +354,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">分类于</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -499,10 +499,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          文章目录
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          站点概览
+          Overview
         </li>
       </ul>
 
@@ -519,7 +519,7 @@
       src="/images/favicon.jpg"
       alt="Kisn 袁凯忻">
   <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
-  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+  <div class="site-description" itemprop="description"></div>
 </div>
   <nav class="site-state motion-element">
       <div class="site-state-item site-state-posts">
@@ -527,7 +527,7 @@
           <a href="/archives">
         
           <span class="site-state-item-count">24</span>
-          <span class="site-state-item-name">日志</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
     
@@ -540,7 +540,7 @@
           
         
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">分类</span>
+        <span class="site-state-item-name">categories</span>
         </a>
       </div>
     
@@ -553,7 +553,7 @@
           
         
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">标签</span>
+        <span class="site-state-item-name">tags</span>
         </a>
       </div>
     
