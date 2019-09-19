@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="浏览器的 URL 的构成 portocal，协议头，例如：http、ftp 等 host，主机域名或 IP 地址 port，端口号 path，目录路径 query，即查询参数 fragment，即#后的 hash 值，一般用来定位到某个位置  ‘http://note.youdao.com/?user=admin&amp;amp;query=123#page=top&amp;#39; = portocal(htt">
+  <meta name="description" content="apply1234567891011121314151617181920Function.prototype.myApply = function(context,args)&amp;#123;    // 如果是调用自己，则返回undefined    if(this===Function.prototype) return false;        context=context || window">
 <meta name="keywords" content="笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="url和正则表达式的学习">
-<meta property="og:url" content="https://kisnnnnn.github.io/2019/02/13/2019-02-13-url/index.html">
+<meta property="og:title" content="手动实现apply-call-bind">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/08/20/2019-08-20-手动实现apply-call-bind/index.html">
 <meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
-<meta property="og:description" content="浏览器的 URL 的构成 portocal，协议头，例如：http、ftp 等 host，主机域名或 IP 地址 port，端口号 path，目录路径 query，即查询参数 fragment，即#后的 hash 值，一般用来定位到某个位置  ‘http://note.youdao.com/?user=admin&amp;amp;query=123#page=top&amp;#39; = portocal(htt">
+<meta property="og:description" content="apply1234567891011121314151617181920Function.prototype.myApply = function(context,args)&amp;#123;    // 如果是调用自己，则返回undefined    if(this===Function.prototype) return false;        context=context || window">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-19T00:58:15.179Z">
+<meta property="og:updated_time" content="2019-09-19T01:02:00.159Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="url和正则表达式的学习">
-<meta name="twitter:description" content="浏览器的 URL 的构成 portocal，协议头，例如：http、ftp 等 host，主机域名或 IP 地址 port，端口号 path，目录路径 query，即查询参数 fragment，即#后的 hash 值，一般用来定位到某个位置  ‘http://note.youdao.com/?user=admin&amp;amp;query=123#page=top&amp;#39; = portocal(htt">
-  <link rel="canonical" href="https://kisnnnnn.github.io/2019/02/13/2019-02-13-url/">
+<meta name="twitter:title" content="手动实现apply-call-bind">
+<meta name="twitter:description" content="apply1234567891011121314151617181920Function.prototype.myApply = function(context,args)&amp;#123;    // 如果是调用自己，则返回undefined    if(this===Function.prototype) return false;        context=context || window">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/08/20/2019-08-20-手动实现apply-call-bind/">
 
 
 <script id="page-configurations">
@@ -81,7 +81,7 @@
   };
 </script>
 
-  <title>url和正则表达式的学习 | 翻山越岭遇到一条狗的Blog</title>
+  <title>手动实现apply-call-bind | 翻山越岭遇到一条狗的Blog</title>
   
 
 
@@ -303,7 +303,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/02/13/2019-02-13-url/">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/08/20/2019-08-20-手动实现apply-call-bind/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
@@ -315,7 +315,7 @@
       <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">url和正则表达式的学习
+        <h2 class="post-title" itemprop="name headline">手动实现apply-call-bind
 
           
         </h2>
@@ -331,7 +331,7 @@
                 
               
 
-              <time title="创建时间：2019-02-13 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-13T21:00:00+08:00">2019-02-13</time>
+              <time title="创建时间：2019-08-20 21:00:00" itemprop="dateCreated datePublished" datetime="2019-08-20T21:00:00+08:00">2019-08-20</time>
             </span>
           
             
@@ -342,7 +342,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <time title="修改时间：2019-09-19 09:02:00" itemprop="dateModified" datetime="2019-09-19T09:02:00+08:00">2019-09-19</time>
               </span>
             
           
@@ -371,142 +371,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="浏览器的-URL-的构成"><a href="#浏览器的-URL-的构成" class="headerlink" title="浏览器的 URL 的构成"></a>浏览器的 URL 的构成</h2><ul>
-<li>portocal，协议头，例如：http、ftp 等</li>
-<li>host，主机域名或 IP 地址</li>
-<li>port，端口号</li>
-<li>path，目录路径</li>
-<li>query，即查询参数</li>
-<li>fragment，即#后的 hash 值，一般用来定位到某个位置</li>
-</ul><blockquote>
-<p>‘<a href="http://note.youdao.com/?user=admin&amp;query=123#page=top&#39;" target="_blank" rel="noopener">http://note.youdao.com/?user=admin&amp;query=123#page=top&#39;</a> = portocal(https://) + host(<a href="http://www.jianshu.com" target="_blank" rel="noopener">www.jianshu.com</a>) + port(80) + path(/p/d31f494ad6f5) + query(?user=admin&amp;query=123) + fragment(#page=top)</p>
-</blockquote><a id="more"></a>
+        <h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myApply = <span class="function"><span class="keyword">function</span>(<span class="params">context,args</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 如果是调用自己，则返回undefined</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>===<span class="built_in">Function</span>.prototype) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    </span><br><span class="line">    context=context || <span class="built_in">window</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> fn = <span class="built_in">Symbol</span>(),</span><br><span class="line">    result;</span><br><span class="line">    </span><br><span class="line">    context[fn]=<span class="keyword">this</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">Array</span>.isarray(args))&#123;</span><br><span class="line">        result = context[fn](...args);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        result = context[fn]();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">delete</span> context[fn];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
 
-<h2 id="window-location"><a href="#window-location" class="headerlink" title="window.location"></a>window.location</h2><ul>
-<li>window.location.hostname，返回 web 主机的域名 (segmentfault.com)</li>
-<li>window.location.pathname，返回当前页面的路径和文件名(a/119….6)</li>
-<li>window.location.port，返回 web 主机的端口</li>
-<li>window.location.portocal，返回所使用的 web 协议（http://）</li>
-<li>window.location.assign(‘<a href="https://www.baidu.com&quot;)，assign(url)，导航到一个新的页面" target="_blank" rel="noopener">https://www.baidu.com&quot;)，assign(url)，导航到一个新的页面</a></li>
-<li>window.location.reload(true) 刷新页面</li>
-<li>window.location.search，获取 url 后额外的数据</li>
-</ul>
-<h2 id="如何获取-url-的额外参数与分析正则表达式"><a href="#如何获取-url-的额外参数与分析正则表达式" class="headerlink" title="如何获取 url 的额外参数与分析正则表达式"></a>如何获取 url 的额外参数与分析正则表达式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function getQueryString(name) &#123;</span><br><span class="line">    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;, &quot;i&quot;),</span><br><span class="line">        r = window.location.search.substr(1).match(reg);</span><br><span class="line"></span><br><span class="line">    if (r != null) return unescape(r[2]);</span><br><span class="line">        return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1.如果是调用自己，则返回undefined<br>2.判断<code>context</code>是否存在，不存在则调用window<br>3.新增一个<code>Symbol</code>属性，赋值给<code>context</code><br>4.将当前函数赋值给这个属性<br>5.判断传参是否数组<br>6.如果是，则将其余的参数传入执行方法。如果否，则直接调用方法。<br>7.删除方法，返回。</p>
+<h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myCall= <span class="function"><span class="keyword">function</span>(<span class="params">context=window,...args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span> === <span class="built_in">Function</span>.prototype) <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">    </span><br><span class="line">    context= context || <span class="built_in">window</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> fn = <span class="built_in">Symbol</span>(),</span><br><span class="line">    result;</span><br><span class="line">    </span><br><span class="line">    context[fn] = <span class="keyword">this</span>;</span><br><span class="line">    </span><br><span class="line">    result = context[fn](...args)</span><br><span class="line">    <span class="keyword">delete</span> context[fn]</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><h4 id="限定符"><a href="#限定符" class="headerlink" title="限定符"></a>限定符</h4><table>
-<thead>
-<tr>
-<th>字符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>*</td>
-<td>匹配前面的子表达式零次或者多次。例如，zo*能匹配「z」以及「zoo」。等价于{0,}（只要包含「z」、「o」的字符全直接匹配出来）</td>
-</tr>
-<tr>
-<td>+</td>
-<td>匹配前面的子表达式一次或多次，例如，zo+能匹配「zo」以及「zoo」。等价于{0,1}（只要包含「zo」的字符会直接匹配出来）</td>
-</tr>
-<tr>
-<td>?</td>
-<td>匹配前面的子表达式零次或者多次，例如，「do(es)?」能匹配到「do」，「does」能匹配到「does」，「doxy」中的「do」。（讲包含「do」或者「does」的字符中的「do」、「does」匹配展现出来）</td>
-</tr>
-<tr>
-<td>{n}</td>
-<td>n 为一个非负整数。匹配确定的 n 次。例如，「o{2}」不能匹配「Bob」中的「o」，但是能匹配「food」的两个 o（o{2}匹配出至少包含 2 个含有 o 的符合对象）</td>
-</tr>
-<tr>
-<td>{n,}</td>
-<td>n 为一个非负整数。至少匹配 n 次。例如，「o{2,}」不能匹配「Bob」中的「o」，但是能匹配「foooooood」的所以的 o（o{2,}匹配出包含大于等于 2 个含有 o 的符合对象），「o{1,}」 等价于 「o+」。「o{0,}」 则等价于 「o*」。</td>
-</tr>
-<tr>
-<td>{n,m}</td>
-<td>m 和 n 均为非负整数，其中 n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，「o{1,3}」将匹配 「fooooood」 中的前三个 o。「o{0,1}」 等价于 「o?」。请注意在逗号和两个数之间不能有空格。</td>
-</tr>
-</tbody></table>
-<h4 id="特殊符号"><a href="#特殊符号" class="headerlink" title="特殊符号"></a>特殊符号</h4><table>
-<thead>
-<tr>
-<th>特别字符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>$</td>
-<td>匹配输入字符全的结尾位置。如果设置了 RegExp 对象的 Multiline 属性，则$也匹配「\n」「\r」。要匹配$字符本身，请使用$ （以下特殊字符均可以使用\形式匹配）</td>
-</tr>
-<tr>
-<td>( )</td>
-<td>标记一个字表达式的开始和结束。子表达式可以获取提供以后使用。</td>
-</tr>
-<tr>
-<td>*</td>
-<td>匹配前面的子表达式零次或者多次。</td>
-</tr>
-<tr>
-<td>+</td>
-<td>匹配前面的子表达式一次或者多次。</td>
-</tr>
-<tr>
-<td>.</td>
-<td>匹配除换行符\n 之外的任何单字符。</td>
-</tr>
-<tr>
-<td>[</td>
-<td>标记一个中括号表达式的开始。</td>
-</tr>
-<tr>
-<td>?</td>
-<td>匹配前面的子表达式零次或者一次，或者指明一个非贪婪限定符。</td>
-</tr>
-<tr>
-<td>\</td>
-<td>将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义字符。</td>
-</tr>
-<tr>
-<td>^</td>
-<td>匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。</td>
-</tr>
-<tr>
-<td>{</td>
-<td>标记限定符表达式的开始。</td>
-</tr>
-<tr>
-<td>|</td>
-<td>指明两项之间的一个选择.</td>
-</tr>
-</tbody></table>
-<h4 id="定位符"><a href="#定位符" class="headerlink" title="定位符"></a>定位符</h4><table>
-<thead>
-<tr>
-<th>字符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>^</td>
-<td>匹配输入字符开始的位置</td>
-</tr>
-<tr>
-<td>$</td>
-<td>匹配输入字符结束的位置</td>
-</tr>
-<tr>
-<td>\b</td>
-<td>匹配一个单词边间，即字与空间间的位置</td>
-</tr>
-<tr>
-<td>\B</td>
-<td>非单词边界匹配</td>
-</tr>
-</tbody></table>
-<p>注意：不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如 ^* 之类的表达式。</p>
-<p>若要匹配一行文本开始处的文本，请在正则表达式的开始使用 ^ 字符。不要将 ^ 的这种用法与中括号表达式内的用法混淆。</p>
-<p>若要匹配一行文本的结束处的文本，请在正则表达式的结束处使用 $ 字符。</p>
-<h4 id="正则匹配匹配的一些-demo"><a href="#正则匹配匹配的一些-demo" class="headerlink" title="正则匹配匹配的一些 demo"></a>正则匹配匹配的一些 demo</h4><p>参考：<a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499503920bb7b42ff6627420da2ceae4babf6c4f2000" target="_blank" rel="noopener">RegExp-廖雪峰</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// 匹配大小写、字母和数字</span><br><span class="line">function isReg(reg, con, isGlobal) &#123;</span><br><span class="line">    const res = reg.test(con);</span><br><span class="line">    const execRes = reg.exec(con);</span><br><span class="line">    console.log(res);</span><br><span class="line">    console.log(execRes);</span><br><span class="line"></span><br><span class="line">    if (isGlobal == 1) &#123;</span><br><span class="line">        console.log(res.lastIndex);</span><br><span class="line">        isReg(reg, con, 0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 可以匹配一个大小写字母、一个数字或者下划线</span><br><span class="line">isReg(/[a-zA-Z0-9\_]/, &apos;_&apos;);</span><br><span class="line">// 可以匹配一个大小写字母、下划线开头，等</span><br><span class="line">isReg(/^([a-zA-Z\$\_])[a-zA-Z0-9\_\$]&#123;0,19&#125;/, &apos;ab2c3&apos;);</span><br><span class="line">// 三个数字+「-」+ 五个字母或者数字</span><br><span class="line">isReg(/^(\d&#123;3&#125;)-(\w&#123;5&#125;)$/, &apos;123-sdaws&apos;);</span><br><span class="line">// 三个数字+「-」或者 空格+ 五个字母或者数字</span><br><span class="line">isReg(/^(\d&#123;3&#125;)(-|\s)(\w&#123;5&#125;)$/, &apos;123 sdaws&apos;);</span><br><span class="line">// 贪婪匹配 [&quot;120300000&quot;, &quot;120300000&quot;, &quot; &quot;, index: 0, input: &quot;120300000&quot;, groups: undefined]</span><br><span class="line">isReg(/^(\d+)(0*)$/, 120300000);</span><br><span class="line">// 非贪婪匹配 （也就是尽可能少匹配,精确匹配)[&quot;120300000&quot;, &quot;1203&quot;, &quot;00000&quot;, index: 0, input: &quot;120300000&quot;, groups: undefined]</span><br><span class="line">isReg(/^(\d+?)(0*)$/, 120300000);</span><br><span class="line">// 全局匹配</span><br><span class="line">isReg(/[a-zA-Z]+Team/g, &apos;sTeam, bTeam, cTeam&apos;, 1);</span><br><span class="line">// 可以验证并提取出带名字的Email地址：</span><br><span class="line">isReg(/^\&lt;(\w+\s?\w+)\&gt;\s?(\w+@\w+\.\w+)$/, &apos;&lt;Tom Paris&gt; tom@voyager.org&apos;);</span><br><span class="line">// 验证Email地址</span><br><span class="line">isReg(/^([a-zA-Z0-9\.\_])+@([0-9]|[A-Za-z])+.(com|org)$/, &apos;szaf93671@126.com&apos;);</span><br></pre></td></tr></table></figure>
+<p>1.如果是调用自己，则返回undefined<br>2.判断<code>context</code>是否存在，不存在则调用window<br>3.新增一个<code>Symbol</code>属性，赋值给<code>context</code><br>4.将当前函数赋值给这个属性<br>5.将其余的参数传入执行方法<br>6.删除方法，返回。</p>
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myBind = <span class="function"><span class="keyword">function</span>(<span class="params">context=window,...args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span> === <span class="built_in">Function</span>.prototype) <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> _this = <span class="keyword">this</span> ;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params">...args2</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span> <span class="keyword">instanceof</span> F)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> _this(...args,...args2)</span><br><span class="line">        &#125;</span><br><span class="line">        _this.apply(context,args.concat(...args2))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>1.处理参数，返回一个闭包<br>2.判断是否为构造函数调用，如果是则调用<code>new</code>调用当前函数<br>3.如果不是，则用<code>apply</code>，将<code>context</code>和<code>args</code>参数传入</p>
+<p><a href="http://www.conardli.top/docs/JavaScript/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0call%E3%80%81apply%E3%80%81bind.html#%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0apply" target="_blank" rel="noopener">参考</a></p>
 
     </div>
 
@@ -532,8 +406,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/02/13/index/" rel="next" title="你好">
-                  <i class="fa fa-chevron-left"></i> 你好
+                <a href="/2019/08/14/2019-08-14-Promise构造函数和then方法的执行顺序/" rel="next" title="Promise构造函数和then方法的执行顺序">
+                  <i class="fa fa-chevron-left"></i> Promise构造函数和then方法的执行顺序
                 </a>
               
             </div>
@@ -541,10 +415,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/02/14/2019-02-14-http/" rel="prev" title="浏览器如何发起一个完整的HTTP请求(1)">
-                  浏览器如何发起一个完整的HTTP请求(1) <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -593,7 +463,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器的-URL-的构成"><span class="nav-number">1.</span> <span class="nav-text">浏览器的 URL 的构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window-location"><span class="nav-number">2.</span> <span class="nav-text">window.location</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何获取-url-的额外参数与分析正则表达式"><span class="nav-number">3.</span> <span class="nav-text">如何获取 url 的额外参数与分析正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式"><span class="nav-number">3.1.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#限定符"><span class="nav-number">3.1.1.</span> <span class="nav-text">限定符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特殊符号"><span class="nav-number">3.1.2.</span> <span class="nav-text">特殊符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定位符"><span class="nav-number">3.1.3.</span> <span class="nav-text">定位符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则匹配匹配的一些-demo"><span class="nav-number">3.1.4.</span> <span class="nav-text">正则匹配匹配的一些 demo</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#apply"><span class="nav-number">1.</span> <span class="nav-text">apply</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#call"><span class="nav-number">2.</span> <span class="nav-text">call</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind"><span class="nav-number">3.</span> <span class="nav-text">bind</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
