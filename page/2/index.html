@@ -4,7 +4,7 @@
 
 
 
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -19,6 +19,8 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-pace-theme-center-atom.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
 <script id="hexo-configurations">
@@ -44,24 +46,28 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
     localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
     },
     sidebarPadding: 40
   };
 </script>
 
-  <meta property="og:type" content="website">
+  <meta name="description" content="今でもあなたはわたしの光。">
+<meta name="keywords" content="Kisn">
+<meta property="og:type" content="website">
 <meta property="og:title" content="翻山越岭遇到一条狗的Blog">
 <meta property="og:url" content="https://kisnnnnn.github.io/page/2/index.html">
 <meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="今でもあなたはわたしの光。">
+<meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="翻山越岭遇到一条狗的Blog">
+<meta name="twitter:description" content="今でもあなたはわたしの光。">
   <link rel="canonical" href="https://kisnnnnn.github.io/page/2/">
 
 
@@ -112,7 +118,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
   <div class="container use-motion">
     <div class="headband"></div>
 
@@ -130,7 +136,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -245,7 +251,7 @@
       <li class="menu-item menu-item-search">
         <a href="javascript:;" class="popup-trigger">
         
-          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
       </li>
     
   </ul>
@@ -259,7 +265,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
+           placeholder="搜索..." spellcheck="false"
            type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
@@ -301,7 +307,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -320,13 +326,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-03-04 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-04T21:00:00+08:00">2019-03-04</time>
+              <time title="创建时间：2019-03-04 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-04T21:00:00+08:00">2019-03-04</time>
             </span>
           
             
@@ -336,8 +342,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -345,7 +351,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -382,7 +388,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/03/04/2019-03-04-JS的执行阶段/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -414,7 +420,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -433,13 +439,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-28 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-28T21:00:00+08:00">2019-02-28</time>
+              <time title="创建时间：2019-02-28 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-28T21:00:00+08:00">2019-02-28</time>
             </span>
           
             
@@ -449,8 +455,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -458,7 +464,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -488,7 +494,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/28/2019-02-28-JS引擎解析过程-解释阶段/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -520,7 +526,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -539,13 +545,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-27 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-27T21:00:00+08:00">2019-02-27</time>
+              <time title="创建时间：2019-02-27 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-27T21:00:00+08:00">2019-02-27</time>
             </span>
           
             
@@ -555,8 +561,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -564,7 +570,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -596,7 +602,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/27/2019-02-27-CSS的可视化格式模型(2)/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -628,7 +634,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -647,13 +653,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-26 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-26T21:00:00+08:00">2019-02-26</time>
+              <time title="创建时间：2019-02-26 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-26T21:00:00+08:00">2019-02-26</time>
             </span>
           
             
@@ -663,8 +669,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -672,7 +678,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -702,7 +708,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/26/2019-02-26-CSS的可视化格式模型/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -734,7 +740,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -753,13 +759,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-21 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-21T21:00:00+08:00">2019-02-21</time>
+              <time title="创建时间：2019-02-21 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-21T21:00:00+08:00">2019-02-21</time>
             </span>
           
             
@@ -769,8 +775,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -778,7 +784,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -810,7 +816,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/21/2019-02-21-解析页面流程（3）HTML初始化遇到外链的处理/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -842,7 +848,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -861,13 +867,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-20 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-20T21:00:00+08:00">2019-02-20</time>
+              <time title="创建时间：2019-02-20 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-20T21:00:00+08:00">2019-02-20</time>
             </span>
           
             
@@ -877,8 +883,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -886,7 +892,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -912,7 +918,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/20/2019-02-20-解析页面流程（2）生成CSS规则和构建渲染/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -944,7 +950,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -963,13 +969,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-19 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-19T21:00:00+08:00">2019-02-19</time>
+              <time title="创建时间：2019-02-19 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-19T21:00:00+08:00">2019-02-19</time>
             </span>
           
             
@@ -979,8 +985,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -988,7 +994,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -1016,7 +1022,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/19/2019-02-19-解析页面流程（1） 解析HTML，构建DOM树/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1048,7 +1054,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -1067,13 +1073,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-18 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-18T21:00:00+08:00">2019-02-18</time>
+              <time title="创建时间：2019-02-18 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-18T21:00:00+08:00">2019-02-18</time>
             </span>
           
             
@@ -1083,8 +1089,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -1092,7 +1098,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -1133,7 +1139,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/18/2019-02-18-http2.0、https（2）/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1165,7 +1171,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -1184,13 +1190,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-17 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-17T21:00:00+08:00">2019-02-17</time>
+              <time title="创建时间：2019-02-17 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-17T21:00:00+08:00">2019-02-17</time>
             </span>
           
             
@@ -1200,8 +1206,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:57:36" itemprop="dateModified" datetime="2019-09-19T08:57:36+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:57:36" itemprop="dateModified" datetime="2019-09-19T08:57:36+08:00">2019-09-19</time>
               </span>
             
           
@@ -1209,7 +1215,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -1237,7 +1243,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/17/2019-02-17-http2.0、https（1）/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1269,7 +1275,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -1288,13 +1294,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-02-16 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-16T21:00:00+08:00">2019-02-16</time>
+              <time title="创建时间：2019-02-16 21:00:00" itemprop="dateCreated datePublished" datetime="2019-02-16T21:00:00+08:00">2019-02-16</time>
             </span>
           
             
@@ -1304,8 +1310,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -1313,7 +1319,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -1343,7 +1349,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/02/16/2019-02-16-cookie和gzip、长与短连接/#more" rel="contents">
-                Read more &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1370,7 +1376,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1393,10 +1399,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Table of Contents
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Overview
+          站点概览
         </li>
       </ul>
 
@@ -1411,7 +1417,7 @@
       src="/images/favicon.jpg"
       alt="Kisn 袁凯忻">
   <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
 </div>
   <nav class="site-state motion-element">
       <div class="site-state-item site-state-posts">
@@ -1419,7 +1425,7 @@
           <a href="/archives">
         
           <span class="site-state-item-count">24</span>
-          <span class="site-state-item-name">posts</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
     
@@ -1432,7 +1438,7 @@
           
         
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">categories</span>
+        <span class="site-state-item-name">分类</span>
         </a>
       </div>
     
@@ -1445,7 +1451,7 @@
           
         
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">标签</span>
         </a>
       </div>
     

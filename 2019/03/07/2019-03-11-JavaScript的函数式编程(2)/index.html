@@ -4,7 +4,7 @@
 
 
 
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -19,6 +19,8 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-pace-theme-center-atom.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
 <script id="hexo-configurations">
@@ -44,12 +46,12 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
     localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
     },
     sidebarPadding: 40
   };
@@ -62,7 +64,7 @@
 <meta property="og:url" content="https://kisnnnnn.github.io/2019/03/07/2019-03-11-JavaScript的函数式编程(2)/index.html">
 <meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
 <meta property="og:description" content="本文中的知识点，我也不是很懂，比较难理解。 涵子什么是涵子涵子是函数式编程里面最重要的数据类型，也是最基本的运算单位和功能单位。它是一种范畴（也是一种容器），包含了值和变形关系。比较特殊的是，它的变形关系可以依次作用于每一个值，将当前容器变形为另一个容器。上图中，左侧的圆圈就是一个汉字，表示人名的范畴。外部传入函数 f，会转成右边标示早餐的范畴。">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1g0yw1xe4azj30of081q34.jpg">
 <meta property="og:updated_time" content="2019-09-19T00:58:15.183Z">
 <meta name="twitter:card" content="summary">
@@ -119,7 +121,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
   <div class="container use-motion">
     <div class="headband"></div>
 
@@ -137,7 +139,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -252,7 +254,7 @@
       <li class="menu-item menu-item-search">
         <a href="javascript:;" class="popup-trigger">
         
-          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
       </li>
     
   </ul>
@@ -266,7 +268,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
+           placeholder="搜索..." spellcheck="false"
            type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
@@ -309,7 +311,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kisn 袁凯忻">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
       <meta itemprop="image" content="/images/favicon.jpg">
     </span>
 
@@ -327,13 +329,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
               
                 
               
 
-              <time title="Created: 2019-03-07 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-07T21:00:00+08:00">2019-03-07</time>
+              <time title="创建时间：2019-03-07 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-07T21:00:00+08:00">2019-03-07</time>
             </span>
           
             
@@ -343,8 +345,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
               </span>
             
           
@@ -352,7 +354,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
 
@@ -467,10 +469,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Table of Contents
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Overview
+          站点概览
         </li>
       </ul>
 
@@ -487,7 +489,7 @@
       src="/images/favicon.jpg"
       alt="Kisn 袁凯忻">
   <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
 </div>
   <nav class="site-state motion-element">
       <div class="site-state-item site-state-posts">
@@ -495,7 +497,7 @@
           <a href="/archives">
         
           <span class="site-state-item-count">24</span>
-          <span class="site-state-item-name">posts</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
     
@@ -508,7 +510,7 @@
           
         
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">categories</span>
+        <span class="site-state-item-name">分类</span>
         </a>
       </div>
     
@@ -521,7 +523,7 @@
           
         
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">标签</span>
         </a>
       </div>
     
