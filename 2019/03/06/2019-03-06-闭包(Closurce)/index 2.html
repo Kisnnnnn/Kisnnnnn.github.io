@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="什么是闭包？闭包就是能够读取其他函数内部变脸的函数。在 JavaScript 中，只有函数内部的子函数才能读取局部变量，所以闭包可以理解成「定义在一个函数内部的函数」。本质，闭包是将函数内部和函数外部连接起来的桥梁。变量的作用域要了解闭包，首先必须了解 JavaScript 特殊的变量作用域。 全局变量 局部变量">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019-03-06-闭包(Closurce)">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/03/06/2019-03-06-闭包(Closurce)/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="什么是闭包？闭包就是能够读取其他函数内部变脸的函数。在 JavaScript 中，只有函数内部的子函数才能读取局部变量，所以闭包可以理解成「定义在一个函数内部的函数」。本质，闭包是将函数内部和函数外部连接起来的桥梁。变量的作用域要了解闭包，首先必须了解 JavaScript 特殊的变量作用域。 全局变量 局部变量">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.184Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2019-03-06-闭包(Closurce)">
+<meta name="twitter:description" content="什么是闭包？闭包就是能够读取其他函数内部变脸的函数。在 JavaScript 中，只有函数内部的子函数才能读取局部变量，所以闭包可以理解成「定义在一个函数内部的函数」。本质，闭包是将函数内部和函数外部连接起来的桥梁。变量的作用域要了解闭包，首先必须了解 JavaScript 特殊的变量作用域。 全局变量 局部变量">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/03/06/2019-03-06-闭包(Closurce)/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>2019-03-06-闭包(Closurce) | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Kisnnnnn/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/03/06/2019-03-06-闭包(Closurce)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2019-03-06-闭包(Closurce)
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-06 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-06T21:00:00+08:00">2019-03-06</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="什么是闭包？"><a href="#什么是闭包？" class="headerlink" title="什么是闭包？"></a>什么是闭包？</h2><p>闭包就是能够读取其他函数内部变脸的函数。在 JavaScript 中，只有函数内部的子函数才能读取局部变量，所以闭包可以理解成「定义在一个函数内部的函数」。本质，闭包是将函数内部和函数外部连接起来的桥梁。</p><h3 id="变量的作用域"><a href="#变量的作用域" class="headerlink" title="变量的作用域"></a>变量的作用域</h3><p>要了解闭包，首先必须了解 JavaScript 特殊的变量作用域。</p><ul>
+<li>全局变量</li>
+<li>局部变量</li>
+</ul><a id="more"></a>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var a = 12345； // 全局变量</span><br><span class="line"></span><br><span class="line">function f1()&#123;</span><br><span class="line">    alert(a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1(); //12345</span><br></pre></td></tr></table></figure>
+
+<p>但是在函数外部自然不能读取函数内部的变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function f1()&#123;</span><br><span class="line">    var a = 12345;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(a); // error</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在函数内部声明变量的时候，一定要使用 var，如果不使用，实际上你生命了一个全局变量</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function f1()&#123;</span><br><span class="line">    a = 12345;</span><br><span class="line">&#125;</span><br><span class="line">f1();</span><br><span class="line">alert(n); // 12345</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何从外部读取局部变脸？"><a href="#如何从外部读取局部变脸？" class="headerlink" title="如何从外部读取局部变脸？"></a>如何从外部读取局部变脸？</h2><h3 id="在函数内部，在定义一个函数"><a href="#在函数内部，在定义一个函数" class="headerlink" title="在函数内部，在定义一个函数"></a>在函数内部，在定义一个函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function f1()&#123;</span><br><span class="line">    var n = 999;</span><br><span class="line">    function f2()&#123;</span><br><span class="line">        alert(n); // 999</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在代码中，函数 f2 就被包含在函数 f1 内部，这是 f1 内部的所有全局变量，对 f2 都是可见的。但是反过来不行，f2 内部的局部变量，对 f1 是不可见的。只能子对象一级以及网上寻找所有父对象的变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function f1()&#123;</span><br><span class="line">    var n=999;</span><br><span class="line">    function f2()&#123;</span><br><span class="line">        alert(n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return f2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var res = f1();</span><br><span class="line"></span><br><span class="line">res(); // 999</span><br></pre></td></tr></table></figure>
+
+<p>如上面的代码所示，f2 函数就是闭包。</p>
+<h2 id="闭包的用途"><a href="#闭包的用途" class="headerlink" title="闭包的用途"></a>闭包的用途</h2><p>闭包主要的在</p>
+<ul>
+<li>可以读取函数内部的变量</li>
+<li>让这些变脸的值始终保持在内存中</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function f1()&#123;</span><br><span class="line">    var n = 999;</span><br><span class="line"></span><br><span class="line">    nAdd = function()&#123;</span><br><span class="line">        n += 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function f2()&#123;</span><br><span class="line">        alert(n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return f2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var res = f1();</span><br><span class="line"></span><br><span class="line">res(); // 999</span><br><span class="line"></span><br><span class="line">nAdd();</span><br><span class="line"></span><br><span class="line">res(); // 1000</span><br></pre></td></tr></table></figure>
+
+<p>在上述代码中，res 实际上就是闭包 f2 函数。他一共运行了 2 次，第一次的值是 999，第二次的值是 1000。这证明了，函数 f1 中的局部变量 n 一直保持在内存中，并没有在 f1 调用后被自动清除。</p>
+<p>f1 是 f2 的富含，而 f2 被赋予了一个全局变脸，这导致 f2 永远存在内存中，而 f2 的存在依赖于 f1，因此 f1 也必须始终存在于内存中，不会在调用结束后，被垃圾回收机制回收。</p>
+<p><strong>值得注意</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nAdd = function()&#123;</span><br><span class="line">    n += 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先，在 nAdd 前面没有加<strong>var</strong>,因此 nAdd 是一个全局变量，而不是局部棉量，其次 nAdd 的值是一个匿名函数，而这个匿名函数本身也是个闭包，所以 nAdd 相当于是一个 setter，可以在函数外部对内部的局部变量进行操作。</p>
+<blockquote>
+<p>注意！ 「onAdd」这种函数写法，在严格模式（’use strict’）下是会报错的。</p>
+</blockquote>
+<h2 id="使用闭包的注意点"><a href="#使用闭包的注意点" class="headerlink" title="使用闭包的注意点"></a>使用闭包的注意点</h2><ul>
+<li>由于闭包会使得函数的变量都被保存在内存中，内存消耗是很严重的，所以不能滥用闭包，否则会造成网页的性能问题，在 IE 中会导致内存泄漏。解决方法是，在退出函数前，将不使用的局部变量全部删除</li>
+<li>闭包会在函数外部，改变父函数的内部变量的值。所以，如果你把父函数当做对象使用，把闭包当做他的公用方法，把内部变量当做他的私有属性，必须注意，不能随便改变父函数内部变量的值。</li>
+</ul>
+<h4 id="好了写完了"><a href="#好了写完了" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-1"><a href="#好了写完了-1" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-2"><a href="#好了写完了-2" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-3"><a href="#好了写完了-3" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-4"><a href="#好了写完了-4" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-5"><a href="#好了写完了-5" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-6"><a href="#好了写完了-6" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-7"><a href="#好了写完了-7" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-8"><a href="#好了写完了-8" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-9"><a href="#好了写完了-9" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-10"><a href="#好了写完了-10" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-11"><a href="#好了写完了-11" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-12"><a href="#好了写完了-12" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-13"><a href="#好了写完了-13" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-14"><a href="#好了写完了-14" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-15"><a href="#好了写完了-15" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-16"><a href="#好了写完了-16" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-17"><a href="#好了写完了-17" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-18"><a href="#好了写完了-18" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-19"><a href="#好了写完了-19" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-20"><a href="#好了写完了-20" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-21"><a href="#好了写完了-21" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-22"><a href="#好了写完了-22" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-23"><a href="#好了写完了-23" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-24"><a href="#好了写完了-24" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-25"><a href="#好了写完了-25" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-26"><a href="#好了写完了-26" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-27"><a href="#好了写完了-27" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-28"><a href="#好了写完了-28" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-29"><a href="#好了写完了-29" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-30"><a href="#好了写完了-30" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-31"><a href="#好了写完了-31" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-32"><a href="#好了写完了-32" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-33"><a href="#好了写完了-33" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-34"><a href="#好了写完了-34" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-35"><a href="#好了写完了-35" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-36"><a href="#好了写完了-36" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-37"><a href="#好了写完了-37" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-38"><a href="#好了写完了-38" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-39"><a href="#好了写完了-39" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-40"><a href="#好了写完了-40" class="headerlink" title="好了写完了"></a>好了写完了</h4><h4 id="好了写完了-41"><a href="#好了写完了-41" class="headerlink" title="好了写完了"></a>好了写完了</h4><hr>
+<p>再说点？</p>
+<blockquote>
+<p>今天整理完，感觉还有一些时间，分享下上周看的奥斯卡最佳影片「绿皮书」</p>
+</blockquote>
+<p>特别喜欢这句对白</p>
+<p><strong>「如果我不够黑人，也不够白人，又或不够男人，那请你告诉我，托尼，那我到底算是什么人！？」</strong></p>
+<p>从学校踏入社会，也有快三年时间了，接触的人也越来越多。在我三观里，对于男女平权、种族仇恨等等，都比较模糊，我只是一直觉得人不可能存在在中立阶段，更多可能是偏左、右，不管从自然选择、和平演变，我觉得大多数人类更多站在自己的利益面发表自己的言论。</p>
+<p>在我看来，这部电影给我最大的思考就就是 Don Shirley 在雨中对 Tony 的歇斯底里的怒吼，为什么人活着就要偏向人群所希望亦或一致认知的生活状态。乃至已经到了 Don 这种高度学历、地位、教育的人依旧困在自己的思想桎梏。</p>
+<p>我经常告诉自己「可能你改不了世界的现状，也改不了身边的朋友、亲人的环境，至少在自己认知方面觉得可以坚持的事，认真坚持到底。」乃至可能也不够「黑」、不够「白」。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/03/05/2019-03-05-JS的回收机制/" rel="next" title="2019-03-05-JS的回收机制">
+                  <i class="fa fa-chevron-left"></i> 2019-03-05-JS的回收机制
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/03/07/2019-03-11-JavaScript的函数式编程(2)/" rel="prev" title="2019-03-07-JavaScript的函数式编程(2)">
+                  2019-03-07-JavaScript的函数式编程(2) <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是闭包？"><span class="nav-number">1.</span> <span class="nav-text">什么是闭包？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量的作用域"><span class="nav-number">1.1.</span> <span class="nav-text">变量的作用域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何从外部读取局部变脸？"><span class="nav-number">2.</span> <span class="nav-text">如何从外部读取局部变脸？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在函数内部，在定义一个函数"><span class="nav-number">2.1.</span> <span class="nav-text">在函数内部，在定义一个函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包的用途"><span class="nav-number">3.</span> <span class="nav-text">闭包的用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用闭包的注意点"><span class="nav-number">4.</span> <span class="nav-text">使用闭包的注意点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了"><span class="nav-number">4.0.1.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-1"><span class="nav-number">4.0.2.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-2"><span class="nav-number">4.0.3.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-3"><span class="nav-number">4.0.4.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-4"><span class="nav-number">4.0.5.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-5"><span class="nav-number">4.0.6.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-6"><span class="nav-number">4.0.7.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-7"><span class="nav-number">4.0.8.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-8"><span class="nav-number">4.0.9.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-9"><span class="nav-number">4.0.10.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-10"><span class="nav-number">4.0.11.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-11"><span class="nav-number">4.0.12.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-12"><span class="nav-number">4.0.13.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-13"><span class="nav-number">4.0.14.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-14"><span class="nav-number">4.0.15.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-15"><span class="nav-number">4.0.16.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-16"><span class="nav-number">4.0.17.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-17"><span class="nav-number">4.0.18.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-18"><span class="nav-number">4.0.19.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-19"><span class="nav-number">4.0.20.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-20"><span class="nav-number">4.0.21.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-21"><span class="nav-number">4.0.22.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-22"><span class="nav-number">4.0.23.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-23"><span class="nav-number">4.0.24.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-24"><span class="nav-number">4.0.25.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-25"><span class="nav-number">4.0.26.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-26"><span class="nav-number">4.0.27.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-27"><span class="nav-number">4.0.28.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-28"><span class="nav-number">4.0.29.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-29"><span class="nav-number">4.0.30.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-30"><span class="nav-number">4.0.31.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-31"><span class="nav-number">4.0.32.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-32"><span class="nav-number">4.0.33.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-33"><span class="nav-number">4.0.34.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-34"><span class="nav-number">4.0.35.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-35"><span class="nav-number">4.0.36.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-36"><span class="nav-number">4.0.37.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-37"><span class="nav-number">4.0.38.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-38"><span class="nav-number">4.0.39.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-39"><span class="nav-number">4.0.40.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-40"><span class="nav-number">4.0.41.</span> <span class="nav-text">好了写完了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#好了写完了-41"><span class="nav-number">4.0.42.</span> <span class="nav-text">好了写完了</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:312339704@qq.com" title="E-Mail &rarr; mailto:312339704@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

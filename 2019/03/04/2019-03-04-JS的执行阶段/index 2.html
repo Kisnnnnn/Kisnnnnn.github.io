@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="JS 的执行阶段当解释器解释完语法规则后，就开始执行，然后整个执行流程中大致包含： 执行上下文，执行堆栈概念（如全局上下文，当前活动上下文） VO（变量对象）和 AO（活动对象） 作用域脸 this 机制 执行上下文 JS 有执行山下文 浏览器首次载入脚本，它将创建「全局执行上下文」，并亚压入执行栈栈顶（不可以被弹出） 然后每进入其他作用域就创建对应的执行上下文并把它压入执行栈的顶部 一旦对应的上">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019-03-04-JS的执行阶段">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/03/04/2019-03-04-JS的执行阶段/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="JS 的执行阶段当解释器解释完语法规则后，就开始执行，然后整个执行流程中大致包含： 执行上下文，执行堆栈概念（如全局上下文，当前活动上下文） VO（变量对象）和 AO（活动对象） 作用域脸 this 机制 执行上下文 JS 有执行山下文 浏览器首次载入脚本，它将创建「全局执行上下文」，并亚压入执行栈栈顶（不可以被弹出） 然后每进入其他作用域就创建对应的执行上下文并把它压入执行栈的顶部 一旦对应的上">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0qztu4q9vj30cv02fmx2.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0qzwz985ij309g06xq2x.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0r08hdnhcj30650bu0sv.jpg">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.183Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2019-03-04-JS的执行阶段">
+<meta name="twitter:description" content="JS 的执行阶段当解释器解释完语法规则后，就开始执行，然后整个执行流程中大致包含： 执行上下文，执行堆栈概念（如全局上下文，当前活动上下文） VO（变量对象）和 AO（活动对象） 作用域脸 this 机制 执行上下文 JS 有执行山下文 浏览器首次载入脚本，它将创建「全局执行上下文」，并亚压入执行栈栈顶（不可以被弹出） 然后每进入其他作用域就创建对应的执行上下文并把它压入执行栈的顶部 一旦对应的上">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0qztu4q9vj30cv02fmx2.jpg">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/03/04/2019-03-04-JS的执行阶段/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>2019-03-04-JS的执行阶段 | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Kisnnnnn/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/03/04/2019-03-04-JS的执行阶段/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2019-03-04-JS的执行阶段
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-04 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-04T21:00:00+08:00">2019-03-04</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="JS-的执行阶段"><a href="#JS-的执行阶段" class="headerlink" title="JS 的执行阶段"></a>JS 的执行阶段</h2><p>当解释器解释完语法规则后，就开始执行，然后整个执行流程中大致包含：</p><ul>
+<li>执行上下文，执行堆栈概念（如全局上下文，当前活动上下文）</li>
+<li>VO（变量对象）和 AO（活动对象）</li>
+<li>作用域脸</li>
+<li>this 机制</li>
+</ul><h3 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h3><ul>
+<li>JS 有执行山下文</li>
+<li>浏览器首次载入脚本，它将创建「全局执行上下文」，并亚压入执行栈栈顶（不可以被弹出）</li>
+<li>然后每进入其他作用域就创建对应的执行上下文并把它压入执行栈的顶部</li>
+<li>一旦对应的上下文执行完毕，就会从栈顶端弹出，并将上下文控制权交给当前的栈</li>
+<li>依次进行，直至回到全局执行上下文</li>
+</ul><a id="more"></a>
+
+
+<p>如果程序执行完成，被弹出执行栈，然后有没有被应用（没有形成闭包），那么这个函数中用的内存就被垃圾处理自动回收。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0qztu4q9vj30cv02fmx2.jpg" alt="image"></p>
+<h4 id="每个执行上下文都有三个重要属性"><a href="#每个执行上下文都有三个重要属性" class="headerlink" title="每个执行上下文都有三个重要属性"></a>每个执行上下文都有三个重要属性</h4><ul>
+<li>变量对象（Variable object ， VO）</li>
+<li>作用域链（Scope chain）</li>
+<li>this</li>
+</ul>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0qzwz985ij309g06xq2x.jpg" alt="image"></p>
+<h4 id="VO-和-AO"><a href="#VO-和-AO" class="headerlink" title="VO 和 AO"></a>VO 和 AO</h4><p>VO 是执行上下文的属性，但是只有全局上下文的变量对象允许通过 VO 的属性名称来间接访问（因为在全局上下文里，全局对象自身就是变量对象）</p>
+<p>AO（activation object），当函数被调用者激活，AO 就被创建了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在函数上下文中：VO === AO</span><br><span class="line">在全局上下文中：VO === this === global</span><br></pre></td></tr></table></figure>
+
+<p>总体来说，VO 中会存放些变量信息（比如声明的变量，函数，arguments 参数等等）</p>
+<h3 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h3><blockquote>
+<p>作为执行上下文的一个属性，原理和原型链很相似，作用很重要。</p>
+</blockquote>
+<h4 id="流程简述"><a href="#流程简述" class="headerlink" title="流程简述"></a>流程简述</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">在函数上下文中，查找一个变量foo</span><br><span class="line">如果函数的VO中找到了，就直接使用</span><br><span class="line">否则去它的父级作用域中（__parent__）找</span><br><span class="line">以此往上级找寻，直到全局上下文中没有找到报错。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0r08hdnhcj30650bu0sv.jpg" alt="image"></p>
+<h4 id="this-指针"><a href="#this-指针" class="headerlink" title="this 指针"></a>this 指针</h4><p><strong>this 是执行上下文环境的一个属性，而不是某个变量对象的属性</strong></p>
+<p>因此：</p>
+<ul>
+<li>this 是没有一个类似搜寻变量的过程</li>
+<li>当代码中使用了 this，这个 this 的值就直接从执行上下文中获取了，而不会从作用域链中搜寻</li>
+<li>this 的值在取决中进入上下文时的情况</li>
+</ul>
+<p>举个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var baz = 200;</span><br><span class="line">var bar = &#123;</span><br><span class="line">    baz: 100,</span><br><span class="line">    foo: function() &#123;</span><br><span class="line">        consoloe.log(this.baz)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var foo = bar.foo;</span><br><span class="line">// 进入环境： global</span><br><span class="line">foo(); // 200，但是严格环境下会报错，Cannot ready property &apos;baz&apos; of undefined</span><br><span class="line">// 进入环境：global bar</span><br><span class="line">bar.foo(); // 100</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/02/28/2019-02-28-JS引擎解析过程-解释阶段/" rel="next" title="2019-02-28-JS引擎解析过程-解释阶段">
+                  <i class="fa fa-chevron-left"></i> 2019-02-28-JS引擎解析过程-解释阶段
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/03/05/2019-03-05-JS的回收机制/" rel="prev" title="2019-03-05-JS的回收机制">
+                  2019-03-05-JS的回收机制 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS-的执行阶段"><span class="nav-number">1.</span> <span class="nav-text">JS 的执行阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#执行上下文"><span class="nav-number">1.1.</span> <span class="nav-text">执行上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#每个执行上下文都有三个重要属性"><span class="nav-number">1.1.1.</span> <span class="nav-text">每个执行上下文都有三个重要属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VO-和-AO"><span class="nav-number">1.1.2.</span> <span class="nav-text">VO 和 AO</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域链"><span class="nav-number">1.2.</span> <span class="nav-text">作用域链</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#流程简述"><span class="nav-number">1.2.1.</span> <span class="nav-text">流程简述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-指针"><span class="nav-number">1.2.2.</span> <span class="nav-text">this 指针</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:312339704@qq.com" title="E-Mail &rarr; mailto:312339704@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

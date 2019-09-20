@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.4.0">
+  <link rel="mask-icon" href="/images/favicon.jpg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","save_scroll":true,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="函数式编程 Funtional programming函数式编程是一种编程范式，也就和如何写程序的方法论，属于结构化编程的一中，主要思想是把运算过程尽量写成一系列嵌套的函数调用学习函数式编程需要了解什么？ 了解什么时候范畴论 数学模型和范畴之间的关系 范畴与函数式编程的关系 什么是范畴论？函数式编程的起源，是一门叫范畴论（Caregory Theory）的数学分支">
+<meta name="keywords" content="笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019-03-07-JavaScript的函数式编程(1)">
+<meta property="og:url" content="https://kisnnnnn.github.io/2019/03/07/2019-03-07-JavaScript的函数式编程(1)/index.html">
+<meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
+<meta property="og:description" content="函数式编程 Funtional programming函数式编程是一种编程范式，也就和如何写程序的方法论，属于结构化编程的一中，主要思想是把运算过程尽量写成一系列嵌套的函数调用学习函数式编程需要了解什么？ 了解什么时候范畴论 数学模型和范畴之间的关系 范畴与函数式编程的关系 什么是范畴论？函数式编程的起源，是一门叫范畴论（Caregory Theory）的数学分支">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbfe6jej30hq0dbjrg.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbv9nszj309608swec.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0ujc6qw2fj30m808pdfz.jpg">
+<meta property="og:updated_time" content="2019-09-19T00:58:15.184Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2019-03-07-JavaScript的函数式编程(1)">
+<meta name="twitter:description" content="函数式编程 Funtional programming函数式编程是一种编程范式，也就和如何写程序的方法论，属于结构化编程的一中，主要思想是把运算过程尽量写成一系列嵌套的函数调用学习函数式编程需要了解什么？ 了解什么时候范畴论 数学模型和范畴之间的关系 范畴与函数式编程的关系 什么是范畴论？函数式编程的起源，是一门叫范畴论（Caregory Theory）的数学分支">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbfe6jej30hq0dbjrg.jpg">
+  <link rel="canonical" href="https://kisnnnnn.github.io/2019/03/07/2019-03-07-JavaScript的函数式编程(1)/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>2019-03-07-JavaScript的函数式编程(1) | 翻山越岭遇到一条狗的Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">翻山越岭遇到一条狗的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-首页">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-分类">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-标签">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-归档">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-关于我">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于我</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Kisnnnnn/" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://kisnnnnn.github.io/2019/03/07/2019-03-07-JavaScript的函数式编程(1)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kisn 袁凯忻">
+      <meta itemprop="description" content="今でもあなたはわたしの光。">
+      <meta itemprop="image" content="/images/favicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="翻山越岭遇到一条狗的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2019-03-07-JavaScript的函数式编程(1)
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-07 21:00:00" itemprop="dateCreated datePublished" datetime="2019-03-07T21:00:00+08:00">2019-03-07</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-19 08:58:15" itemprop="dateModified" datetime="2019-09-19T08:58:15+08:00">2019-09-19</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="函数式编程-Funtional-programming"><a href="#函数式编程-Funtional-programming" class="headerlink" title="函数式编程 Funtional programming"></a>函数式编程 Funtional programming</h2><p>函数式编程是一种编程范式，也就和如何写程序的方法论，属于结构化编程的一中，主要思想是把运算过程尽量写成一系列嵌套的函数调用</p><p><strong>学习函数式编程需要了解什么？</strong></p><ul>
+<li>了解什么时候范畴论</li>
+<li>数学模型和范畴之间的关系</li>
+<li>范畴与函数式编程的关系</li>
+</ul><h2 id="什么是范畴论？"><a href="#什么是范畴论？" class="headerlink" title="什么是范畴论？"></a>什么是范畴论？</h2><p>函数式编程的起源，是一门叫范畴论（Caregory Theory）的数学分支</p><a id="more"></a>
+
+
+
+<p>理解函数式编程的关键，就是理解范畴论。它是一门复杂的数学，认为世界上的所有的概念体系，都可以抽象成一个的‘范畴’</p>
+<p><strong>范畴就是使用箭头连接的物体</strong></p>
+<p>通俗的讲，就是彼此之间存在某种关系的概念、事务、对象等等，都构成范畴。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbfe6jej30hq0dbjrg.jpg" alt="image"></p>
+<p>箭头表示范畴成员之间的关系，正式名称叫做“态射”（morphism）。范畴论任务，同一个范畴的所有成员，就是不同状态的“形变”。通过“态射”就可以从一个成员形变成另一个成员。</p>
+<h3 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a>数学模型</h3><p>既然“范畴“是满足某种形变关系的所有对象，就可以总结出来它的数学模型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.所有成员是一种集合</span><br><span class="line">2.形变关系是函数</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，范畴论是集合论更上层的抽象，简单的理解就是“集合+函数”</p>
+<p>理论上通过函数，就可以从范畴的一个成员，算出其他所有成员</p>
+<h3 id="范畴与容器"><a href="#范畴与容器" class="headerlink" title="范畴与容器"></a>范畴与容器</h3><p>如果把“范畴”想象成一个容器，里面包含两样东西。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">值（value）</span><br><span class="line">值得变形关系，（函数）</span><br></pre></td></tr></table></figure>
+
+<p>下面我们来定义一个简单的范畴</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class Category &#123;</span><br><span class="line">    // 实例化时，传过来的参数</span><br><span class="line">    constructor(a, b, c) &#123;</span><br><span class="line">        this.val = a + b + c;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    addOn(x) &#123;</span><br><span class="line">        return x + 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var a = new Category(12, 3, 4);</span><br><span class="line"></span><br><span class="line">console.log(a); // Category &#123;val: 19&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，Category 是一个类，也是一个容器，里面包含了一个值(this.val)和一种变形关系(addOne)。该关系就是彼此之间都相差 1 的数字。</p>
+<h3 id="范畴论和函数式编程的关系"><a href="#范畴论和函数式编程的关系" class="headerlink" title="范畴论和函数式编程的关系"></a>范畴论和函数式编程的关系</h3><blockquote>
+<p>范畴论使用函数，表达范畴之间的关系</p>
+</blockquote>
+<p>伴随着范畴论的发展，就发展除了一整套函数的运算方法。方法起初只是适用于数学算法，后来有人将它在计算机上实现了，成为了今天的“函数式编程”。</p>
+<p><strong>本质上，函数式编程只是范畴论的预算方法，跟数学逻辑、微积分、行列式都是一类东西，都是数学方法，只是正好用它来写程序。</strong></p>
+<h2 id="函数的合成与柯里化"><a href="#函数的合成与柯里化" class="headerlink" title="函数的合成与柯里化"></a>函数的合成与柯里化</h2><p>函数式编程有 2 个最基本的运算</p>
+<ul>
+<li>合成</li>
+<li>柯里化</li>
+</ul>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>如果一个值要经过多个函数，才能变成另外一个值，就可以把所有的中间步骤合并成一个函数，叫做“函数的合成”</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0ujbv9nszj309608swec.jpg" alt="image"></p>
+<p>上图中，X 和 Y 之间的变形关系是函数 f，Y 和 Z 的变形关系是 g，那么 X 和 Z 之间的关系，就是 g 和 f 的合成函数 g·f。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const compose = function (f, g) &#123;</span><br><span class="line">    return function (x) &#123;</span><br><span class="line">        return f(g(y));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0ujc6qw2fj30m808pdfz.jpg" alt="image"></p>
+<p>函数的合成还必须要满足结合律</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">compose(f,compse(g.h));</span><br><span class="line">// 等同于</span><br><span class="line">compose(compose(f,g),h);</span><br><span class="line">// 等同于</span><br><span class="line">compose(f,g,h);</span><br></pre></td></tr></table></figure>
+
+<h3 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h3><p>f(x)和 g(x)合成为 f(g(x)),有一个隐藏的前提，就是 f 和 g 都只能接受一个参数。如果接受多个参数，比如 f(x,y)和 g(a,b,c)，函数合成就很麻烦。<br>所以需要函数柯里化，把一个多参数的函数，转化为一个单参数的函数；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&quot;use strict&quot;;</span><br><span class="line"></span><br><span class="line">// 未柯里化</span><br><span class="line">function add(x, y) &#123;</span><br><span class="line">    return alert(x + y);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 柯里化后</span><br><span class="line">function Xadd(x) &#123;</span><br><span class="line">    return function (y) &#123;</span><br><span class="line">        return alert(x + y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Xadd(2)(3);// 5</span><br></pre></td></tr></table></figure>
+
+<p>有了柯里化以后，我们就能做到，所以函数只能接受一个参数。</p>
+<blockquote>
+<p>这里面包含了 ES6 的 class、constructor 等特性</p>
+</blockquote>
+<h3 id="JavaScript-的-class"><a href="#JavaScript-的-class" class="headerlink" title="JavaScript 的 class"></a>JavaScript 的 class</h3><p>在 ES5 的时候，我们编写 JavaScript 很多时候只能使用构造函数和原型链进行方法属性，实现 class 的功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// ES5环境</span><br><span class="line">&apos;use strict&apos;;</span><br><span class="line">// Box是一个构造函数</span><br><span class="line">function Box(val) &#123;</span><br><span class="line">    this.type = &apos;double&apos;;</span><br><span class="line">    this.color = val;</span><br><span class="line">&#125;</span><br><span class="line">// 我们通过prototype的方式来添加一条属性</span><br><span class="line">Box.prototype.hello = function () &#123;</span><br><span class="line">    console.log(&apos;hello,&apos; + this.type + &quot;,&quot; + this.color);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 对于私有属性（static method），  我们当然不能放在原型链上，我们直接放在构造函数上面。</span><br><span class="line">Box.fn = function () &#123;</span><br><span class="line">    console.log(&apos;static&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//通过new来创建</span><br><span class="line">var circle = new Box(&apos;red&apos;);</span><br><span class="line">circle.hello(); // hello,double,red</span><br></pre></td></tr></table></figure>
+
+<p>但是在 ES6 的规范中，可以使用 class 语法，ES6 的 class 可以看做只是一个语法糖，它绝大部分都可以做到，新的 class 写法只是让对象原型的写法更加清晰、更想面对对象编程的语法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// es6</span><br><span class="line">class BoxES6 &#123;</span><br><span class="line">    constructor(val) &#123;</span><br><span class="line">        this.type = &apos;double&apos;;</span><br><span class="line">        this.color = val;</span><br><span class="line">    &#125;</span><br><span class="line">    hello() &#123;</span><br><span class="line">        console.log(&apos;hello,&apos; + this.type + &apos;,&apos; + this.color);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//通过new来创建</span><br><span class="line">var helloBlue = new BoxES6(&apos;blue&apos;);</span><br><span class="line"></span><br><span class="line">helloBlue.hello(); // hello,double,blue</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/03/07/2019-03-11-JavaScript的函数式编程(2)/" rel="next" title="2019-03-07-JavaScript的函数式编程(2)">
+                  <i class="fa fa-chevron-left"></i> 2019-03-07-JavaScript的函数式编程(2)
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/05/29/2019-05-29-VUE中的ref、on、emit/" rel="prev" title="2019-05-29-VUE中的$ref、$on、$emit">
+                  2019-05-29-VUE中的$ref、$on、$emit <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数式编程-Funtional-programming"><span class="nav-number">1.</span> <span class="nav-text">函数式编程 Funtional programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是范畴论？"><span class="nav-number">2.</span> <span class="nav-text">什么是范畴论？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数学模型"><span class="nav-number">2.1.</span> <span class="nav-text">数学模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#范畴与容器"><span class="nav-number">2.2.</span> <span class="nav-text">范畴与容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#范畴论和函数式编程的关系"><span class="nav-number">2.3.</span> <span class="nav-text">范畴论和函数式编程的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数的合成与柯里化"><span class="nav-number">3.</span> <span class="nav-text">函数的合成与柯里化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#合成"><span class="nav-number">3.1.</span> <span class="nav-text">合成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#柯里化"><span class="nav-number">3.2.</span> <span class="nav-text">柯里化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript-的-class"><span class="nav-number">3.3.</span> <span class="nav-text">JavaScript 的 class</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/favicon.jpg"
+      alt="Kisn 袁凯忻">
+  <p class="site-author-name" itemprop="name">Kisn 袁凯忻</p>
+  <div class="site-description" itemprop="description">今でもあなたはわたしの光。</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Kisnnnnn" title="GitHub &rarr; https://github.com/Kisnnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:312339704@qq.com" title="E-Mail &rarr; mailto:312339704@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/f2ba550eddb6" title="简书 &rarr; https://www.jianshu.com/u/f2ba550eddb6" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>简书</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://segmentfault.com/u/kisnnnn" title="思否 &rarr; https://segmentfault.com/u/kisnnnn" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>思否</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.zhihu.com/people/yuan-kai-xin-44" title="知乎 &rarr; https://www.zhihu.com/people/yuan-kai-xin-44" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/1843958274" title="微博 &rarr; https://weibo.com/u/1843958274" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>微博</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">by Kisn</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='41, 44, 51' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
