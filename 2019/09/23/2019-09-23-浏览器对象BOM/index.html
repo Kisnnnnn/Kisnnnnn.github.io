@@ -63,7 +63,7 @@
 <meta property="og:site_name" content="翻山越岭遇到一条狗的Blog">
 <meta property="og:description" content="什么是 BOM? BOM（Browser Object Model）即浏览器对象模型提供了独立于内容而与浏览器窗口进行交互的对象。由于 BOM 主要用于管理窗口与窗口之间的通讯，因此其核心对象是 window。 相关方法(属性)弹出框1window.alert()URL 的属性1234567891011121314151617181920212223242526272829303132333435">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-23T05:50:18.504Z">
+<meta property="og:updated_time" content="2019-09-23T06:50:08.338Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器对象BOM">
 <meta name="twitter:description" content="什么是 BOM? BOM（Browser Object Model）即浏览器对象模型提供了独立于内容而与浏览器窗口进行交互的对象。由于 BOM 主要用于管理窗口与窗口之间的通讯，因此其核心对象是 window。 相关方法(属性)弹出框1window.alert()URL 的属性1234567891011121314151617181920212223242526272829303132333435">
@@ -331,7 +331,7 @@
                 
               
 
-              <time title="创建时间：2019-09-23 21:00:00 / 修改时间：13:50:18" itemprop="dateCreated datePublished" datetime="2019-09-23T21:00:00+08:00">2019-09-23</time>
+              <time title="创建时间：2019-09-23 21:00:00 / 修改时间：14:50:08" itemprop="dateCreated datePublished" datetime="2019-09-23T21:00:00+08:00">2019-09-23</time>
             </span>
           
             
@@ -415,6 +415,40 @@
 <p>当浏览器向服务器发送网页请求时，对应这个页面的 cookies 就被加入到了请求中，这样的服务器就能获取到辨认这个用户的所需的信息。</p>
 <h4 id="操作-cookies-的方法"><a href="#操作-cookies-的方法" class="headerlink" title="操作 cookies 的方法"></a>操作 cookies 的方法</h4><p>JavaScript 可以用个<code>document.cookie</code>属性来穿件、读取和删除 cookies</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setCookie</span>(<span class="params">name, val, time</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> exp = <span class="keyword">new</span> <span class="built_in">Date</span>()</span><br><span class="line"></span><br><span class="line">  exp.setTime(exp.getTime() + time)</span><br><span class="line">  <span class="built_in">document</span>.cookie = name + <span class="string">'='</span> + val + <span class="string">';expires='</span> + exp.toGMTString()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 读取</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCookie</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'(^| )'</span> + name + <span class="string">'=([^;]*(;|$))'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ((res = <span class="built_in">document</span>.cookie.match(reg))) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">unescape</span>(res[<span class="number">2</span>])</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">delCookie</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> exp = <span class="keyword">new</span> <span class="built_in">Date</span>()</span><br><span class="line">  exp.setTime = exp.getTime() - <span class="number">1</span></span><br><span class="line">  <span class="keyword">let</span> cval = getCookie(name)</span><br><span class="line">  <span class="keyword">if</span> (cval != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="built_in">document</span>.cookie = name + <span class="string">'='</span> + cval + <span class="string">';expires='</span> + exp.toGMTString()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Cookie-和-Session-的区别"><a href="#Cookie-和-Session-的区别" class="headerlink" title="Cookie 和 Session 的区别"></a>Cookie 和 Session 的区别</h4><p>http 是一种无状态协议，因此 Cookie 的最大的作用是储存 sessionId 用辨识用户</p>
+<h4 id="Cookie、sessionStorage、localStorage-的区别"><a href="#Cookie、sessionStorage、localStorage-的区别" class="headerlink" title="Cookie、sessionStorage、localStorage 的区别"></a>Cookie、sessionStorage、localStorage 的区别</h4><ul>
+<li>共同点<ul>
+<li>都是保存在浏览器端，并且是同源的</li>
+</ul>
+</li>
+<li>不同点<ul>
+<li>Cookie:<ul>
+<li>储存大小：<code>4KB</code></li>
+<li>参与服务器通信</li>
+<li>只要是同源的 http 请求中，都会存在 cookie，即 cookie 在浏览器和服务器之间来回传递，而且有实效（expires）。cookie 有路径的概念，我们可以限制 cookie 只属于某个路径下</li>
+</ul>
+</li>
+<li>sessionStorage:<ul>
+<li>储存大小：<code>5M</code></li>
+<li>不参与服务器通信</li>
+<li>仅在当前浏览器窗口（该进程）会话期间有效，数据不是服务器请求储存的，而且只有在请求时使用数据。</li>
+</ul>
+</li>
+<li>localStorage:<ul>
+<li>储存大小：<code>5M</code></li>
+<li>不参与服务器通信</li>
+<li>在同源窗口可以共享，但是除非数据被清除，否则会一直存在。数据不是服务器请求储存的，而且只有在请求时使用数据。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Cookie-如何防范-XSS-攻击"><a href="#Cookie-如何防范-XSS-攻击" class="headerlink" title="Cookie 如何防范 XSS 攻击"></a>Cookie 如何防范 XSS 攻击</h4><h5 id="XSS-是什么？"><a href="#XSS-是什么？" class="headerlink" title="XSS 是什么？"></a>XSS 是什么？</h5><blockquote>
+<p>XSS 全称 跨站脚本攻击，我们可以理解为：通过某种方法向 web 页面注入代码，同时浏览器可以被执行这段代码。<br>比如简单的论坛回复，可以插入部分 HTML、CSS、JS，可以获取我们的 Cookie</p>
+</blockquote>
+<p>我们可以在 HTTP 头部配置，来防御 XSS 获取 Cookie。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set-cookie: httponly // 禁止js脚本来访问cookie</span><br><span class="line">set-cookie: secure // 仅在请求为https的时候发送cookie</span><br></pre></td></tr></table></figure>
 
 <h3 id="screen"><a href="#screen" class="headerlink" title="screen"></a>screen</h3><ul>
 <li><p>screen.width 显示器的宽度</p>
@@ -512,7 +546,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-BOM"><span class="nav-number">1.</span> <span class="nav-text">什么是 BOM?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关方法-属性"><span class="nav-number">2.</span> <span class="nav-text">相关方法(属性)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#弹出框"><span class="nav-number">2.0.1.</span> <span class="nav-text">弹出框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URL-的属性"><span class="nav-number">2.0.2.</span> <span class="nav-text">URL 的属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#history-对象"><span class="nav-number">2.0.3.</span> <span class="nav-text">history 对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigator-对象"><span class="nav-number">2.0.4.</span> <span class="nav-text">Navigator 对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#size"><span class="nav-number">2.1.</span> <span class="nav-text">size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#open"><span class="nav-number">2.2.</span> <span class="nav-text">open</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计时事件"><span class="nav-number">2.3.</span> <span class="nav-text">计时事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookies"><span class="nav-number">2.4.</span> <span class="nav-text">Cookies</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是-Cookies"><span class="nav-number">2.4.1.</span> <span class="nav-text">什么是 Cookies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#储存方式"><span class="nav-number">2.4.2.</span> <span class="nav-text">储存方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作-cookies-的方法"><span class="nav-number">2.4.3.</span> <span class="nav-text">操作 cookies 的方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen"><span class="nav-number">2.5.</span> <span class="nav-text">screen</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-BOM"><span class="nav-number">1.</span> <span class="nav-text">什么是 BOM?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关方法-属性"><span class="nav-number">2.</span> <span class="nav-text">相关方法(属性)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#弹出框"><span class="nav-number">2.0.1.</span> <span class="nav-text">弹出框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URL-的属性"><span class="nav-number">2.0.2.</span> <span class="nav-text">URL 的属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#history-对象"><span class="nav-number">2.0.3.</span> <span class="nav-text">history 对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigator-对象"><span class="nav-number">2.0.4.</span> <span class="nav-text">Navigator 对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#size"><span class="nav-number">2.1.</span> <span class="nav-text">size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#open"><span class="nav-number">2.2.</span> <span class="nav-text">open</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计时事件"><span class="nav-number">2.3.</span> <span class="nav-text">计时事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookies"><span class="nav-number">2.4.</span> <span class="nav-text">Cookies</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是-Cookies"><span class="nav-number">2.4.1.</span> <span class="nav-text">什么是 Cookies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#储存方式"><span class="nav-number">2.4.2.</span> <span class="nav-text">储存方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作-cookies-的方法"><span class="nav-number">2.4.3.</span> <span class="nav-text">操作 cookies 的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie-和-Session-的区别"><span class="nav-number">2.4.4.</span> <span class="nav-text">Cookie 和 Session 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie、sessionStorage、localStorage-的区别"><span class="nav-number">2.4.5.</span> <span class="nav-text">Cookie、sessionStorage、localStorage 的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie-如何防范-XSS-攻击"><span class="nav-number">2.4.6.</span> <span class="nav-text">Cookie 如何防范 XSS 攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#XSS-是什么？"><span class="nav-number">2.4.6.1.</span> <span class="nav-text">XSS 是什么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen"><span class="nav-number">2.5.</span> <span class="nav-text">screen</span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
